@@ -1,0 +1,21 @@
+---
+title: Comments
+description: Built–in commenting system.
+author: Taufik Nurrohman
+type: Markdown
+version: 0.0.9
+...
+
+Edit the `page.php` file in your active shield folder then put this snippet after the `</article>` tag:
+
+~~~ .php
+<?php Shield::get('comments'); ?>
+~~~
+
+### Dependency
+
+#### Extension
+
+ - Pages
+
+<!-- block:donate -->

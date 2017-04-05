@@ -1,0 +1,110 @@
+.comments,
+.comments-header,
+.comments-body,
+.comments-footer {margin:0}
+.comments,
+.comments-body,
+.comments-footer {margin-top:5%}
+ul.comments,
+li.comment {
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+li.comment:after {
+  content:"";
+  display:table;
+  clear:both;
+}
+ul.comments {margin-top:-1em}
+li.comment {padding-top:1em}
+.comment-avatar,
+.comment-header,
+.comment-body,
+.comment-footer {
+  margin:0 0 0 3.3333333333333335em;
+  padding:0 0 0 1em;
+  clear:none;
+  overflow:hidden;
+}
+.comment-body,
+.comment-footer {margin-top:.5em}
+.comment-body figure:first-child,
+.comment-body h3:first-child,
+.comment-body h4:first-child,
+.comment-body h5:first-child,
+.comment-body h6:first-child,
+.comment-body iframe:first-child,
+.comment-body p:first-child,
+.comment-body pre:first-child,
+.comment-body table:first-child {margin-top:0}
+.comment-avatar {
+  width:3.3333333333333335em;
+  height:3.3333333333333335em;
+  float:left;
+  margin:0;
+  padding:0;
+}
+.comment-avatar img {
+  display:block;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  background:none;
+  border:0;
+  outline:0;
+}
+.comment-header:after {
+  content:"";
+  display:table;
+  clear:both;
+}
+.comment-link {
+  float:left;
+  font-weight:bold;
+}
+.comment-date {float:right}
+.comment-footer {text-align:right}
+.form-comment {
+  display:table;
+  width:100%;
+  table-layout:fixed;
+  border-collapse:collapse;
+}
+.form-comment .f {
+  display:table-row;
+  margin:0;
+  padding:0;
+}
+.form-comment .f label,
+.form-comment .f label + span,
+.form-comment .f label + div {
+  display:table-cell;
+  vertical-align:top;
+  text-align:left;
+  padding:.5em 0;
+}
+.form-comment .f label {
+  width:5em;
+  text-align:right;
+  padding-right:1em;
+}
+.form-comment .f-set label {visibility:hidden}
+.form-comment .button,
+.form-comment .input,
+.form-comment .select,
+.form-comment .textarea {
+  display:inline-block;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+}
+.form-comment .block {
+  display:block;
+  width:100%;
+}
+.form-comment .button-cancel {display:none}
+.comment .form-comment {margin-bottom:5%}
+.comment .form-comment .button-cancel,
+.form-comment [name="parent"][value] + .f .button-cancel {display:inline-block}

@@ -1,0 +1,23 @@
+---
+type: YAML
+...
+
+comment: Comment
+comments: Comments
+
+comment_author: Name
+comment_cancel: Cancel
+comment_content: Message
+comment_email: Email
+comment_publish: Publish
+comment_reply: Reply
+comment_reply_to__: Reply to %{0}%
+comment_url: URL
+
+message_error_comment_pattern_field: Invalid %{0}% format.
+message_error_comment_token: Invalid token.
+message_error_comment_void_field: Please fill out the %{0}% field.
+
+message_info_comment_save: Your comment will be visible once approved by the author.
+
+message_success_comment_create: Comment created.
