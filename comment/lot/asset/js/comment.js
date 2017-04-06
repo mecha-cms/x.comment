@@ -9,6 +9,7 @@
         content = form.content,
         content_placeholder = content.placeholder,
         parent = form.parent, i, j;
+        q = !q || !q.match(/[?&]parent=\d+/);
     function reply(a) {
         a.addEventListener('click', function(e) {
             this.parentNode.parentNode.insertBefore(form, this.parentNode);
@@ -18,17 +19,19 @@
             e.preventDefault();
         }, false);
     }
-    for (i = 0, j = a.length; i < j; ++i) {
-        reply(a[i]);
-    }
-    if (x && (!q || !q.match(/[?&]parent=\d+/))) {
-        x.addEventListener('click', function(e) {
-            footer.appendChild(form);
-            content.placeholder = content_placeholder;
-            content.focus();
-            parent.removeAttribute('value');
-            e.preventDefault();
-        }, false);
+    if (q) {
+        for (i = 0, j = a.length; i < j; ++i) {
+            reply(a[i]);
+        }
+        if (x) {
+            x.addEventListener('click', function(e) {
+                footer.appendChild(form);
+                content.placeholder = content_placeholder;
+                content.focus();
+                parent.removeAttribute('value');
+                e.preventDefault();
+            }, false);
+        }
     }
 
 })(window, document);

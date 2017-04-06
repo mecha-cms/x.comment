@@ -29,12 +29,13 @@ function fn_comments_set($path = "", $step = 1) {
         asort($comments);
     }
     Lot::set('comments', $comments);
-    Hook::set('page.comments', function() use($files, $language) {
+    Hook::set('page.comments', function($v) use($files, $language) {
         $i = count($files);
-        return (object) [
+        return (object) array_merge([
             'i' => $i,
+            'x' => false, // disable comment(s)
             'text' => $i . ' ' . $language->{$i === 1 ? 'comment' : 'comments'}
-        ];
+        ], (array) $v);
     });
 }
 
@@ -51,65 +52,3 @@ if (function_exists('fn_markdown')) Hook::set(['comment.description', 'comment.c
 
 // Apply the user filter(s) of `page.author` to the `comment.author`
 if (function_exists('fn_user')) Hook::set('comment.author', 'fn_user', 1);
-
-// Set a new comment
-Route::set('%*%/-comment', function($path) use($language, $url) {
-    $page = PAGE . DS . $path;
-    $comment = COMMENT . DS . $path;
-    $state = Extend::state('comment');
-    if (!Request::is('post') || !File::exist([
-        $page . '.page',
-        $page . '.archive'
-    ])) return;
-    $token = Request::post('token', false);
-    $author = Request::post('author', false);
-    $email = Request::post('email', false);
-    $link = Request::post('link', false);
-    $type = Request::post('type', $state['page']['type']);
-    $status = Request::post('status', $state['page']['status']);
-    $content = Request::post('content', false);
-    if (!$token || Session::get(Guardian::$config['session']['token']) !== $token) {
-        Message::error('comment_token');
-    }
-    if (!$author) {
-        Message::error('comment_void_field', $language->comment_author);
-    } else {
-        $author = strip_tags($author);
-    }
-    if (!$email) {
-        Message::error('comment_void_field', $language->comment_email);
-    } else if (!Is::email($email)) {
-        Message::error('comment_pattern_field', $language->comment_email);
-    }
-    if ($link && !Is::url($link)) {
-        Message::error('comment_pattern_field', $language->comment_url);
-    }
-    if (!$content) {
-        Message::error('comment_void_field', $language->comment_content);
-    } else {
-        $content = strip_tags($content, '<' . str_replace(',', '><', HTML_WISE) . '>');
-    }
-    $id = time();
-    $file = $comment . DS . date('Y-m-d-H-i-s', $id) . '.' . $state['x'];
-    Hook::NS('on.comment.set', [$file]);
-    if (!Message::$x) {
-        Page::data([
-            'author' => $author,
-            'email' => $email,
-            'link' => $link,
-            'type' => $type,
-            'status' => $status,
-            'content' => $content
-        ])->saveTo($file, 0600);
-        if ($s = Request::post('parent', false)) {
-            File::write((new Date($s))->slug)->saveTo(Path::F($file) . DS . 'parent.data', 0600);
-        }
-        Message::success('comment_create');
-        if ($state['x'] === 'draft') {
-            Message::info('comment_save');
-        } else {
-            Guardian::kick(Path::D($url->current) . '#comment-' . $id);
-        }
-    }
-    Guardian::kick(Path::D($url->current) . '#form-comment');
-});

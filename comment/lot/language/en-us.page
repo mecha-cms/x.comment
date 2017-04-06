@@ -12,13 +12,22 @@ comment_author: Name
 comment_cancel: Cancel
 comment_content: Message
 comment_email: Email
+comment_link: URL
 comment_publish: Publish
 comment_reply: Reply
 comment_reply_to__: Reply to %{0}%
-comment_url: URL
 
-message_error_comment_pattern_field: Invalid %{0}% format.
+comment_f_author: Anonymous
+comment_f_email: email@domain.com
+comment_f_link: http://
+comment_f_content: Message goes here…
+comment_f_reply: Reply to %{0}%…
+
 message_error_comment_token: Invalid token.
+message_error_comment_max: %{0}% too long.
+message_error_comment_min: %{0}% too short.
+message_error_comment_pattern_field: Invalid %{0}% format.
+message_error_comment_query_x: Please choose another word: <em>%{0}%</em>.
 message_error_comment_void_field: Please fill out the %{0}% field.
 
 message_info_comment_save: Your comment will be visible once approved by the author.

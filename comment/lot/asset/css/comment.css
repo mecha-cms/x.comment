@@ -34,8 +34,9 @@ li.comment {padding-top:1em}
 .comment-figure + .comment-header,
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
-.comment-figure + .comment-header + .comment-body + ul.comments,
-.comment-figure + .comment-header + .comment-body + ul.comments + .comment-footer {margin-left:4.3333333333333335em}
+.comment-figure + .comment-header + .comment-body + ul.comments {margin-left:4.5em}
+.comment-figure + .comment-header + .comment-body + ul.comments + .comment-footer,
+.comment-figure + .comment-header + .comment-body + ul.comments + .form-comment + .comment-footer {margin-left:9em}
 .comment-body,
 .comment-footer {margin-top:.5em}
 .comment-body figure:first-child,
@@ -48,8 +49,8 @@ li.comment {padding-top:1em}
 .comment-body pre:first-child,
 .comment-body table:first-child {margin-top:0}
 .comment-figure {
-  width:3.3333333333333335em;
-  height:3.3333333333333335em;
+  width:3.5em;
+  height:3.5em;
   float:left;
   margin:0;
   padding:0;
@@ -62,7 +63,7 @@ li.comment {padding-top:1em}
   max-height:100%;
   margin:0;
   padding:0;
-  background:none;
+  background:rgba(0,0,0,.05);
   border:0;
   outline:0;
 }
@@ -71,11 +72,14 @@ li.comment {padding-top:1em}
   display:table;
   clear:both;
 }
-.comment-link {
-  float:left;
-  font-weight:bold;
+.comment-author,
+.comment-property {
+  margin:0;
+  padding:0;
 }
-.comment-date {float:right}
+.comment-author {float:left}
+.comment-property {float:right}
+.comment-url:before {content:'#'}
 .form-comment {
   display:table;
   width:100%;
@@ -101,7 +105,7 @@ li.comment {padding-top:1em}
 }
 .form-comment-input label,
 .form-comment-button label {
-  width:5em;
+  width:4.5em;
   text-align:right;
   padding-right:1em;
 }
@@ -121,6 +125,5 @@ li.comment {padding-top:1em}
 }
 .form-comment .button-cancel,
 .form-comment + .comment-footer {display:none}
-.comment .form-comment {margin-bottom:5%}
 .comment .form-comment .button-cancel,
 .form-comment [name="parent"][value] + .form-comment-button .button-cancel {display:inline-block}
