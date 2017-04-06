@@ -3,7 +3,7 @@
 // Create a `comment` folder in `lot` if it is not there
 $f = LOT . DS . 'comment';
 if (!Folder::exist($f)) {
-    Folder::set($f, 0600);
+    Folder::set($f, 0755);
     File::write('deny from all')->saveTo($f . DS . '.htaccess', 0600);
     Guardian::kick($url->current);
 }
