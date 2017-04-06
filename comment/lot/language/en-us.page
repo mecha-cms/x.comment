@@ -5,6 +5,9 @@ type: YAML
 comment: Comment
 comments: Comments
 
+reply: Reply
+replys: Replies
+
 comment_author: Name
 comment_cancel: Cancel
 comment_content: Message

@@ -11,8 +11,9 @@
         parent = form.parent, i, j;
     function reply(a) {
         a.addEventListener('click', function(e) {
-            this.parentNode.parentNode.appendChild(form);
+            this.parentNode.parentNode.insertBefore(form, this.parentNode);
             content.placeholder = this.title;
+            content.focus();
             parent.value = this.id.split(':')[1];
             e.preventDefault();
         }, false);
@@ -24,6 +25,7 @@
         x.addEventListener('click', function(e) {
             footer.appendChild(form);
             content.placeholder = content_placeholder;
+            content.focus();
             parent.removeAttribute('value');
             e.preventDefault();
         }, false);

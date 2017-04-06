@@ -7,19 +7,7 @@ function fn_comment_url($s) {
     return $url . '/' . To::url($path) . '#comment-' . $id;
 }
 
-function fn_comment_content($content, $lot) {
-    $parent = isset($lot['parent']) ? $lot['parent'] : null;
-    $parent = File::open(Path::F($lot['path']) . DS . 'parent.data')->get(0);
-    if ($parent && $file = File::exist(Path::D($lot['path']) . DS . $parent . '.page')) {
-        $parent = new Comment($file);
-        $a = '<a href="#comment-' . $parent->id . '">@' . $parent->author . '</a>';
-        $content = strpos($content, '<p>') === 0 ? str_replace([X . '<p>', X], ['<p>' . $a . ' ', ""], X . $content) : $content . '<p>' . $a . '</p>';
-    }
-    return $content;
-}
-
 Hook::set('comment.url', 'fn_comment_url');
-Hook::set('comment.content', 'fn_comment_content', 2.1);
 
 function fn_comments_path($path, $id) {
     if ($id === 'comments' && !$path) {
@@ -101,7 +89,8 @@ Route::set('%*%/-comment', function($path) use($language, $url) {
     } else {
         $content = strip_tags($content, '<' . str_replace(',', '><', HTML_WISE) . '>');
     }
-    $file = $comment . DS . date('Y-m-d-H-i-s') . '.' . $state['x'];
+    $id = time();
+    $file = $comment . DS . date('Y-m-d-H-i-s', $id) . '.' . $state['x'];
     Hook::NS('on.comment.set', [$file]);
     if (!Message::$x) {
         Page::data([
@@ -118,6 +107,8 @@ Route::set('%*%/-comment', function($path) use($language, $url) {
         Message::success('comment_create');
         if ($state['x'] === 'draft') {
             Message::info('comment_save');
+        } else {
+            Guardian::kick(Path::D($url->current) . '#comment-' . $id);
         }
     }
     Guardian::kick(Path::D($url->current) . '#form-comment');

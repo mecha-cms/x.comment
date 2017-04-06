@@ -8,9 +8,9 @@ if (!Folder::exist($f)) {
     Guardian::kick($url->current);
 }
 
-define('COMMENT_FORM_ID', 'form-comment');
-
-Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'css' . DS . 'comment.min.css');
-Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'js' . DS . 'comment.min.js');
+if ($site->is === 'page') {
+    Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'css' . DS . 'comment.min.css');
+    Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'js' . DS . 'comment.min.js');
+}
 
 require __DIR__ . DS . 'engine' . DS . 'fire.php';
