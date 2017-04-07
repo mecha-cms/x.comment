@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'anchor' => ['comment-%{id}%', 'form-comment'],
     'path' => '-comment',
     'thread' => 1, // set to `0` or `false` to disable comment thread (TODO: multi-level comment thread)
     'page' => [
@@ -20,5 +21,7 @@ return [
         'link' => 0,
         'content' => 1
     ],
-    'query_x' => ['<script ', '<iframe ']
+    'query_x' => ['<script ', '<iframe '], // block by word(s)
+    'user_ip_x' => [], // block by IP address(es)
+    'user_agent_x' => [] // block by user agent word(s)
 ];

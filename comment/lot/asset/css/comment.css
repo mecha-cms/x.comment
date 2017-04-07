@@ -80,36 +80,37 @@ li.comment {padding-top:1em}
 .comment-author {float:left}
 .comment-property {float:right}
 .comment-url:before {content:'#'}
-.form-comment {
-  display:table;
-  width:100%;
-  table-layout:fixed;
-  border-collapse:collapse;
-}
-.form-comment-input,
-.form-comment-button {
-  display:table-row;
+.form-comment {}
+.form-comment .form-comment-input,
+.form-comment .form-comment-button {
   margin:0;
-  padding:0;
-}
-.form-comment-input label,
-.form-comment-input label + span,
-.form-comment-input label + div,
-.form-comment-button label,
-.form-comment-button label + span,
-.form-comment-button label + div {
-  display:table-cell;
-  vertical-align:top;
-  text-align:left;
   padding:.5em 0;
 }
-.form-comment-input label,
-.form-comment-button label {
-  width:4.5em;
-  text-align:right;
-  padding-right:1em;
+.form-comment-input:after,
+.form-comment-button:after {
+  content:"";
+  display:table;
+  clear:both;
 }
-.form-comment-button label {visibility:hidden}
+.form-comment-input > label,
+.form-comment-button > label {
+  float:left;
+  width:3.5em;
+  text-align:right;
+}
+.form-comment-input > label,
+.form-comment-input > label + span,
+.form-comment-input > label + div,
+.form-comment-button > label,
+.form-comment-button > label + span,
+.form-comment-button > label + div {
+  display:block;
+  margin:0 0 0 4.5em;
+  padding:0;
+}
+.form-comment-input > label,
+.form-comment-button > label {margin-left:0}
+.form-comment-button > label {visibility:hidden}
 .form-comment .button,
 .form-comment .input,
 .form-comment .select,
@@ -123,7 +124,12 @@ li.comment {padding-top:1em}
   display:block;
   width:100%;
 }
+.form-comment .messages {margin-bottom:.5em}
 .form-comment .button-cancel,
 .form-comment + .comment-footer {display:none}
-.comment .form-comment .button-cancel,
-.form-comment [name="parent"][value] + .form-comment-button .button-cancel {display:inline-block}
+.form-comment.on-reply .button-cancel {display:inline-block}
+@media (max-width:730px) {
+  .comment-author,
+  .comment-property {float:none}
+  .comment-property {margin-bottom:.5em}
+}

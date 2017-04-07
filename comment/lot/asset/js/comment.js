@@ -13,6 +13,7 @@
     function reply(a) {
         a.addEventListener('click', function(e) {
             this.parentNode.parentNode.insertBefore(form, this.parentNode);
+            form.classList.add('on-reply');
             content.placeholder = this.title;
             content.focus();
             parent.value = this.id.split(':')[1];
@@ -26,6 +27,7 @@
         if (x) {
             x.addEventListener('click', function(e) {
                 footer.appendChild(form);
+                form.classList.remove('on-reply');
                 content.placeholder = content_placeholder;
                 content.focus();
                 parent.removeAttribute('value');

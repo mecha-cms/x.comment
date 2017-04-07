@@ -1,7 +1,12 @@
 <?php if ($page->comments->x && !$page->comments->i): ?>
 <!-- comment disable and comment empty -->
-<?php else: ?>
-<?php $thread = Extend::state('comment', 'thread'); ?>
+<?php else:
+
+$comment_state = Extend::state('comment');
+$thread = $comment_state['thread'];
+$anchor = $comment_state['anchor'];
+
+?>
 <section class="comments">
   <header class="comments-header">
     <h3><?php echo $page->comments->text; ?></h3>
@@ -12,6 +17,7 @@
       <?php foreach ($comments as $comment): ?>
       <?php if ($thread && $comment->parent) continue; ?>
       <?php if ($thread): ?>
+      <?php if ($comment->parent) continue; ?>
       <?php $replys = []; ?>
       <?php foreach ($comments as $reply): ?>
       <?php if ($reply->parent && $reply->parent === Path::N($comment->path)): ?>
@@ -19,7 +25,7 @@
       <?php endif; ?>
       <?php endforeach; $i = count($replys); ?>
       <?php endif; ?>
-      <li class="comment comment--status-<?php echo $comment->status; ?>" id="comment-<?php echo $comment->id; ?>">
+      <li class="comment comment--status-<?php echo $comment->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $comment->id]); ?>">
         <figure class="comment-figure">
           <img class="comment-avatar" alt="" src="<?php echo $comment->avatar($url->protocol . 'www.gravatar.com/avatar/' . md5($comment->email) . '?s=70&amp;d=monsterid'); ?>" width="70" height="70">
         </figure>
@@ -40,7 +46,7 @@
         <?php if ($thread && $replys): ?>
         <ul class="comments replies" title="<?php echo $i . ' ' . $language->{$i === 1 ? 'reply' : 'replys'}; ?>">
           <?php foreach ($replys as $reply): ?>
-          <li class="comment comment--status-<?php echo $reply->status; ?>" id="comment-<?php echo $reply->id; ?>">
+          <li class="comment comment--status-<?php echo $reply->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $reply->id]); ?>">
             <figure class="comment-figure">
               <img class="comment-avatar" alt="" src="<?php echo $reply->avatar($url->protocol . 'www.gravatar.com/avatar/' . md5($reply->email) . '?s=70&amp;d=monsterid'); ?>" width="70" height="70">
             </figure>
@@ -66,7 +72,7 @@
         </ul>
         <?php endif; ?>
         <footer class="comment-footer">
-          <?php echo implode(' &#x00B7; ', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#form-comment', false, ['classes' => ['comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
+          <?php echo implode(' &#x00B7; ', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
         </footer>
       </li>
       <?php endforeach; ?>
@@ -80,10 +86,10 @@
     <?php $parent_id = Request::get('parent', null); ?>
     <?php $parent = $parent_id ? new Comment(COMMENT . DS . $url->path . DS . (new Date($parent_id))->slug . '.page') : null; ?>
     <?php if ($parent): ?>
-    <h4><?php echo $language->comment_reply_to__(HTML::a($parent->author, $url->current . $url->query . '#comment-' . $parent->id, false, ['rel' => 'nofollow']), true); ?></h4>
+    <h4><?php echo $language->comment_reply_to__(HTML::a($parent->author, implode($url->query . '#', explode('#', $parent->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>
     <?php endif; ?>
-    <?php echo $message; ?>
-    <form class="form-comment" id="form-comment" action="<?php echo $url->current; ?>/<?php echo Extend::state('comment', 'path', '-comment'); ?>" method="post">
+    <form class="form-comment<?php echo $parent ? ' on-reply' : ""; ?>" id="<?php echo $anchor[1]; ?>" action="<?php echo $url->current; ?>/<?php echo $comment_state['path']; ?>" method="post">
+      <?php echo $message; ?>
       <?php echo Form::hidden('token', $token); ?>
       <p class="form-comment-input form-comment-input--author">
         <label for="form-comment-input:author"><?php echo $language->comment_author; ?></label>
@@ -105,7 +111,7 @@
       <?php echo Form::hidden('parent', $parent_id); ?>
       <p class="form-comment-button">
         <label></label>
-        <span><?php echo Form::submit(null, null, $language->comment_publish, ['classes' => ['button', 'button-publish']]) . ($thread ? ' ' . HTML::a($language->comment_cancel, $url->current . '#form-comment', false, ['classes' => ['button', 'button-cancel', 'comment-reply-x']]) : ""); ?></span>
+        <span><?php echo Form::submit(null, null, $language->comment_publish, ['classes' => ['button', 'button-publish']]) . ($thread ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $anchor[1], false, ['classes' => ['button', 'button-cancel', 'comment-reply-x']]) : ""); ?></span>
       </p>
     </form>
   </footer>

@@ -8,10 +8,12 @@ if (!Folder::exist($f)) {
     Guardian::kick($url->current);
 }
 
-if ($site->is === 'page') {
-    Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'css' . DS . 'comment.min.css');
-    Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'js' . DS . 'comment.min.js');
-}
+Hook::set('shield.before', function() use($site) {
+    if ($site->is === 'page') {
+        Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'css' . DS . 'comment.min.css');
+        Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'js' . DS . 'comment.min.js');
+    }
+});
 
 require __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker' . DS . 'route.php';
 require __DIR__ . DS . 'engine' . DS . 'fire.php';
