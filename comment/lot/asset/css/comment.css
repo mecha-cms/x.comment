@@ -34,9 +34,9 @@ li.comment {padding-top:1em}
 .comment-figure + .comment-header,
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
-.comment-figure + .comment-header + .comment-body + ul.comments {margin-left:4.5em}
+.comment-figure + .comment-header + .comment-body + ul.comments {margin-left:5em}
 .comment-figure + .comment-header + .comment-body + ul.comments + .comment-footer,
-.comment-figure + .comment-header + .comment-body + ul.comments + .form-comment + .comment-footer {margin-left:9em}
+.comment-figure + .comment-header + .comment-body + ul.comments + .form-comment + .comment-footer {margin-left:10em}
 .comment-body,
 .comment-footer {margin-top:.5em}
 .comment-body figure:first-child,
@@ -49,8 +49,8 @@ li.comment {padding-top:1em}
 .comment-body pre:first-child,
 .comment-body table:first-child {margin-top:0}
 .comment-figure {
-  width:3.5em;
-  height:3.5em;
+  width:4em;
+  height:4em;
   float:left;
   margin:0;
   padding:0;
@@ -80,9 +80,11 @@ li.comment {padding-top:1em}
 .comment-author {float:left}
 .comment-property {float:right}
 .comment-url:before {content:'#'}
-.form-comment {}
-.form-comment .form-comment-input,
-.form-comment .form-comment-button {
+.form-comment {clear:both}
+.form-comment-input,
+.form-comment-button,
+.form-comment-input.p,
+.form-comment-button.p {
   margin:0;
   padding:.5em 0;
 }
@@ -95,7 +97,7 @@ li.comment {padding-top:1em}
 .form-comment-input > label,
 .form-comment-button > label {
   float:left;
-  width:3.5em;
+  width:4em;
   text-align:right;
 }
 .form-comment-input > label,
@@ -105,7 +107,7 @@ li.comment {padding-top:1em}
 .form-comment-button > label + span,
 .form-comment-button > label + div {
   display:block;
-  margin:0 0 0 4.5em;
+  margin:0 0 0 5em;
   padding:0;
 }
 .form-comment-input > label,

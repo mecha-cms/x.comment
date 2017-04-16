@@ -1,5 +1,5 @@
-<?php if ($page->comments->x && !$page->comments->i): ?>
-<!-- comment disable and comment empty -->
+<?php if ($url->path === "" || $page->comments->x && !$page->comments->i): ?>
+<!-- is home page or (comment disable and comment empty) -->
 <?php else:
 
 $comment_state = Extend::state('comment');
