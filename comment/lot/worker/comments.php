@@ -25,7 +25,7 @@ $anchor = $comment_state['anchor'];
       <?php endif; ?>
       <?php endforeach; $i = count($replys); ?>
       <?php endif; ?>
-      <li class="comment comment--status-<?php echo $comment->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $comment->id]); ?>">
+      <li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $comment->id]); ?>">
         <figure class="comment-figure">
           <img class="comment-avatar" alt="" src="<?php echo $comment->avatar($url->protocol . 'www.gravatar.com/avatar/' . md5($comment->email) . '?s=70&amp;d=monsterid'); ?>" width="70" height="70">
         </figure>
@@ -46,7 +46,7 @@ $anchor = $comment_state['anchor'];
         <?php if ($thread && $replys): ?>
         <ul class="comments replies" title="<?php echo $i . ' ' . $language->{$i === 1 ? 'reply' : 'replys'}; ?>">
           <?php foreach ($replys as $reply): ?>
-          <li class="comment comment--status-<?php echo $reply->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $reply->id]); ?>">
+          <li class="comment comment-status:<?php echo $reply->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $reply->id]); ?>">
             <figure class="comment-figure">
               <img class="comment-avatar" alt="" src="<?php echo $reply->avatar($url->protocol . 'www.gravatar.com/avatar/' . md5($reply->email) . '?s=70&amp;d=monsterid'); ?>" width="70" height="70">
             </figure>
