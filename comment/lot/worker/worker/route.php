@@ -53,6 +53,11 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_content);
     } else {
         $content = To::text($content, HTML_WISE . ',img', true);
+        // Permanently disable the `[[e]]` block(s) in comment
+        if (Extend::exist('block')) {
+            $u = Extend::state('block', 'union', [1 => [0 => ['[[', ']]', '/']]])[1][0];
+            $content = str_replace([$u[0] . 'e' . $u[1], $u[0] . $u[2] . 'e' . $u[1]], "", $content);
+        }
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img .*?>#i', '<!-- $0 -->', $content);
         if (Is::gt($content, $state['max']['content'])) {

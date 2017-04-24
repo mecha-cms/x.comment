@@ -44,7 +44,7 @@ $anchor = $comment_state['anchor'];
         </header>
         <div class="comment-body"><?php echo $comment->content; ?></div>
         <?php if ($thread && $replys): ?>
-        <ul class="comments replies" title="<?php echo $i . ' ' . $language->{$i === 1 ? 'reply' : 'replys'}; ?>">
+        <ul class="comments replies" data-title="<?php echo $i . ' ' . $language->{$i === 1 ? 'reply' : 'replys'}; ?>">
           <?php foreach ($replys as $reply): ?>
           <li class="comment comment-status:<?php echo $reply->status; ?>" id="<?php echo __replace__($anchor[0], ['id' => $reply->id]); ?>">
             <figure class="comment-figure">
@@ -111,7 +111,7 @@ $anchor = $comment_state['anchor'];
       <?php echo Form::hidden('parent', $parent_id); ?>
       <p class="form-comment-button">
         <label></label>
-        <span><?php echo Form::submit(null, null, $language->comment_publish, ['classes' => ['button', 'button-publish']]) . ($thread ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $anchor[1], false, ['classes' => ['button', 'button-cancel', 'comment-reply-x']]) : ""); ?></span>
+        <span><?php echo Form::submit(null, null, $language->comment_publish, ['classes' => ['button', 'button-publish', 'set']]) . ($thread ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $anchor[1], false, ['classes' => ['button', 'button-cancel', 'comment-reply-x', 'reset']]) : ""); ?></span>
       </p>
     </form>
   </footer>
