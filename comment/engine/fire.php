@@ -22,24 +22,40 @@ function fn_comments_set($path = "", $step = 1) {
     global $site, $language;
     $comments = $files = [];
     if ($folder = Folder::exist(COMMENT . DS . $path)) {
-        $files = glob($folder . DS . '*.page');
-        foreach ($files as $v) {
+        foreach (g($folder, 'page') as $v) {
             $comments[$v] = new Comment($v);
         }
         asort($comments);
     }
     Lot::set('comments', $comments);
-    Hook::set('page.comments', function($v) use($files, $language) {
-        $i = count($files);
-        return (object) array_merge([
-            'i' => $i,
-            'x' => false, // disable comment(s)
-            'text' => $i . ' ' . $language->{$i === 1 ? 'comment' : 'comments'}
-        ], (array) $v);
-    });
 }
 
 Route::hook(['%*%/%i%', '%*%'], 'fn_comments_set');
+
+function fn_page_comments($content, $lot) {
+    global $language;
+    $a = [
+        'i' => 0,
+        'x' => false, // disable comment?
+        'text' => '0 ' . $language->comments
+    ];
+    if (!isset($lot['path'])) {
+        return array_replace($a, [
+            'x' => true,
+            'text' => null
+        ]);
+    }
+    if ($files = g(str_replace(PAGE, COMMENT, Path::F($lot['path'])), 'page')) {
+        $i = count($files);
+        return (object) array_replace($a, [
+            'i' => $i,
+            'text' => $i . ' ' . $language->{$i === 1 ? 'comment' : 'comments'}
+        ], (array) $content);
+    }
+    return (object) array_replace($a, (array) $content);
+}
+
+Hook::set('page.comments', 'fn_page_comments');
 
 // Apply the block filter(s) of `page.content` to the `comment.content`
 if (function_exists('fn_block_x')) Hook::set('comment.content', 'fn_block_x', 0);
