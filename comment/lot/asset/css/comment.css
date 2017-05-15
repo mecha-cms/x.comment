@@ -25,6 +25,7 @@ ul.comments ul.comments {
 li.comment {
   padding-top:1em;
   position:relative;
+  word-wrap:break-word;
 }
 .comment-figure,
 .comment-header,
