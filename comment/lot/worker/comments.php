@@ -72,7 +72,7 @@ $anchor = $comment_state['anchor'];
         </ul>
         <?php endif; ?>
         <footer class="comment-footer">
-          <?php echo implode(' &#x00B7; ', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
+          <?php echo implode(' &#x00B7; ', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-a', 'comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
         </footer>
       </li>
       <?php endforeach; ?>

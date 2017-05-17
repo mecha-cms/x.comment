@@ -34,6 +34,10 @@ li.comment {
   margin:0;
   clear:none;
 }
+.comment-footer .comment-a {
+  display:inline-block;
+  vertical-align:middle;
+}
 .comment-figure:after,
 .comment-header:after,
 .comment-body:after,

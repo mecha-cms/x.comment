@@ -53,6 +53,10 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_content);
     } else {
         $content = To::text($content, HTML_WISE . ',img', true);
+        if ($state['page']['type'] === 'HTML') {
+            // Replace new line with break
+            $content = str_replace("\n", '<br>', $content);
+        }
         // Permanently disable the `[[e]]` block(s) in comment
         if (Extend::exist('block')) {
             $u = Extend::state('block', 'union', [1 => [0 => ['[[', ']]', '/']]])[1][0];
