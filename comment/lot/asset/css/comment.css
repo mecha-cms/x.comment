@@ -34,10 +34,13 @@ li.comment {
   margin:0;
   clear:none;
 }
-.comment-footer .comment-a {
+.comment-footer .comment-a,
+.comment-footer .comment-s {
   display:inline-block;
   vertical-align:middle;
 }
+.comment-footer .comment-s {margin:0 .5em}
+.comment-footer .comment-s:before {content:'\00B7'}
 .comment-figure:after,
 .comment-header:after,
 .comment-body:after,

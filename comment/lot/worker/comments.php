@@ -65,14 +65,14 @@ $anchor = $comment_state['anchor'];
             </header>
             <div class="comment-body"><?php echo $reply->content; ?></div>
             <footer class="comment-footer">
-              <?php echo implode(' &#x00B7; ', Hook::fire('page.a.comment', [[], $reply, $replys, $page])); ?>
+              <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [[], $reply, $replys, $page])); ?>
             </footer>
           </li>
           <?php endforeach; ?>
         </ul>
         <?php endif; ?>
         <footer class="comment-footer">
-          <?php echo implode(' &#x00B7; ', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-a', 'comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
+          <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-a', 'comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
         </footer>
       </li>
       <?php endforeach; ?>

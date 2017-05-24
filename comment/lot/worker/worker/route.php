@@ -53,9 +53,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_content);
     } else {
         $content = To::text($content, HTML_WISE . ',img', true);
-        if ($state['page']['type'] === 'HTML') {
+        if ($state['page']['type'] === 'HTML' && strpos($content, '</p>') === false) {
             // Replace new line with break
-            $content = str_replace("\n", '<br>', $content);
+            $content = '<p>' . str_replace("\n", '<br>', To::text($content, HTML_WISE_I . ',img', true)) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
         if (Extend::exist('block')) {
