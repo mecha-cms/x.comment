@@ -2,7 +2,7 @@
 
 function fn_comment_url($s) {
     global $url;
-    $path = Path::F(To::path(Path::D($s)), COMMENT);
+    $path = Path::F(Path::D($s), COMMENT);
     $id = (new Date(Path::N($s)))->unix;
     return $url . '/' . To::url($path) . '#' . __replace__(Extend::state('comment', 'anchor')[0], ['id' => $id]);
 }

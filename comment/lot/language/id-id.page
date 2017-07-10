@@ -1,0 +1,38 @@
+---
+type: YAML
+...
+
+comment: Komentar
+comments: Komentar
+
+reply: Balasan
+replys: Balasan
+
+comment_author: Nama
+comment_cancel: Batal
+comment_content: Pesan
+comment_email: Surel
+comment_link: URL
+comment_publish: Publikasikan
+comment_reply: Balas
+comment_reply_to__: Balasan untuk %{0}%
+
+comment_f_author: Anonim
+comment_f_email: email@domain.com
+comment_f_link: http://
+comment_f_content: Pesan di sini…
+comment_f_reply: Balasan untuk %{0}%…
+
+message_error_comment_duplicate: Anda sudah mengirimkan komentar tersebut.
+message_error_comment_token: Token tidak valid.
+message_error_comment_max: %{0}% terlalu panjang.
+message_error_comment_min: %{0}% terlalu pendek.
+message_error_comment_pattern_field: Format %{0}% tidak valid.
+message_error_comment_query_x: Mohon gunakan kata yang lain: <em>%{0}%</em>.
+message_error_comment_user_agent_x: Agen pengguna yang diblok: <em>%{0}%</em>.
+message_error_comment_user_ip_x: Alamat IP yang diblok: <em>%{0}%</em>.
+message_error_comment_void_field: Mohon isi bidang %{0}%.
+
+message_info_comment_save: Komentar Anda akan tampil setelah disetujui oleh penulis.
+
+message_success_comment_create: Komentar berhasil dibuat.
