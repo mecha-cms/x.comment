@@ -1,8 +1,8 @@
 <?php
 
-function fn_comment_url($s) {
+function fn_comment_url($s, $lot) {
     global $url;
-    $path = Path::F(Path::D($s), COMMENT);
+    $path = Path::F(Path::D($lot['path']), COMMENT);
     $id = (new Date(Path::N($s)))->unix;
     return $url . '/' . To::url($path) . '#' . __replace__(Extend::state('comment', 'anchor')[0], ['id' => $id]);
 }
