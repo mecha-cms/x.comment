@@ -10,7 +10,7 @@ function fn_comment_url($s, $lot) {
 Hook::set('comment.url', 'fn_comment_url');
 
 function fn_comments_path($path, $id) {
-    if ($id === 'comments' && !$path) {
+    if (is_string($id) && $id === 'comments' && !$path) {
         return Path::D(__DIR__) . DS . 'lot' . DS . 'worker' . DS . 'comments.php';
     }
     return $path;
