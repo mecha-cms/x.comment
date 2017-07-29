@@ -4,7 +4,6 @@
 $f = LOT . DS . 'comment';
 if (!Folder::exist($f)) {
     Folder::set($f, 0755);
-    File::write('deny from all')->saveTo($f . DS . '.htaccess', 0600);
     Guardian::kick($url->current);
 }
 
