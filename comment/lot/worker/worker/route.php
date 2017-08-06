@@ -54,7 +54,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     } else {
         $content = To::text($content, HTML_WISE . ',img', true);
         if ($state['page']['type'] === 'HTML' && strpos($content, '</p>') === false) {
-            // Replace new line with break
+            // Replace new line with `<br>` tag
             $content = '<p>' . str_replace("\n", '<br>', To::text($content, HTML_WISE_I . ',img', true)) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
@@ -108,7 +108,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     $id = time();
     $anchor = $state['anchor'];
     $file = $comment . DS . date('Y-m-d-H-i-s', $id) . '.' . $state['page']['state'];
-    Hook::NS('on.comment.set', [$file]);
+    Hook::fire('on.comment.set', [$file, null]);
     if (!Message::$x) {
         $data = [
             'author' => $author,

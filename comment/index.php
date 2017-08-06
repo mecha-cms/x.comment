@@ -7,17 +7,18 @@ if (!Folder::exist($f)) {
     Guardian::kick($url->current);
 }
 
-Hook::set('asset.bottom', function($content) {
+Hook::set('asset.top', function($content) {
     $a = [
         'id' => Extend::state(__DIR__, 'anchor')[1]
     ];
     return $content . '<script>window.COMMENT=' . json_encode($a) . ';</script>';
 }, 9.9);
 
-Hook::set('shield.before', function() use($site) {
+Hook::set('route.enter', function() use($site) {
     if ($site->is === 'page') {
-        Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'css' . DS . 'comment.min.css', 10);
-        Asset::set(__DIR__ . DS . 'lot' . DS . 'asset' . DS . 'js' . DS . 'comment.min.js', 10);
+        $s = __DIR__ . DS . 'lot' . DS . 'asset' . DS;
+        Asset::set($s . 'css' . DS . 'comment.min.css', 10);
+        Asset::set($s . 'js' . DS . 'comment.min.js', 10);
     }
 });
 

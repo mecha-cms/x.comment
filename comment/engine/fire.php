@@ -30,7 +30,7 @@ function fn_comments_set($path = "", $step = 1) {
     Lot::set('comments', $comments);
 }
 
-Route::hook(['%*%/%i%', '%*%'], 'fn_comments_set');
+Route::lot(['%*%/%i%', '%*%'], 'fn_comments_set');
 
 function fn_page_comments($content, $lot) {
     global $language;
@@ -57,14 +57,17 @@ function fn_page_comments($content, $lot) {
 
 Hook::set('page.comments', 'fn_page_comments');
 
-// Apply the block filter(s) of `page.content` to the `comment.content`
-if (function_exists('fn_block_x')) Hook::set('comment.content', 'fn_block_x', 0);
-if (function_exists('fn_block')) Hook::set('comment.content', 'fn_block', 1);
+// Apply `page.content` hook to the `comment.content`
+Hook::set('comment.content', function(...$lot) {
+    return Hook::fire('page.content', $lot);
+}, 0);
 
-// Apply the Markdown filter of `page.title` to the `comment.title` (if any)
-// Apply the Markdown filter of `page.content` to the `comment.content`
-if (function_exists('fn_markdown_span')) Hook::set('comment.title', 'fn_markdown_span', 2);
-if (function_exists('fn_markdown')) Hook::set(['comment.description', 'comment.content'], 'fn_markdown', 2);
+// Apply `page.title` hook to the `comment.title`
+Hook::set('comment.title', function(...$lot) {
+    return Hook::fire('page.title', $lot);
+}, 0);
 
-// Apply the user filter(s) of `page.author` to the `comment.author`
-if (function_exists('fn_user')) Hook::set('comment.author', 'fn_user', 1);
+// Apply `page.author` hook to the `comment.author`
+Hook::set('comment.author', function(...$lot) {
+    return Hook::fire('page.author', $lot);
+}, 0);
