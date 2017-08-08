@@ -4,6 +4,7 @@ description: Built–in commenting system.
 author: Taufik Nurrohman
 type: Markdown
 version: 1.3.2
+dependency: {"extension":["page"]}
 ...
 
 Edit the `page.php` file in your active shield folder then put this snippet after the `</article>` tag:
@@ -11,11 +12,5 @@ Edit the `page.php` file in your active shield folder then put this snippet afte
 ~~~ .php
 <?php Shield::get('comments'); ?>
 ~~~
-
-### Dependency
-
-#### Extension
-
- - Pages
 
 <!-- block:donate -->

@@ -5,8 +5,8 @@ type: YAML
 comment: Comment
 comments: Comments
 
-reply: Reply
-replys: Replies
+comment_reply: Reply
+comment_replys: Replies
 
 comment_author: Name
 comment_cancel: Cancel
@@ -14,8 +14,6 @@ comment_content: Message
 comment_email: Email
 comment_link: URL
 comment_publish: Publish
-comment_reply: Reply
-comment_reply_to__: Reply to %{0}%
 
 comment_f_author: Anonymous
 comment_f_email: email@domain.com
@@ -36,3 +34,6 @@ message_error_comment_void_field: Please fill out the %{0}% field.
 message_info_comment_save: Your comment will be visible once approved by the author.
 
 message_success_comment_create: Comment created.
+
+reply: Reply
+reply_to__: Reply to %{0}%
