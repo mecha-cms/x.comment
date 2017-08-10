@@ -72,7 +72,7 @@ $anchor = $comment_state['anchor'];
         </ul>
         <?php endif; ?>
         <footer class="comment-footer">
-          <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? [HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-a', 'comment-parent', 'comment-reply-v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
+          <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [$thread && !$page->comments->x ? ['reply' => HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->id]) . '#' . $anchor[1], false, ['classes' => ['comment-a', 'comment-a:reply', 'comment-reply:v'], 'id' => 'parent:' . $comment->id, 'title' => $language->comment_f_reply(To::text($comment->author . ""), true), 'rel' => 'nofollow'])] : [], $comment, $comments, $page])); ?>
         </footer>
       </li>
       <?php endforeach; ?>
@@ -91,19 +91,19 @@ $anchor = $comment_state['anchor'];
     <form class="form-comment<?php echo $parent ? ' on-reply' : ""; ?>" id="<?php echo $anchor[1]; ?>" action="<?php echo $url->current; ?>/<?php echo $comment_state['path']; ?>" method="post">
       <?php echo $message; ?>
       <?php echo Form::hidden('token', $token); ?>
-      <p class="form-comment-input form-comment-input--author">
+      <p class="form-comment-input form-comment-input:author">
         <label for="form-comment-input:author"><?php echo $language->comment_author; ?></label>
         <span><?php echo Form::text('author', null, $language->comment_f_author, ['classes' => ['input', 'block'], 'id' => 'form-comment-input:author', 'required' => true]); ?></span>
       </p>
-      <p class="form-comment-input form-comment-input--email">
+      <p class="form-comment-input form-comment-input:email">
         <label for="form-comment-input:email"><?php echo $language->comment_email; ?></label>
         <span><?php echo Form::email('email', null, $language->comment_f_email, ['classes' => ['input', 'block'], 'id' => 'form-comment-input:email', 'required' => true]); ?></span>
       </p>
-      <p class="form-comment-input form-comment-input--link">
+      <p class="form-comment-input form-comment-input:link">
         <label for="form-comment-input:link"><?php echo $language->comment_link; ?></label>
         <span><?php echo Form::url('link', null, $language->comment_f_link, ['classes' => ['input', 'block'], 'id' => 'form-comment-input:link']); ?></span>
       </p>
-      <div class="form-comment-input form-comment-input--content p">
+      <div class="form-comment-input form-comment-input:content p">
         <label for="form-comment-input:content"><?php echo $language->comment_content; ?></label>
         <div><?php echo Form::textarea('content', null, $language->comment_f_content, ['classes' => ['textarea', 'block'], 'id' => 'form-comment-input:content', 'required' => true]); ?></div>
       </div>
@@ -111,7 +111,7 @@ $anchor = $comment_state['anchor'];
       <?php echo Form::hidden('parent', $parent_id); ?>
       <p class="form-comment-button">
         <label></label>
-        <span><?php echo Form::submit(null, null, $language->comment_publish, ['classes' => ['button', 'button-publish', 'set']]) . ($thread ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $anchor[1], false, ['classes' => ['button', 'button-cancel', 'comment-reply-x', 'reset']]) : ""); ?></span>
+        <span><?php echo Form::submit(null, null, $language->comment_publish, ['classes' => ['button', 'button-publish', 'set']]) . ($thread ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $anchor[1], false, ['classes' => ['button', 'button-cancel', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?></span>
       </p>
     </form>
   </footer>

@@ -107,7 +107,8 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     }
     $id = time();
     $anchor = $state['anchor'];
-    $file = $comment . DS . date('Y-m-d-H-i-s', $id) . '.' . $state['page']['state'];
+    $directory = $comment . DS . date('Y-m-d-H-i-s', $id);
+    $file = $directory . '.' . $state['page']['state'];
     Hook::fire('on.comment.set', [$file, null]);
     if (!Message::$x) {
         $data = [
@@ -119,8 +120,13 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             'content' => $content
         ];
         Page::data($data)->saveTo($file, 0600);
-        if ($s = Request::post('parent')) {
-            File::write((new Date($s))->slug)->saveTo(Path::F($file) . DS . 'parent.data', 0600);
+        if ($s = Request::post('parent', "", false)) {
+            File::write((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+        }
+        if ($s = Request::post('+', [], false)) {
+            foreach ($s as $k => $v) {
+                File::write(is_array($v) ? To::json(e($v)) : $v)->saveTo($directory . DS . $k . '.data', 0600);
+            }
         }
         Message::success('comment_create');
         Session::set('comment', $data);
