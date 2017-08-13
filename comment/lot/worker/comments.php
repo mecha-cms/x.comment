@@ -86,7 +86,7 @@ $anchor = $comment_state['anchor'];
     <?php $parent_id = Request::get('parent', null); ?>
     <?php $parent = $parent_id ? new Comment(COMMENT . DS . $url->path . DS . (new Date($parent_id))->slug . '.page') : null; ?>
     <?php if ($parent): ?>
-    <h4><?php echo $language->comment_reply_to__(HTML::a($parent->author, implode($url->query . '#', explode('#', $parent->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>
+    <h4><?php echo $language->reply_to__(HTML::a($parent->author, implode($url->query . '#', explode('#', $parent->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>
     <?php endif; ?>
     <form class="form-comment<?php echo $parent ? ' on-reply' : ""; ?>" id="<?php echo $anchor[1]; ?>" action="<?php echo $url->current; ?>/<?php echo $comment_state['path']; ?>" method="post">
       <?php echo $message; ?>

@@ -7,11 +7,14 @@ if (!Folder::exist($f)) {
     Guardian::kick($url->current);
 }
 
-Hook::set('asset.top', function($content) {
-    $a = [
-        'id' => Extend::state(__DIR__, 'anchor')[1]
-    ];
-    return $content . '<script>window.COMMENT=' . json_encode($a) . ';</script>';
+Hook::set('asset.top', function($content) use($site) {
+    if ($site->is === 'page') {
+        $o = array_replace([
+            'id' => Extend::state(__DIR__, 'anchor')[1]
+        ], (array) a(Config::get('page.o.js.COMMENT', [])));
+        return $content . '<script>window.COMMENT=' . json_encode($o) . ';</script>';
+    }
+    return $content;
 }, 9.9);
 
 Hook::set('route.enter', function() use($site) {

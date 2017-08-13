@@ -7,8 +7,8 @@
     var hooks = {}, param,
         footer = form.parentNode,
         q = win.location.search,
-        a = doc.getElementsByClassName('comment-parent'),
-        x = form.getElementsByClassName('comment-reply-x')[0],
+        a = doc.getElementsByClassName('comment-reply:v'),
+        x = form.getElementsByClassName('comment-reply:x')[0],
         content = form.content,
         content_placeholder = content.placeholder,
         parent = form.parent, i, j;
