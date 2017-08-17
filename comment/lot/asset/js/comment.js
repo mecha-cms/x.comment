@@ -1,4 +1,12 @@
-(function(win, doc, $) {
+(function($, win, doc) {
+
+    if (typeof $ === "object") {
+        var $$ = function() {}, i;
+        for (i in $) {
+            $$[i] = $[i];
+        }
+        win.COMMENT = $ = $$;
+    }
 
     var form = doc.getElementById($.id);
 
@@ -82,4 +90,4 @@
         }
     }
 
-})(window, document, window.COMMENT);
+})(window.COMMENT, window, document);

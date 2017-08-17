@@ -3,7 +3,7 @@ title: Comments
 description: Built–in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.4.0
+version: 1.5.0
 dependency: {"extension":["asset","page"]}
 ...
 
