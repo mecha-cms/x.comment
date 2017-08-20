@@ -18,7 +18,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     $type = Request::post('type', $state['page']['type']);
     $status = Request::post('status', $state['page']['status']);
     $content = Request::post('content', false);
-    if (!$token || Session::get(Guardian::$config['session']['token']) !== $token) {
+    if (!$token || !Guardian::check($token)) {
         Message::error('comment_token');
     }
     if (!$author) {
