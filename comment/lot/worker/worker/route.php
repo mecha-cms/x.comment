@@ -25,9 +25,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_author);
     } else {
         $author = To::text($author);
-        if (Is::gt($author, $state['max']['author'])) {
+        if (Is::this($author)->gt($state['max']['author'])) {
             Message::error('comment_max', $language->comment_author);
-        } else if (Is::lt($author, $state['min']['author'])) {
+        } else if (Is::this($author)->lt($state['min']['author'])) {
             Message::error('comment_min', $language->comment_author);
         }
     }
@@ -35,17 +35,17 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_email);
     } else if (!Is::email($email)) {
         Message::error('comment_pattern_field', $language->comment_email);
-    } else if (Is::gt($email, $state['max']['email'])) {
+    } else if (Is::this($email)->gt($state['max']['email'])) {
         Message::error('comment_max', $language->comment_email);
-    } else if (Is::lt($email, $state['min']['email'])) {
+    } else if (Is::this($email)->lt($state['min']['email'])) {
         Message::error('comment_min', $language->comment_email);
     }
     if ($link) {
         if (!Is::url($link)) {
             Message::error('comment_pattern_field', $language->comment_link);
-        } else if (Is::gt($link, $state['max']['link'])) {
+        } else if (Is::this($link)->gt($state['max']['link'])) {
             Message::error('comment_max', $language->comment_link);
-        } else if (Is::lt($link, $state['min']['link'])) {
+        } else if (Is::this($link)->lt($state['min']['link'])) {
             Message::error('comment_min', $language->comment_link);
         }
     }
@@ -64,9 +64,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img .*?>#i', '<!-- $0 -->', $content);
-        if (Is::gt($content, $state['max']['content'])) {
+        if (Is::this($content)->gt($state['max']['content'])) {
             Message::error('comment_max', $language->comment_content);
-        } else if (Is::lt($content, $state['min']['content'])) {
+        } else if (Is::this($content)->lt($state['min']['content'])) {
             Message::error('comment_min', $language->comment_content);
         }
     }
