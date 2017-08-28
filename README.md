@@ -1,4 +1,4 @@
 Comment Extension for Mecha
 ===========================
 
-Built–in commenting system.
+Built-in commenting system.
