@@ -56,18 +56,3 @@ function fn_page_comments($content, $lot) {
 }
 
 Hook::set('page.comments', 'fn_page_comments');
-
-// Apply `page.content` hook to the `comment.content`
-Hook::set('comment.content', function(...$lot) {
-    return Hook::fire('page.content', $lot);
-}, 0);
-
-// Apply `page.title` hook to the `comment.title`
-Hook::set('comment.title', function(...$lot) {
-    return Hook::fire('page.title', $lot);
-}, 0);
-
-// Apply `page.author` hook to the `comment.author`
-Hook::set('comment.author', function(...$lot) {
-    return Hook::fire('page.author', $lot);
-}, 0);

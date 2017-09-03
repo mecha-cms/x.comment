@@ -1,13 +1,5 @@
 (function($, win, doc) {
 
-    if (typeof $ === "object") {
-        var $$ = function() {}, i;
-        for (i in $) {
-            $$[i] = $[i];
-        }
-        win.COMMENT = $ = $$;
-    }
-
     var form = doc.getElementById($.id);
 
     if (!form) return;
