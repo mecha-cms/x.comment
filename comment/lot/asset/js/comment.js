@@ -59,7 +59,7 @@
             parent.value = this.id.split(':')[1];
             param = [e, this];
             fire('on.comment.reply', param);
-            fire('on.comment.reply.v', param);
+            fire('on.comment.reply:v', param);
             e.preventDefault();
         }, false);
     }
@@ -76,10 +76,10 @@
                 parent.removeAttribute('value');
                 param = [e, this];
                 fire('on.comment.reply', param);
-                fire('on.comment.reply.x', param);
+                fire('on.comment.reply:x', param);
                 e.preventDefault();
             }, false);
         }
     }
 
-})(window.COMMENT, window, document);
+})(window.COMMENT || {}, window, document);

@@ -103,37 +103,35 @@ li.comment {
   clear:both;
   padding-bottom:.5em;
 }
-.form-comment-input,
-.form-comment-button,
-.form-comment-input.p,
-.form-comment-button.p {
+.form-comment > p,
+.form-comment > .p {
   margin:0;
   padding:.5em 0;
 }
-.form-comment-input:after,
-.form-comment-button:after {
+.form-comment p:after,
+.form-comment .p:after {
   content:"";
   display:table;
   clear:both;
 }
-.form-comment-input > label,
-.form-comment-button > label {
+.form-comment p > label,
+.form-comment .p > label {
   float:left;
   width:4em;
   text-align:right;
 }
-.form-comment-input > label,
-.form-comment-input > label + span,
-.form-comment-input > label + div,
-.form-comment-button > label,
-.form-comment-button > label + span,
-.form-comment-button > label + div {
+.form-comment p > label,
+.form-comment .p > label,
+.form-comment p > label + span,
+.form-comment .p > label + span,
+.form-comment p > label + div,
+.form-comment .p > label + div {
   display:block;
   margin:0 0 0 5em;
   padding:0;
 }
-.form-comment-input > label,
-.form-comment-button > label {margin-left:0}
+.form-comment p > label,
+.form-comment .p > label {margin-left:0}
 .form-comment-button > label {visibility:hidden}
 .form-comment .button,
 .form-comment .input,
@@ -149,9 +147,9 @@ li.comment {
   width:100%;
 }
 .form-comment .messages {margin-bottom:.5em}
-.form-comment .button-cancel,
+.form-comment .button-reset,
 .form-comment + .comment-footer {display:none}
-.form-comment.on-reply .button-cancel {display:inline-block}
+.form-comment.on-reply .button-reset {display:inline-block}
 @media (max-width:730px) {
   .comment-author,
   .comment-property {float:none}

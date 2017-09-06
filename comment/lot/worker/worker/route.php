@@ -1,6 +1,6 @@
 <?php
 
-// Set a new comment
+// Set a new comment!
 $state = Extend::state('comment');
 Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state) {
     $page = PAGE . DS . $path;
@@ -55,7 +55,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         $content = To::text($content, HTML_WISE . ',img', true);
         if ($state['page']['type'] === 'HTML' && strpos($content, '</p>') === false) {
             // Replace new line with `<br>` tag
-            $content = '<p>' . str_replace("\n", '<br>', To::text($content, HTML_WISE_I . ',img', true)) . '</p>';
+            $content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
         if (Extend::exist('block')) {
