@@ -7,7 +7,7 @@ if (!Folder::exist($f)) {
     Guardian::kick($url->current);
 }
 
-Hook::set('asset.top', function($content) use($site) {
+Hook::set('asset:body', function($content) use($site) {
     if ($site->is === 'page') {
         $o = array_replace([
             'id' => Extend::state(__DIR__, 'anchor')[1]
