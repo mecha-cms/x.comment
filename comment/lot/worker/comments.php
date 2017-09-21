@@ -36,7 +36,7 @@ $anchor = $comment_state['anchor'];
           </p>
           <h4 class="comment-author">
             <?php if ($comment->link): ?>
-            <a class="comment-link" href="<?php echo $comment->link; ?>" rel="nofollow" target="_new"><?php echo $comment->author; ?></a>
+            <a class="comment-link" href="<?php echo $comment->link; ?>" rel="nofollow" target="_blank"><?php echo $comment->author; ?></a>
             <?php else: ?>
             <span class="comment-link"><?php echo $comment->author; ?></span>
             <?php endif; ?>
@@ -57,7 +57,7 @@ $anchor = $comment_state['anchor'];
               </p>
               <h4 class="comment-author">
                 <?php if ($reply->link): ?>
-                <a class="comment-link" href="<?php echo $reply->link; ?>" rel="nofollow" target="_new"><?php echo $reply->author; ?></a>
+                <a class="comment-link" href="<?php echo $reply->link; ?>" rel="nofollow" target="_blank"><?php echo $reply->author; ?></a>
                 <?php else: ?>
                 <span class="comment-link"><?php echo $reply->author; ?></span>
                 <?php endif; ?>
