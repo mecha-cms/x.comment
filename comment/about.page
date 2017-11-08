@@ -3,8 +3,11 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.6.2
-dependency: {"extension":["asset","page"]}
+version: 1.7.0
+dependency:
+  extension:
+    - asset
+	- page
 ...
 
 Edit the `page.php` file in your active shield folder then put this snippet after the `</article>` tag:
