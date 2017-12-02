@@ -32,8 +32,9 @@ function fn_comments_set($path = "", $step = 1) {
 
 Route::lot(['%*%/%i%', '%*%'], 'fn_comments_set');
 
-function fn_page_comments($content, $lot) {
+function fn_page_comments($comments, $lot) {
     global $language;
+    $comments = (array) $comments;
     $a = [
         'i' => 0,
         'x' => false, // disable comment?
@@ -50,9 +51,9 @@ function fn_page_comments($content, $lot) {
         return (object) array_replace($a, [
             'i' => $i,
             'text' => $i . ' ' . $language->{$i === 1 ? 'comment' : 'comments'}
-        ], (array) $content);
+        ], $comments);
     }
-    return (object) array_replace($a, (array) $content);
+    return (object) array_replace($a, $comments);
 }
 
 Hook::set('page.comments', 'fn_page_comments');
