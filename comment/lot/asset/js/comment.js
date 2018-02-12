@@ -11,8 +11,9 @@
         x = form.getElementsByClassName('comment-reply:x')[0],
         content = form.content,
         content_placeholder = content.placeholder,
+        test = /(\?|&(?:amp;)?)parent=\d+/g,
         parent = form.parent, i, j;
-        q = !q || !q.match(/[?&]parent=\d+/);
+        q = !q || !q.match(test);
 
     function set(name, fn) {
         name = name.split('.');
@@ -51,12 +52,17 @@
 
     function reply(a) {
         a.addEventListener('click', function(e) {
-            var s = this.parentNode;
+            var s = this.parentNode,
+                a = form.getAttribute('action'),
+                i = this.id.split(':')[1];
             s.parentNode.insertBefore(form, s);
+            a = a.replace(test, "");
+            a += (a.indexOf('?') > -1 ? '&' : '?') + 'parent=' + i;
+            form.setAttribute('action', a);
             form.classList.add('on-reply');
             content.placeholder = this.title;
             content.focus();
-            parent.value = this.id.split(':')[1];
+            parent.value = i;
             param = [e, this];
             fire('on.comment.reply', param);
             fire('on.comment.reply:v', param);
@@ -70,6 +76,7 @@
         if (x) {
             x.addEventListener('click', function(e) {
                 footer.appendChild(form);
+                form.setAttribute('action', form.getAttribute('action').replace(test, ""));
                 form.classList.remove('on-reply');
                 content.placeholder = content_placeholder;
                 content.focus();

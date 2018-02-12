@@ -138,5 +138,5 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     } else {
         Request::save('post');
     }
-    Guardian::kick(Path::D($url->current) . '#' . $anchor[1]);
+    Guardian::kick(Path::D($url->current) . HTTP::query() . '#' . $anchor[1]);
 });
