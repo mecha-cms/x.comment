@@ -15,11 +15,12 @@ comment_email: Email
 comment_link: URL
 comment_publish: Publish
 
+comment_f_as: Comment as %{0}%
 comment_f_author: Anonymous
 comment_f_email: email@domain.com
 comment_f_link: http://
 comment_f_content: Message goes here…
-comment_f_reply: Reply to %{0}%…
+comment_f_reply: Reply to %{0}%
 
 message_error_comment_duplicate: You have sent that comment already.
 message_error_comment_token: Invalid token.
@@ -36,4 +37,3 @@ message_info_comment_save: Your comment will be visible once approved by the aut
 message_success_comment_create: Comment created.
 
 reply: Reply
-reply_to__: Reply to %{0}%

@@ -1,59 +1,65 @@
 <?php
 
-function fn_comment_url($s, $lot) {
-    global $url;
-    $path = Path::F(Path::D($lot['path']), COMMENT);
-    $id = (new Date(Path::N($s)))->unix;
-    return $url . '/' . To::url($path) . '#' . __replace__(Extend::state('comment', 'anchor')[0], ['id' => $id]);
-}
-
-Hook::set('comment.url', 'fn_comment_url');
-
 function fn_comments_path($path, $id) {
-    if (is_string($id) && $id === 'comments' && !$path) {
-        return Path::D(__DIR__) . DS . 'lot' . DS . 'worker' . DS . 'comments.php';
+    if (is_string($id) && $id === 'comments') {
+        $path[] = Path::D(__DIR__) . DS . 'lot' . DS . 'worker' . DS . 'comments.php';
     }
     return $path;
 }
 
-Hook::set('shield.get.path', 'fn_comments_path');
+Hook::set('shield.path', 'fn_comments_path');
 
-function fn_comments_set($path = "", $step = 1) {
-    global $site, $language;
-    $comments = $files = [];
-    if ($folder = Folder::exist(COMMENT . DS . $path)) {
-        foreach (g($folder, 'page') as $v) {
-            $comments[$v] = new Comment($v);
-        }
-        asort($comments);
-    }
-    Lot::set('comments', $comments);
-}
-
-Route::lot(['%*%/%i%', '%*%'], 'fn_comments_set');
-
-function fn_page_comments($comments, $lot) {
+function fn_comment_comments($comments, $lot = [], $that) {
     global $language;
-    $comments = (array) $comments;
+    $comments = $comments ?: [];
     $a = [
-        'i' => 0,
+        'count' => 0,
+        'text' => '0 ' . $language->comment_replys,
         'x' => false, // disable comment?
-        'text' => '0 ' . $language->comments
     ];
-    if (!isset($lot['path'])) {
-        return array_replace($a, [
-            'x' => true,
-            'text' => null
-        ]);
+    if (!$path = $that->get('path')) {
+        $a['x'] = true;
     }
-    if ($files = g(str_replace(PAGE, COMMENT, Path::F($lot['path'])), 'page')) {
-        $i = count($files);
-        return (object) array_replace($a, [
-            'i' => $i,
-            'text' => $i . ' ' . $language->{$i === 1 ? 'comment' : 'comments'}
-        ], $comments);
+    $i = 0;
+    foreach (g(Path::D($path), 'page', "", true) as $v) {
+        $comment = new Comment($v);
+        if ($comment->get('parent') === Path::N($path)) {
+            $comments[] = $comment;
+            ++$i;
+        }
     }
-    return (object) array_replace($a, $comments);
+    return array_replace($a, [
+        'count' => $i,
+        'text' => $i . ' ' . $language->{'comment_reply' . ($i === 1 ? "" : 's')}
+    ], $comments);
 }
 
-Hook::set('page.comments', 'fn_page_comments');
+function fn_comments($comments, $lot = [], $that) {
+    global $language;
+    $comments = $comments ?: [];
+    $a = [
+        'count' => 0,
+        'text' => '0 ' . $language->comments,
+        'x' => false, // disable comment?
+    ];
+    if (!$path = $that->get('path')) {
+        $a['x'] = true;
+    }
+    $i = 0;
+    if ($folder = Folder::exist(COMMENT . DS . Path::F($path, PAGE))) {
+        foreach (g($folder, 'page', "", true) as $v) {
+            $comment = new Comment($v);
+            if (!$comment->get('parent')) {
+                $comments[] = $comment;
+                ++$i;
+            }
+        }
+    }
+    return array_replace($a, [
+        'count' => $i,
+        'text' => $i . ' ' . $language->{'comment' . ($i === 1 ? "" : 's')}
+    ], $comments);
+}
+
+Hook::set('*.comments', 'fn_comments', 0);
+Hook::set('comment.comments', 'fn_comment_comments', 0);

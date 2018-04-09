@@ -3,11 +3,11 @@
 return [
     'anchor' => ['comment-%{id}%', 'form-comment'],
     'path' => '-comment',
-    'thread' => 1, // Set to `0` or `false` to disable comment thread (TODO: multi-level comment thread)
-    'page' => [
+    'level' => 2, // Set to `1` to disable comment thread, `2` or more to enable comment thread
+    'enter' => true, // Show log in link if user extension available?
+    'comment' => [
         'state' => 'page', // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
-        'type' => 'HTML',
-        'status' => 2
+        'type' => 'HTML'
     ],
     'max' => [
         'author' => 100,

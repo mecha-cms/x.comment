@@ -5,47 +5,50 @@ $state = Extend::state('comment');
 Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state) {
     $page = PAGE . DS . $path;
     $comment = COMMENT . DS . $path;
-    if (!Request::is('post') || !File::exist([
+    if (!HTTP::is('post') || !File::exist([
         $page . '.page',
         $page . '.archive'
     ])) {
         Guardian::kick($path);
     }
-    $token = Request::post('token', false);
-    $author = Request::post('author', false);
-    $email = Request::post('email', false);
-    $link = Request::post('link', false);
-    $type = Request::post('type', $state['page']['type']);
-    $status = Request::post('status', $state['page']['status']);
-    $content = Request::post('content', false);
+    $token = HTTP::post('token', false);
+    $author = HTTP::post('author', false);
+    $email = HTTP::post('email', false);
+    $link = HTTP::post('link', false);
+    $type = HTTP::post('type', $state['comment']['type']);
+    $status = HTTP::post('status', $enter ? 1 : false);
+    $content = HTTP::post('content', false);
+    $enter = Extend::exist('user') && Is::user();
     if (!$token || !Guardian::check($token)) {
         Message::error('comment_token');
     }
     if (!$author) {
         Message::error('comment_void_field', $language->comment_author);
     } else {
-        $author = To::text($author);
-        if (Is::this($author)->gt($state['max']['author'])) {
+        $author = strpos($author, '@') !== 0 ? To::text($author) : $author;
+        if (Is::this($author)->GT($state['max']['author'])) {
             Message::error('comment_max', $language->comment_author);
-        } else if (Is::this($author)->lt($state['min']['author'])) {
+        } else if (Is::this($author)->LT($state['min']['author'])) {
             Message::error('comment_min', $language->comment_author);
         }
     }
-    if (!$email) {
-        Message::error('comment_void_field', $language->comment_email);
-    } else if (!Is::email($email)) {
-        Message::error('comment_pattern_field', $language->comment_email);
-    } else if (Is::this($email)->gt($state['max']['email'])) {
-        Message::error('comment_max', $language->comment_email);
-    } else if (Is::this($email)->lt($state['min']['email'])) {
-        Message::error('comment_min', $language->comment_email);
+    if (!$enter) {
+        if (!$email) {
+            Message::error('comment_void_field', $language->comment_email);
+        } else if (!Is::email($email)) {
+            Message::error('comment_pattern_field', $language->comment_email);
+        } else if (Is::this($email)->GT($state['max']['email'])) {
+            Message::error('comment_max', $language->comment_email);
+        } else if (Is::this($email)->LT($state['min']['email'])) {
+            Message::error('comment_min', $language->comment_email);
+        }
     }
     if ($link) {
         if (!Is::url($link)) {
             Message::error('comment_pattern_field', $language->comment_link);
-        } else if (Is::this($link)->gt($state['max']['link'])) {
+        } else if (Is::this($link)->GT($state['max']['link'])) {
             Message::error('comment_max', $language->comment_link);
-        } else if (Is::this($link)->lt($state['min']['link'])) {
+        } else if (Is::this($link)->LT($state['min']['link'])) {
             Message::error('comment_min', $language->comment_link);
         }
     }
@@ -53,7 +56,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_content);
     } else {
         $content = To::text($content, HTML_WISE . ',img', true);
-        if ($state['page']['type'] === 'HTML' && strpos($content, '</p>') === false) {
+        if ($state['comment']['type'] === 'HTML' && strpos($content, '</p>') === false) {
             // Replace new line with `<br>` tag
             $content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
@@ -64,9 +67,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img .*?>#i', '<!-- $0 -->', $content);
-        if (Is::this($content)->gt($state['max']['content'])) {
+        if (Is::this($content)->GT($state['max']['content'])) {
             Message::error('comment_max', $language->comment_content);
-        } else if (Is::this($content)->lt($state['min']['content'])) {
+        } else if (Is::this($content)->LT($state['min']['content'])) {
             Message::error('comment_min', $language->comment_content);
         }
     }
@@ -76,7 +79,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     } else {
         // Block user by IP address
         if (!empty($state['user_ip_x'])) {
-            $ip = Get::ip();
+            $ip = Get::IP();
             foreach ($state['user_ip_x'] as $v) {
                 if ($ip === $v) {
                     Message::error('comment_user_ip_x', $ip);
@@ -86,7 +89,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         // Block user by UA keyword(s)
         if (!empty($state['user_agent_x'])) {
-            $ua = Get::ua();
+            $ua = Get::UA();
             foreach ($state['user_agent_x'] as $v) {
                 if (stripos($ua, $v) !== false) {
                     Message::error('comment_user_agent_x', $ua);
@@ -108,7 +111,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     $id = time();
     $anchor = $state['anchor'];
     $directory = $comment . DS . date('Y-m-d-H-i-s', $id);
-    $file = $directory . '.' . $state['page']['state'];
+    $file = $directory . '.' . $state['comment']['state'];
     Hook::fire('on.comment.set', [$file, null]);
     if (!Message::$x) {
         $data = [
@@ -119,24 +122,29 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             'status' => $status,
             'content' => $content
         ];
-        Page::data($data)->saveTo($file, 0600);
-        if ($s = Request::post('parent', "", false)) {
-            File::write((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+        foreach ((array) Config::get('comment') as $k => $v) {
+            if (isset($data[$k]) && $data[$k] === $v) {
+                unset($data[$k]);
+            }
         }
-        if ($s = Request::post('+', [], false)) {
+        Page::set($data)->saveTo($file, 0600);
+        if ($s = HTTP::post('parent', "", false)) {
+            File::set((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+        }
+        if ($s = HTTP::post('+', [], false)) {
             foreach ($s as $k => $v) {
-                File::write(is_array($v) ? To::json(e($v)) : $v)->saveTo($directory . DS . $k . '.data', 0600);
+                File::set(is_array($v) ? To::JSON(e($v)) : $v)->saveTo($directory . DS . $k . '.data', 0600);
             }
         }
         Message::success('comment_create');
         Session::set('comment', $data);
-        if ($state['page']['state'] === 'draft') {
+        if ($state['comment']['state'] === 'draft') {
             Message::info('comment_save');
         } else {
             Guardian::kick(Path::D($url->current) . '#' . __replace__($anchor[0], ['id' => $id]));
         }
     } else {
-        Request::save('post');
+        HTTP::save('post');
     }
-    Guardian::kick(Path::D($url->current) . HTTP::query() . '#' . $anchor[1]);
+    Guardian::kick(Path::D($url->current) . $url->query . '#' . $anchor[1]);
 });

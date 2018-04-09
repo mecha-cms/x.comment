@@ -15,11 +15,12 @@ comment_email: Surel
 comment_link: URL
 comment_publish: Publikasikan
 
+comment_f_as: Berkomentar sebagai %{0}%
 comment_f_author: Anonim
 comment_f_email: email@domain.com
 comment_f_link: http://
 comment_f_content: Pesan di sini…
-comment_f_reply: Balasan untuk %{0}%…
+comment_f_reply: Balasan untuk %{0}%
 
 message_error_comment_duplicate: Anda sudah mengirimkan komentar tersebut.
 message_error_comment_token: Token tidak valid.

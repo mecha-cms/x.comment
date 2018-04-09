@@ -1,9 +1,25 @@
+.button.comment-user,
+.button.comment-user:focus,
+.button.comment-user:hover,
+.button.comment-user:active {
+  color:inherit;
+  text-shadow:none;
+  background:none;
+  border-color:transparent;
+  border-radius:0;
+  box-shadow:none;
+  cursor:auto;
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  user-select:text;
+}
 .comments,
 .comments-header,
 .comments-body,
 .comments-footer {margin:0}
 .comments,
 .comments-body,
+.comments-body .form-comment,
 .comments-footer {margin-top:5%}
 ul.comments,
 li.comment {
@@ -27,6 +43,7 @@ li.comment {
   position:relative;
   word-wrap:break-word;
 }
+li.comment ul.comments {margin-bottom:1em}
 .comment-figure,
 .comment-header,
 .comment-body,
@@ -52,9 +69,7 @@ li.comment {
 .comment-figure + .comment-header,
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
-.comment-figure + .comment-header + .comment-body + ul.comments,
-.comment-figure + .comment-header + .comment-body + ul.comments + .comment-footer,
-.comment-figure + .comment-header + .comment-body + ul.comments + .form-comment + .comment-footer {margin-left:5em}
+.comment-figure + .comment-header + .comment-body + .comment-footer + ul.comments {margin-left:5em}
 .comment-body,
 .comment-footer {margin-top:.5em}
 .comment-body figure:first-child,
@@ -102,6 +117,10 @@ li.comment {
 .form-comment {
   clear:both;
   padding-bottom:.5em;
+}
+.form-comment h4 {
+  margin:-1rem 0 1rem;
+  padding-top:1rem;
 }
 .form-comment > p,
 .form-comment > .p {
