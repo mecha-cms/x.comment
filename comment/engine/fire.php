@@ -62,3 +62,38 @@ function fn_comments($comments, $lot = [], $that) {
 
 Hook::set('*.comments', 'fn_comments', 0);
 Hook::set('comment.comments', 'fn_comment_comments', 0);
+
+// Automatic `email` and `link` value
+if (Extend::exist('user')) {
+
+    function fn_comment_email($email, $lot = [], $that) {
+        if ($email) {
+            return $email;
+        }
+        $user = $that->get('author', false);
+        if ($user && is_string($user) && strpos($user, '@') === 0) {
+            if ($f = File::exist(USER . DS . substr($user, 1) . '.page')) {
+                return (new User($f))->get('email', $email);
+            }
+        }
+        return $email;
+    }
+
+    function fn_comment_link($link, $lot = [], $that) {
+        if ($link) {
+            return $link;
+        }
+        $user = $that->get('author', false);
+        if ($user && is_string($user) && strpos($user, '@') === 0) {
+            if ($f = File::exist(USER . DS . substr($user, 1) . '.page')) {
+                $user = new User($f);
+                return $user->get('link', $user->get('url', $link));
+            }
+        }
+        return $link;
+    }
+
+    Hook::set('comment.email', 'fn_comment_email', 0);
+    Hook::set('comment.link', 'fn_comment_link', 0);
+
+}

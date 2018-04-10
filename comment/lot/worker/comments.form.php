@@ -1,6 +1,7 @@
 <?php $_id = HTTP::get('parent', null); ?>
 <?php $_parent = $_id ? new Comment(COMMENT . DS . $url->path . DS . (new Date($_id))->slug . '.page') : null; ?>
-<?php $_user = Extend::exist('user') ? Is::user() : false; ?>
+<?php $_extend_user = Extend::exist('user'); ?>
+<?php $_user = $_extend_user ? Is::user() : false; ?>
 <form class="form-comment<?php echo $_parent ? ' on-reply' : ""; ?>" id="<?php echo $_state['anchor'][1]; ?>" action="<?php echo $url->clean . '/' . $_state['path'] . $url->query('&amp;'); ?>" method="post">
   <?php echo $message; ?>
   <?php if ($_parent): ?>
@@ -9,7 +10,7 @@
   <h4><?php echo $language->comment_f_as(HTML::a($user, $user->url, false, ['rel' => 'nofollow']), true); ?></h4>
   <?php endif; ?>
   <?php if ($_user): ?>
-  <?php echo Form::hidden('author', $_user); ?>
+    <?php echo Form::hidden('author', $_user); ?>
   <?php else: ?>
   <p class="form-comment-input form-comment-input:author">
     <label for="form-comment-input:author"><?php echo $language->comment_author; ?></label>
@@ -32,7 +33,7 @@
     <label for="form-comment-button:state"></label>
     <span>
       <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($_state['level'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $_state['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?> <span class="comment-user button">
-        <?php if (!empty($_state['enter']) && Extend::exist('user')): ?>
+        <?php if (!empty($_state['enter']) && $_extend_user): ?>
         <?php echo HTML::a($_user ?: $language->log_in, Extend::state('user', 'path') . HTTP::query(['kick' => $url->path])); ?>
         <?php endif; ?>
       </span>
