@@ -7,7 +7,8 @@ return [
     'enter' => true, // Show log in link if user extension available?
     'comment' => [
         'state' => 'page', // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
-        'type' => 'HTML'
+        'status' => 2,
+        'type' => Config::get('page.type', 'HTML') // Inherit `page.type` state or `HTML`
     ],
     'max' => [
         'author' => 100,

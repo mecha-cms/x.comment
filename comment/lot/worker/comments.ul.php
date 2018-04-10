@@ -1,8 +1,7 @@
-<?php if ($page->comments): ?>
+<?php if ($page->comments['count']): ?>
 <ul class="comments" data-level="1">
-  <?php foreach ($page->comments as $k => $comment): ?>
-  <?php if (!is_numeric($k)) continue; ?>
-  <?php Shield::get(__DIR__ . DS . 'li.php', [
+  <?php foreach ($page->comments['data'] as $comment): ?>
+  <?php Shield::get('comments.li', [
       'comment' => $comment,
       'level' => 1
   ]); ?>

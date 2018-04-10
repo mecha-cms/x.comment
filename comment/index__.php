@@ -25,5 +25,9 @@ Hook::set('shield.enter', function() use($site) {
     }
 }, 0);
 
-require __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker' . DS . 'route.php';
+r(__DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker', [
+    'config.php',
+    'route.php'
+], null, Lot::get(null, []));
+
 require __DIR__ . DS . 'engine' . DS . 'fire.php';

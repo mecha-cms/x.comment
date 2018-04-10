@@ -20,7 +20,9 @@
   <footer class="comment-footer">
     <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [
         $level < $_state['level'] ? [
-            'reply' => HTML::a($language->comment_reply, HTTP::query(['parent' => $comment->date('U')]) . '#' . $_state['anchor'][1], false, [
+            'reply' => HTML::a($language->comment_reply, HTTP::query([
+                'parent' => $comment->date('U')
+            ]) . '#' . $_state['anchor'][1], false, [
                 'class[]' => ['comment-a', 'comment-a:set', 'comment-reply:v'],
                 'id' => 'parent:' . $comment->date('U'),
                 'rel' => 'nofollow',
@@ -28,11 +30,10 @@
             ])
         ] : [], $comment, $page])); ?>
   </footer>
-  <?php if ($level < $_state['level'] && $comment->comments): ++$level; ?>
+  <?php if ($level < $_state['level'] && $comment->comments['count']): ++$level; ?>
   <ul class="comments" data-level="<?php echo $level; ?>">
-    <?php foreach ($comment->comments as $k => $reply): ?>
-    <?php if (!is_numeric($k)) continue; ?>
-    <?php Shield::get(__FILE__, [
+    <?php foreach ($comment->comments['data'] as $reply): ?>
+    <?php Shield::get('comments.li', [
         'comment' => $reply,
         'level' => $level
     ]); ?>

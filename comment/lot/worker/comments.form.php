@@ -1,7 +1,7 @@
 <?php $_id = HTTP::get('parent', null); ?>
 <?php $_parent = $_id ? new Comment(COMMENT . DS . $url->path . DS . (new Date($_id))->slug . '.page') : null; ?>
 <?php $_user = Extend::exist('user') ? Is::user() : false; ?>
-<form class="form-comment<?php echo $_parent ? ' on-reply' : ""; ?>" id="<?php echo $_state['anchor'][1]; ?>" action="<?php echo $url->current . '/' . $_state['path'] . $url->query('&amp;'); ?>" method="post">
+<form class="form-comment<?php echo $_parent ? ' on-reply' : ""; ?>" id="<?php echo $_state['anchor'][1]; ?>" action="<?php echo $url->clean . '/' . $_state['path'] . $url->query('&amp;'); ?>" method="post">
   <?php echo $message; ?>
   <?php if ($_parent): ?>
   <h4><?php echo $language->comment_f_reply(HTML::a($_parent->author, implode($url->query . '#', explode('#', $_parent->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>

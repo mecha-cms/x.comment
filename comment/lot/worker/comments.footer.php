@@ -1,5 +1,5 @@
   <?php if (!$page->comments['x']): ?>
   <footer class="comments-footer">
-  <?php Shield::get(__DIR__ . DS . 'form.php'); ?>
+  <?php Shield::get('comments.form'); ?>
   </footer>
   <?php endif; ?>

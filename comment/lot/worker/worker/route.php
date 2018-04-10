@@ -16,9 +16,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     $email = HTTP::post('email', false);
     $link = HTTP::post('link', false);
     $type = HTTP::post('type', $state['comment']['type']);
+    $enter = Extend::exist('user') && Is::user();
     $status = HTTP::post('status', $enter ? 1 : false);
     $content = HTTP::post('content', false);
-    $enter = Extend::exist('user') && Is::user();
     if (!$token || !Guardian::check($token)) {
         Message::error('comment_token');
     }
@@ -122,7 +122,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             'status' => $status,
             'content' => $content
         ];
-        foreach ((array) Config::get('comment') as $k => $v) {
+        foreach ((array) Config::get('comment', []) as $k => $v) {
             if (isset($data[$k]) && $data[$k] === $v) {
                 unset($data[$k]);
             }
@@ -130,11 +130,6 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Page::set($data)->saveTo($file, 0600);
         if ($s = HTTP::post('parent', "", false)) {
             File::set((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
-        }
-        if ($s = HTTP::post('+', [], false)) {
-            foreach ($s as $k => $v) {
-                File::set(is_array($v) ? To::JSON(e($v)) : $v)->saveTo($directory . DS . $k . '.data', 0600);
-            }
         }
         Message::success('comment_create');
         Session::set('comment', $data);
