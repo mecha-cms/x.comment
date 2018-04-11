@@ -32,9 +32,11 @@
   <p class="form-comment-button form-comment-button:state">
     <label for="form-comment-button:state"></label>
     <span>
-      <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($_state['level'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->current . '#' . $_state['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?> <span class="comment-user button">
+      <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($_state['level'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->clean . '#' . $_state['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?> <span class="comment-user button">
         <?php if (!empty($_state['enter']) && $_extend_user): ?>
-        <?php echo HTML::a($_user ?: $language->log_in, Extend::state('user', 'path') . HTTP::query(['kick' => $url->path])); ?>
+        <?php echo HTML::a($_user ?: $language->log_in, Extend::state('user', 'path') . HTTP::query([
+            'kick' => $url->path
+        ]) . '#' . $_state['anchor'][1]); ?>
         <?php endif; ?>
       </span>
     </span>

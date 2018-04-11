@@ -5,7 +5,7 @@
   </figure>
   <header class="comment-header">
     <p class="comment-property">
-      <time class="comment-time" datetime="<?php echo $comment->date->W3C; ?>"><?php echo $comment->date->{str_replace('-', '_', $site->language)} . ' ' . $comment->date->F4; ?></time>&#x20;
+      <time class="comment-time" datetime="<?php echo $comment->time->W3C; ?>"><?php echo $comment->time->{str_replace('-', '_', $site->language)} . ' ' . $comment->time->F4; ?></time>&#x20;
       <a class="comment-url" href="<?php echo $comment->url; ?>" rel="nofollow"></a>
     </p>
     <h4 class="comment-author">
@@ -21,10 +21,10 @@
     <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [
         $level < $_state['level'] ? [
             'reply' => HTML::a($language->comment_reply, HTTP::query([
-                'parent' => $comment->date('U')
+                'parent' => $comment->time('U')
             ]) . '#' . $_state['anchor'][1], false, [
                 'class[]' => ['comment-a', 'comment-a:set', 'comment-reply:v'],
-                'id' => 'parent:' . $comment->date('U'),
+                'id' => 'parent:' . $comment->time('U'),
                 'rel' => 'nofollow',
                 'title' => $language->comment_f_reply(To::text($comment->author . ""), true)
             ])
