@@ -63,37 +63,28 @@ function fn_comments($comments, $lot = [], $that) {
 Hook::set('*.comments', 'fn_comments', 0);
 Hook::set('comment.comments', 'fn_comment_comments', 0);
 
-// Automatic `email` and `link` value
+// Extend user propert(y|ies) to comment propert(y|ies)
 if (Extend::exist('user')) {
-
-    function fn_comment_email($email, $lot = [], $that) {
-        if ($email) {
-            return $email;
+    function fn_comment_($v, $lot = [], $that, $key) {
+        if ($v || $that->get('status', false) !== 1) {
+            return $v;
         }
         $user = $that->get('author', false);
         if ($user && is_string($user) && strpos($user, '@') === 0) {
             if ($f = File::exist(USER . DS . substr($user, 1) . '.page')) {
-                return (new User($f))->get('email', $email);
+                $f = new User($f);
+                if ($key === 'link') {
+                    // Return `link` property or `url` property or self value
+                    return $f->get($key, $f->get('url', $v));
+                }
+                return $f->get($key, $v);
             }
         }
-        return $email;
+        return $v;
     }
-
-    function fn_comment_link($link, $lot = [], $that) {
-        if ($link) {
-            return $link;
-        }
-        $user = $that->get('author', false);
-        if ($user && is_string($user) && strpos($user, '@') === 0) {
-            if ($f = File::exist(USER . DS . substr($user, 1) . '.page')) {
-                $user = new User($f);
-                return $user->get('link', $user->get('url', $link));
-            }
-        }
-        return $link;
-    }
-
-    Hook::set('comment.email', 'fn_comment_email', 0);
-    Hook::set('comment.link', 'fn_comment_link', 0);
-
+    Hook::set([
+        'comment.avatar',
+        'comment.email',
+        'comment.link'
+    ], 'fn_comment_', 0);
 }
