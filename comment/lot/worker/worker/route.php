@@ -9,7 +9,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         $page . '.page',
         $page . '.archive'
     ])) {
-        Guardian::kick($path);
+        Message::error('comment_source');
     }
     $token = HTTP::post('token', false);
     $author = HTTP::post('author', false);

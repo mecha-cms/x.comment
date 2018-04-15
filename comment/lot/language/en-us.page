@@ -23,11 +23,12 @@ comment_f_content: Message goes here…
 comment_f_reply: Reply to %{0}%
 
 message_error_comment_duplicate: You have sent that comment already.
-message_error_comment_token: Invalid token.
 message_error_comment_max: %{0}% too long.
 message_error_comment_min: %{0}% too short.
 message_error_comment_pattern_field: Invalid %{0}% format.
 message_error_comment_query_x: Please choose another word: <em>%{0}%</em>.
+message_error_comment_source: You cannot write a comment here. This is usually due to the page data that is dynamically generated.
+message_error_comment_token: Invalid token.
 message_error_comment_user_agent_x: Blocked user agent: <em>%{0}%</em>.
 message_error_comment_user_ip_x: Blocked IP address: <em>%{0}%</em>.
 message_error_comment_void_field: Please fill out the %{0}% field.
