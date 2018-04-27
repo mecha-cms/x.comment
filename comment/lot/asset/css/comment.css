@@ -145,8 +145,7 @@ li.comment ul.comments {margin-bottom:1em}
 .form-comment p > label + div,
 .form-comment .p > label + div {
   display:block;
-  margin:0 0 0 5em;
-  padding:0;
+  margin-left:5em;
 }
 .form-comment p > label,
 .form-comment .p > label {margin-left:0}

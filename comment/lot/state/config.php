@@ -3,7 +3,7 @@
 return [
     'anchor' => ['comment-%{id}%', 'form-comment'],
     'path' => '-comment',
-    'level' => 2, // Set to `1` to disable comment thread, `2` or more to enable comment thread
+    'level' => 3, // Set to `1` to disable comment thread, `2` or more to enable comment thread
     'enter' => true, // Show log in link if user extension available?
     'comment' => [
         'state' => 'page', // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
