@@ -7,7 +7,7 @@ if (!Folder::exist($f)) {
     Guardian::kick($url->current);
 }
 
-Hook::set('asset:body', function($content) use($site) {
+Hook::set('asset:head', function($content) use($site) {
     if ($site->is('page')) {
         $o = array_replace([
             'id' => Extend::state('comment', 'anchor')[1]
