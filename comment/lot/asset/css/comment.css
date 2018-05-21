@@ -114,10 +114,7 @@ li.comment ul.comments {margin-bottom:1em}
 .comment-author {float:left}
 .comment-property {float:right}
 .comment-url:before {content:'#'}
-.form-comment {
-  clear:both;
-  padding-bottom:.5em;
-}
+.form-comment {clear:both}
 .form-comment h4 {margin-bottom:1rem}
 .form-comment > p,
 .form-comment > .p {
