@@ -20,7 +20,7 @@
 
     function reply(a) {
         a.addEventListener('click', function(e) {
-            var s = this.parentNode,
+            var s = this.parentNode.parentNode.parentNode, // `a < li < ul.comment-link < footer.comment-footer`
                 a = form.getAttribute('action'),
                 i = this.id.split(':')[1];
             s.parentNode.insertBefore(form, s);

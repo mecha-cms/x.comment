@@ -12,18 +12,13 @@
   <?php if ($_user): ?>
     <?php echo Form::hidden('author', $_user); ?>
   <?php else: ?>
-  <p class="form-comment-input form-comment-input:author">
-    <label for="form-comment-input:author"><?php echo $language->comment_author; ?></label>
-    <span><?php echo Form::text('*author', null, $language->comment_f_author, ['class[]' => ['input', 'block'], 'id' => 'form-comment-input:author']); ?></span>
-  </p>
-  <p class="form-comment-input form-comment-input:email">
-    <label for="form-comment-input:email"><?php echo $language->comment_email; ?></label>
-    <span><?php echo Form::email('*email', null, $language->comment_f_email, ['class[]' => ['input', 'block'], 'id' => 'form-comment-input:email']); ?></span>
-  </p>
-  <p class="form-comment-input form-comment-input:link">
-    <label for="form-comment-input:link"><?php echo $language->comment_link; ?></label>
-    <span><?php echo Form::url('link', null, $language->comment_f_link, ['class[]' => ['input', 'block'], 'id' => 'form-comment-input:link']); ?></span>
-  </p>
+    <?php foreach (['author', 'email', 'link'] as $_field): ?>
+      <?php $_r = $_field !== 'link' ? '*' : ""; ?>
+      <p class="form-comment-input form-comment-input:<?php echo $_field; ?>">
+        <label for="form-comment-input:<?php echo $_field; ?>"><?php echo $language->{'comment_' . $_field}; ?></label>
+        <span><?php echo Form::text($_r . $_field, null, $language->{'comment_f_' . $_field}, ['class[]' => ['input', 'block'], 'id' => 'form-comment-input:' . $_field]); ?></span>
+      </p>
+    <?php endforeach; ?>
   <?php endif; ?>
   <div class="form-comment-textarea form-comment-textarea:content p">
     <label for="form-comment-textarea:content"><?php echo $language->comment_content; ?></label>
@@ -32,13 +27,11 @@
   <p class="form-comment-button form-comment-button:state">
     <label for="form-comment-button:state"></label>
     <span>
-      <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($_state['level'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->clean . '#' . $_state['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?> <span class="comment-user button">
-        <?php if (!empty($_state['enter']) && $_extend_user): ?>
+      <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($_state['level'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->clean . '#' . $_state['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?><?php if (!empty($_state['enter']) && $_extend_user): ?> <span class="comment-user button">
         <?php echo HTML::a($_user ?: $language->log_in, Extend::state('user', 'path') . HTTP::query([
             'kick' => $url->path
         ]) . '#' . $_state['anchor'][1]); ?>
-        <?php endif; ?>
-      </span>
+      </span><?php endif; ?>
     </span>
   </p>
   <?php echo Form::hidden('path', $url->path); ?>

@@ -18,7 +18,9 @@
   </header>
   <div class="comment-body"><?php echo $comment->content; ?></div>
   <footer class="comment-footer">
-    <?php echo implode('<span class="comment-s"></span>', Hook::fire('page.a.comment', [
+    <?php
+
+    $_tools = Hook::fire('page.a.comment', [
         $level < $_state['level'] ? [
             'reply' => HTML::a($language->comment_reply, HTTP::query([
                 'parent' => $comment->time('U')
@@ -28,7 +30,14 @@
                 'rel' => 'nofollow',
                 'title' => $language->comment_f_reply(To::text($comment->author . ""), true)
             ])
-        ] : [], $comment, $page])); ?>
+    ] : [], $comment, $page]);
+
+    ?>
+    <?php if (!empty($_tools)): ?>
+    <ul class="comment-links">
+      <li><?php echo implode('</li><li>', $_tools); ?></li>
+    </ul>
+    <?php endif; ?>
   </footer>
   <?php if ($level < $_state['level'] && $comment->comments['count']): ++$level; ?>
   <ul class="comments" data-level="<?php echo $level; ?>">
