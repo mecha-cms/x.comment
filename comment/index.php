@@ -1,12 +1,5 @@
 <?php
 
-// Create a `comment` folder in `lot` if it is not there
-$f = LOT . DS . 'comment';
-if (!Folder::exist($f)) {
-    Folder::set($f, 0755);
-    Guardian::kick($url->current);
-}
-
 Hook::set('shield.enter', function() use($site) {
     if ($site->is('page')) {
         $s = __DIR__ . DS . 'lot' . DS . 'asset' . DS;

@@ -43,7 +43,8 @@ li.comment {
   position:relative;
   word-wrap:break-word;
 }
-li.comment ul.comments {margin-bottom:1em}
+li.comment ul.comments,
+li.comment .form-comment {margin-bottom:1em}
 .comment-figure,
 .comment-header,
 .comment-body,

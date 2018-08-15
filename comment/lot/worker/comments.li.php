@@ -42,7 +42,7 @@
   <?php if ($level < $_state['level'] && $comment->comments['count']): ++$level; ?>
   <ul class="comments" data-level="<?php echo $level; ?>">
     <?php foreach ($comment->comments['data'] as $reply): ?>
-    <?php Shield::get('comments.li', [
+    <?php Shield::get(__FILE__, [
         'comment' => $reply,
         'level' => $level
     ]); ?>
