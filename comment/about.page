@@ -17,4 +17,26 @@ Edit the `page.php` file in your active shield folder then put this snippet afte
 <?php Shield::get('comments'); ?>
 ~~~
 
+### Constant
+
+This extension will add a folder called `comment` in the `.\lot` folder, which will also automatically add a constant named `COMMENT`.
+
+~~~ .php
+COMMENT
+~~~
+
+### Class
+
+We now have a `Comment` class which works the same as the [`Page`][link:../class/page] class, but with custom hook _namespace_:
+
+~~~ .php.xmp
+Comment($input = null, $lot = [], $NS = ['*', 'comment']);
+~~~
+
+**Example:**
+
+~~~ .php
+$comment = new Comment('.\lot\comment\article\test-page\2014-05-05-09-09-32.page');
+~~~
+
 <!-- block:donate -->
