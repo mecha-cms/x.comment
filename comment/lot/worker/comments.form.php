@@ -28,7 +28,8 @@
     <label for="form-comment-button:state"></label>
     <span>
       <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($_state['level'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->clean . '#' . $_state['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?><?php if (!empty($_state['enter']) && $_extend_user): ?> <span class="comment-user button">
-        <?php echo HTML::a($_user ?: $language->log_in, Extend::state('user', 'path') . HTTP::query([
+        <?php $_c = Extend::state('user'); ?>
+        <?php echo HTML::a($_user ?: $language->log_in, (isset($_c['_path']) ? $_c['_path'] : $_c['path']) . HTTP::query([
             'kick' => $url->path
         ]) . '#' . $_state['anchor'][1]); ?>
       </span><?php endif; ?>
