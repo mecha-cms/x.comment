@@ -1,10 +1,10 @@
-<?php
+<?php namespace fn\comment;
 
-foreach (g(__DIR__ . DS . '..' . DS . 'lot' . DS . 'worker', 'php') as $v) {
-    Shield::set(Path::N($v), $v);
+foreach (\g(__DIR__ . DS . '..' . DS . 'lot' . DS . 'worker', 'php') as $v) {
+    \Shield::set(\Path::N($v), $v);
 }
 
-function fn_comment_comments($comments, $lot = [], $that) {
+function comments_comments($comments, $lot = [], $that) {
     global $language;
     $comments = $comments ?: [];
     $a = [
@@ -17,9 +17,9 @@ function fn_comment_comments($comments, $lot = [], $that) {
         $a['x'] = true;
     }
     $i = 0;
-    foreach (g(Path::D($path), 'page', "", true) as $v) {
-        $comment = new Comment($v);
-        if ($comment->get('parent') === Path::N($path)) {
+    foreach (\g(\Path::D($path), 'page', "", true) as $v) {
+        $comment = new \Comment($v);
+        if ($comment->get('parent') === \Path::N($path)) {
             $comments['data'][] = $comment;
             ++$i;
         }
@@ -30,7 +30,7 @@ function fn_comment_comments($comments, $lot = [], $that) {
     ], $comments);
 }
 
-function fn_comments($comments, $lot = [], $that) {
+function comments($comments, $lot = [], $that) {
     global $language, $url;
     $comments = $comments ?: [];
     $a = [
@@ -45,9 +45,9 @@ function fn_comments($comments, $lot = [], $that) {
         return $comments; // do not nest this `*.comments` hook to the comment page
     }
     $i = 0;
-    if ($folder = Folder::exist(COMMENT . DS . $url->path(DS))) {
-        foreach (g($folder, 'page', "", true) as $v) {
-            $comment = new Comment($v);
+    if ($folder = \Folder::exist(COMMENT . DS . $url->path(DS))) {
+        foreach (\g($folder, 'page', "", true) as $v) {
+            $comment = new \Comment($v);
             if (!$comment->get('parent')) {
                 $comments['data'][] = $comment;
             }
@@ -60,19 +60,19 @@ function fn_comments($comments, $lot = [], $that) {
     ], $comments);
 }
 
-Hook::set('*.comments', 'fn_comments', 0);
-Hook::set('comment.comments', 'fn_comment_comments', 0);
+\Hook::set('*.comments', __NAMESPACE__ . '\comments', 0);
+\Hook::set('comment.comments', __NAMESPACE__ . '\comments_comments', 0);
 
 // Extend user propert(y|ies) to comment propert(y|ies)
-if (Extend::exist('user')) {
-    function fn_comment_($v, $lot = [], $that, $key) {
+if (\Extend::exist('user')) {
+    function user($v, $lot = [], $that, $key) {
         if ($v || $that->get('status', false) !== 1) {
             return $v;
         }
         $user = $that->get('author', false);
         if ($user && is_string($user) && strpos($user, '@') === 0) {
-            if ($f = File::exist(USER . DS . substr($user, 1) . '.page')) {
-                $f = new User($f);
+            if ($f = \File::exist(USER . DS . substr($user, 1) . '.page')) {
+                $f = new \User($f);
                 if ($key === 'link') {
                     // Return `link` property or `url` property or self value
                     return $f->get($key, $f->get('url', $v));
@@ -82,9 +82,9 @@ if (Extend::exist('user')) {
         }
         return $v;
     }
-    Hook::set([
+    \Hook::set([
         'comment.avatar',
         'comment.email',
         'comment.link'
-    ], 'fn_comment_', 0);
+    ], __NAMESPACE__ . '\user', 0);
 }
