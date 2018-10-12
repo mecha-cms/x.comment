@@ -24,7 +24,7 @@ function comments_comments($comments = [], array $lot = []) {
             ++$i;
         }
     }
-    return array_replace($data, [
+    return \extend($data, [
         'count' => $i,
         'text' => $i . ' ' . $language->{'comment_reply' . ($i === 1 ? "" : 's')}
     ], (array) $comments);
@@ -53,7 +53,7 @@ function comments($comments = [], array $lot = []) {
             ++$i;
         }
     }
-    return array_replace($data, [
+    return \extend($data, [
         'count' => $i,
         'text' => $i . ' ' . $language->{'comment' . ($i === 1 ? "" : 's')}
     ], (array) $comments);
