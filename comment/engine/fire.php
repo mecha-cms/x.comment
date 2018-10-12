@@ -4,60 +4,59 @@ foreach (\g(__DIR__ . DS . '..' . DS . 'lot' . DS . 'worker', 'php') as $v) {
     \Shield::set(\Path::N($v), $v);
 }
 
-function comments_comments($comments, $lot = [], $that) {
+function comments_comments($comments = [], array $lot = []) {
     global $language;
-    $comments = $comments ?: [];
-    $a = [
+    $data = [
         'count' => 0,
         'data' => [],
         'text' => '0 ' . $language->comment_replys,
         'x' => false, // disable comment?
     ];
-    if (!$path = $that->get('path')) {
-        $a['x'] = true;
+    if (!$path = $this->path) {
+        $data['x'] = true;
     }
     $i = 0;
+    $self = \Path::N($path);
     foreach (\g(\Path::D($path), 'page', "", true) as $v) {
         $comment = new \Comment($v);
-        if ($comment->get('parent') === \Path::N($path)) {
+        if ($comment->parent === $self) {
             $comments['data'][] = $comment;
             ++$i;
         }
     }
-    return array_replace($a, [
+    return array_replace($data, [
         'count' => $i,
         'text' => $i . ' ' . $language->{'comment_reply' . ($i === 1 ? "" : 's')}
-    ], $comments);
+    ], (array) $comments);
 }
 
-function comments($comments, $lot = [], $that) {
+function comments($comments = [], array $lot = []) {
     global $language, $url;
-    $comments = $comments ?: [];
-    $a = [
+    $data = [
         'count' => 0,
         'data' => [],
         'text' => '0 ' . $language->comments,
         'x' => false, // disable comment?
     ];
-    if (!$path = $that->get('path')) {
-        $a['x'] = true;
+    if (!$path = $this->path) {
+        $data['x'] = true;
     } else if (strpos($path, COMMENT . DS) === 0) {
-        return $comments; // do not nest this `*.comments` hook to the comment page
+        return (array) $comments; // do not nest this `*.comments` hook to the comment page
     }
     $i = 0;
     if ($folder = \Folder::exist(COMMENT . DS . $url->path(DS))) {
         foreach (\g($folder, 'page', "", true) as $v) {
             $comment = new \Comment($v);
-            if (!$comment->get('parent')) {
+            if (!$comment->parent) {
                 $comments['data'][] = $comment;
             }
             ++$i;
         }
     }
-    return array_replace($a, [
+    return array_replace($data, [
         'count' => $i,
         'text' => $i . ' ' . $language->{'comment' . ($i === 1 ? "" : 's')}
-    ], $comments);
+    ], (array) $comments);
 }
 
 \Hook::set('*.comments', __NAMESPACE__ . '\comments', 0);
@@ -65,15 +64,15 @@ function comments($comments, $lot = [], $that) {
 
 // Extend user propert(y|ies) to comment propert(y|ies)
 if (\Extend::exist('user')) {
-    function user($v, $lot = [], $that, $key) {
-        if ($v || $that->get('status', false) !== 1) {
+    function user($v = "", array $lot = []) {
+        if ($v || $this->status(false) !== 1) {
             return $v;
         }
-        $user = $that->get('author', false);
+        $user = $this->author(false);
         if ($user && is_string($user) && strpos($user, '@') === 0) {
             if ($f = \File::exist(USER . DS . substr($user, 1) . '.page')) {
                 $f = new \User($f);
-                if ($key === 'link') {
+                if ($this->_hook === 'comment.link') {
                     // Return `link` property or `url` property or self value
                     return $f->get($key, $f->get('url', $v));
                 }

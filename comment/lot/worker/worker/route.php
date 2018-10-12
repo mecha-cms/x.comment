@@ -136,7 +136,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         if ($state['comment']['state'] === 'draft') {
             Message::info('comment_save');
         } else {
-            Guardian::kick(Path::D($url->current) . '#' . __replace__($anchor[0], ['id' => $id]));
+            Guardian::kick(Path::D($url->current) . '#' . replace($anchor[0], ['id' => $id]));
         }
     } else {
         HTTP::save('post');

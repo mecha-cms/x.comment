@@ -2,12 +2,11 @@
 
 class Comment extends Page {
 
-    public function __construct($input = [], $lot = [], $NS = []) {
-        $path = is_array($input) ? (isset($input['path']) ? $input['path'] : null) : $input;
-        $f = Path::F(Path::D($path), COMMENT, '/');
-        $id = (new Date(Path::N($path)))->unix;
-        parent::__construct($input, array_replace([
-            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . __replace__(Extend::state('comment', 'anchor')[0], ['id' => $id])
+    public function __construct($path = null, array $lot = [], $NS = []) {
+        $f = Path::F(dirname($path), COMMENT, '/');
+        $id = sprintf('%u', (new Date(Path::N($path)))->unix);
+        parent::__construct($path, array_replace([
+            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . replace(Extend::state('comment', 'anchor')[0], ['id' => $id])
         ], $lot), $NS);
     }
 

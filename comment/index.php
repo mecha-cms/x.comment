@@ -2,9 +2,9 @@
 
 Hook::set('shield.enter', function() use($site) {
     if ($site->is('page')) {
-        $s = __DIR__ . DS . 'lot' . DS . 'asset' . DS;
-        Asset::set($s . 'css' . DS . 'comment.min.css', 10);
-        Asset::set($s . 'js' . DS . 'comment.min.js', 10, [
+        $path = __DIR__ . DS . 'lot' . DS . 'asset' . DS;
+        Asset::set($path . 'css' . DS . 'comment.min.css', 10);
+        Asset::set($path . 'js' . DS . 'comment.min.js', 10, [
             'src' => function($src) {
                 return $src . '#' . Extend::state('comment', 'anchor')[1];
             }

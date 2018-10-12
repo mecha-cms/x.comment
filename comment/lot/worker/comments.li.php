@@ -1,5 +1,5 @@
 <?php extract($lot); ?>
-<li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo __replace__($_state['anchor'][0], ['id' => $comment->id]); ?>">
+<li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo replace($_state['anchor'][0], ['id' => $comment->id]); ?>">
   <figure class="comment-figure">
     <img class="comment-avatar" alt="" src="<?php echo $comment->avatar($url->protocol . 'www.gravatar.com/avatar/' . md5($comment->email) . '?s=70&amp;d=monsterid'); ?>" width="70" height="70">
   </figure>
