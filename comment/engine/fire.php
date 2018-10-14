@@ -27,7 +27,7 @@ function comments_comments($comments = [], array $lot = []) {
     return \extend($data, [
         'count' => $i,
         'text' => $i . ' ' . $language->{'comment_reply' . ($i === 1 ? "" : 's')}
-    ], (array) $comments);
+    ], (array) $comments, false);
 }
 
 function comments($comments = [], array $lot = []) {
@@ -56,7 +56,7 @@ function comments($comments = [], array $lot = []) {
     return \extend($data, [
         'count' => $i,
         'text' => $i . ' ' . $language->{'comment' . ($i === 1 ? "" : 's')}
-    ], (array) $comments);
+    ], (array) $comments, false);
 }
 
 \Hook::set('*.comments', __NAMESPACE__ . '\comments', 0);

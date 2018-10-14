@@ -7,7 +7,7 @@ class Comment extends Page {
         $id = sprintf('%u', (new Date(Path::N($path)))->unix);
         parent::__construct($path, extend([
             'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . candy(Extend::state('comment', 'anchor')[0], ['id' => $id])
-        ], $lot), $NS);
+        ], $lot, false), $NS);
     }
 
 }

@@ -112,7 +112,6 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     $anchor = $state['anchor'];
     $directory = $comment . DS . date('Y-m-d-H-i-s', $id);
     $file = $directory . '.' . $state['comment']['state'];
-    Hook::fire('on.comment.set', [$file, null]);
     if (!Message::$x) {
         $data = [
             'author' => $author,
@@ -122,7 +121,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             'status' => $status,
             'content' => $content
         ];
-        foreach ((array) Config::get('comment', []) as $k => $v) {
+        foreach ((array) Config::get('comment', [], true) as $k => $v) {
             if (isset($data[$k]) && $data[$k] === $v) {
                 unset($data[$k]);
             }
@@ -131,6 +130,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         if ($s = HTTP::post('parent', "", false)) {
             File::set((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
         }
+        Hook::fire('on.comment.set', [$file, null], new File($file));
         Message::success('comment_create');
         Session::set('comment', $data);
         if ($state['comment']['state'] === 'draft') {

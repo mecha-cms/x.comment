@@ -30,7 +30,7 @@
                 'rel' => 'nofollow',
                 'title' => $language->comment_f_reply(To::text($comment->author . ""), true)
             ])
-    ] : [], $comment, $page]);
+    ] : [], $page], $comment);
 
     ?>
     <?php if (!empty($_tools)): ?>
