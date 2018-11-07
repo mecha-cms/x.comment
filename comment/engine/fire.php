@@ -72,7 +72,8 @@ if (\Extend::exist('user')) {
         if ($user && is_string($user) && strpos($user, '@') === 0) {
             if ($f = \File::exist(USER . DS . substr($user, 1) . '.page')) {
                 $f = new \User($f);
-                if ($this->_hook === 'comment.link') {
+                $key = explode('.', $this->_hook, 2)[1];
+                if ($key === 'link') {
                     // Return `link` property or `url` property or self value
                     return $f->get($key, $f->get('url', $v));
                 }
@@ -85,5 +86,5 @@ if (\Extend::exist('user')) {
         'comment.avatar',
         'comment.email',
         'comment.link'
-    ], __NAMESPACE__ . '\user', 0);
+    ], __NAMESPACE__ . "\\user", 0);
 }
