@@ -12,9 +12,6 @@ Hook::set('shield.enter', function() use($site) {
     }
 }, 0);
 
-r(__DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker', [
-    'config.php',
-    'route.php'
-], null, Lot::get(null, []));
+r(['config', 'route'], __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker', Lot::get(null, []));
 
 require __DIR__ . DS . 'engine' . DS . 'fire.php';

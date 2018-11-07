@@ -59,8 +59,8 @@ function comments($comments = [], array $lot = []) {
     ], (array) $comments, false);
 }
 
-\Hook::set('*.comments', __NAMESPACE__ . '\comments', 0);
-\Hook::set('comment.comments', __NAMESPACE__ . '\comments_comments', 0);
+\Hook::set('*.comments', __NAMESPACE__ . "\\comments", 0);
+\Hook::set('comment.comments', __NAMESPACE__ . "\\comments_comments", 0);
 
 // Extend user propert(y|ies) to comment propert(y|ies)
 if (\Extend::exist('user')) {

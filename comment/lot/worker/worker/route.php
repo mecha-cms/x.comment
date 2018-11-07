@@ -35,7 +35,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     if (!$enter) {
         if (!$email) {
             Message::error('comment_void_field', $language->comment_email);
-        } else if (!Is::EMail($email)) {
+        } else if (!Is::eMail($email)) {
             Message::error('comment_pattern_field', $language->comment_email);
         } else if (Is::this($email)->GT($state['max']['email'])) {
             Message::error('comment_max', $language->comment_email);
