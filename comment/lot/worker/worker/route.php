@@ -78,31 +78,31 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_duplicate');
     } else {
         // Block user by IP address
-        if (!empty($state['user_ip_x'])) {
+        if (!empty($state['x']['user_ip'])) {
             $ip = Get::IP();
-            foreach ($state['user_ip_x'] as $v) {
+            foreach ($state['x']['user_ip'] as $v) {
                 if ($ip === $v) {
-                    Message::error('comment_user_ip_x', $ip);
+                    Message::error('comment_user_ip', $ip);
                     break;
                 }
             }
         }
         // Block user by UA keyword(s)
-        if (!empty($state['user_agent_x'])) {
+        if (!empty($state['x']['user_agent'])) {
             $ua = Get::UA();
-            foreach ($state['user_agent_x'] as $v) {
+            foreach ($state['x']['user_agent'] as $v) {
                 if (stripos($ua, $v) !== false) {
-                    Message::error('comment_user_agent_x', $ua);
+                    Message::error('comment_user_agent', $ua);
                     break;
                 }
             }
         }
         // Check for spam keyword(s) in comment
-        if (!empty($state['query_x'])) {
+        if (!empty($state['x']['query'])) {
             $s = $author . $email . $link . $content;
-            foreach ($state['query_x'] as $v) {
+            foreach ($state['x']['query'] as $v) {
                 if (stripos($s, $v) !== false) {
-                    Message::error('comment_query_x', $v);
+                    Message::error('comment_query', $v);
                     break;
                 }
             }

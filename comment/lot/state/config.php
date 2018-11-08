@@ -22,7 +22,9 @@ return [
         'link' => 0,
         'content' => 1
     ],
-    'query_x' => ['<script ', '<iframe '], // Block by word(s)
-    'user_ip_x' => [], // Block by IP address(es)
-    'user_agent_x' => [] // Block by user agent word(s)
+    'x' => [
+        'query' => ['<script ', '<iframe '], // Block by word(s)
+        'user_ip' => [], // Block by IP address(es)
+        'user_agent' => [] // Block by user agent word(s)
+    ]
 ];

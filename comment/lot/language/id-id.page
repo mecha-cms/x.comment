@@ -15,22 +15,22 @@ comment_email: Surel
 comment_link: URL
 comment_publish: Publikasikan
 
-comment_f_as: Berkomentar sebagai %{0}%
-comment_f_author: Anonim
-comment_f_email: email@domain.com
-comment_f_link: http://
-comment_f_content: Pesan di sini…
-comment_f_reply: Balasan untuk %{0}%
+comment_hint_as: Berkomentar sebagai %{0}%
+comment_hint_author: Anonim
+comment_hint_email: email@domain.com
+comment_hint_link: http://
+comment_hint_content: Pesan di sini…
+comment_hint_reply: Balasan untuk %{0}%
 
 message_error_comment_duplicate: Anda sudah mengirimkan komentar tersebut.
 message_error_comment_max: %{0}% terlalu panjang.
 message_error_comment_min: %{0}% terlalu pendek.
 message_error_comment_pattern_field: Format %{0}% tidak valid.
-message_error_comment_query_x: Mohon gunakan kata yang lain: <em>%{0}%</em>.
+message_error_comment_query: Mohon gunakan kata yang lain: <em>%{0}%</em>.
 message_error_comment_source: Anda tidak dapat menulis komentar di sini. Biasanya ini dikarenakan oleh data halaman yang dihasilkan secara dinamis.
 message_error_comment_token: Token tidak valid.
-message_error_comment_user_agent_x: Agen pengguna yang diblok: <em>%{0}%</em>.
-message_error_comment_user_ip_x: Alamat IP yang diblok: <em>%{0}%</em>.
+message_error_comment_user_agent: Agen pengguna yang diblok: <em>%{0}%</em>.
+message_error_comment_user_ip: Alamat IP yang diblok: <em>%{0}%</em>.
 message_error_comment_void_field: Mohon isi bidang %{0}%.
 
 message_info_comment_save: Komentar Anda akan tampil setelah disetujui oleh penulis.

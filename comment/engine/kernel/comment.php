@@ -2,7 +2,7 @@
 
 class Comment extends Page {
 
-    public function __construct($path = null, array $lot = [], $NS = []) {
+    public function __construct(string $path = null, array $lot = [], $NS = []) {
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U'));
         parent::__construct($path, extend([

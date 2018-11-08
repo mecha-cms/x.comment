@@ -30,7 +30,7 @@ COMMENT
 We now have a `Comment` class which works the same as the [`Page`][link:../class/page] class, but with custom hook _namespace_:
 
 ~~~ .php.xmp
-Comment($input = null, $lot = [], $NS = ['*', 'comment']);
+Comment(string $path = null, array $lot = [], $NS = ['*', 'comment']);
 ~~~
 
 **Example:**
