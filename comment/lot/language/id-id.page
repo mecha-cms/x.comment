@@ -20,7 +20,9 @@ comment_hint_author: Anonim
 comment_hint_email: email@domain.com
 comment_hint_link: http://
 comment_hint_content: Pesan di sini…
-comment_hint_reply: Balasan untuk %{0}%
+comment_hint_reply: Balasan kepada %{0}%
+
+do_reply: Balas # verb of `reply`
 
 message_error_comment_duplicate: Anda sudah mengirimkan komentar tersebut.
 message_error_comment_max: %{0}% terlalu panjang.
@@ -36,6 +38,3 @@ message_error_comment_void_field: Mohon isi bidang %{0}%.
 message_info_comment_save: Komentar Anda akan tampil setelah disetujui oleh penulis.
 
 message_success_comment_create: Komentar berhasil dibuat.
-
-reply: Balas
-reply_to__: Balasan untuk %{0}%

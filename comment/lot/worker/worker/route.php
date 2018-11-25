@@ -108,7 +108,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             }
         }
     }
-    $id = time();
+    $id = sprintf('%u', (string) time());
     $anchor = $state['anchor'];
     $directory = $comment . DS . date('Y-m-d-H-i-s', $id);
     $file = $directory . '.' . $state['comment']['state'];
@@ -128,7 +128,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         Page::set($data)->saveTo($file, 0600);
         if ($s = HTTP::post('parent', "", false)) {
-            File::set((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+            File::put((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
         }
         Hook::fire('on.comment.set', [$file, null], new File($file));
         Message::success('comment_create');
@@ -139,7 +139,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             Guardian::kick(Path::D($url->current) . '#' . candy($anchor[0], ['id' => $id]));
         }
     } else {
-        HTTP::save('post');
+        HTTP::save();
     }
     Guardian::kick(Path::D($url->current) . $url->query . '#' . $anchor[1]);
 });

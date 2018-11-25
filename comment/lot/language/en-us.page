@@ -22,6 +22,8 @@ comment_hint_link: http://
 comment_hint_content: Message goes here…
 comment_hint_reply: Reply to %{0}%
 
+do_reply: Reply # verb of `reply`
+
 message_error_comment_duplicate: You have sent that comment already.
 message_error_comment_max: %{0}% too long.
 message_error_comment_min: %{0}% too short.
@@ -36,5 +38,3 @@ message_error_comment_void_field: Please fill out the %{0}% field.
 message_info_comment_save: Your comment will be visible once approved by the author.
 
 message_success_comment_create: Comment created.
-
-reply: Reply

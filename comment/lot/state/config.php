@@ -2,7 +2,7 @@
 
 return [
     'anchor' => ['comment-%{id}%', 'form-comment'],
-    'path' => '-comment',
+    'path' => '.comment',
     'level' => 3, // Set to `1` to disable comment thread, `2` or more to enable comment thread
     'enter' => true, // Show log in link if user extension available?
     'comment' => [
@@ -18,9 +18,9 @@ return [
     ],
     'min' => [
         'author' => 1,
-        'email' => 1,
+        'email' => 3, // `a@b`
         'link' => 0,
-        'content' => 1
+        'content' => 2
     ],
     'x' => [
         'query' => ['<script ', '<iframe '], // Block by word(s)

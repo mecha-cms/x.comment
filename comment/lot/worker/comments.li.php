@@ -20,12 +20,13 @@
   <footer class="comment-footer">
     <?php
 
+    $pid = $comment->time->format('Y-m-d-H-i-s');
     $tools = fn\comment\tools(Hook::fire('page.a.comment', [$level < $c['level'] ? [
-        'reply' => [$language->comment_reply, HTTP::query([
-            'parent' => $comment->time->format('U')
+        'reply' => [$language->do_reply, HTTP::query([
+            'parent' => $pid
         ]) . '#' . $c['anchor'][1], false, [
             'class[]' => ['comment-a', 'comment-a:set', 'comment-reply:v'],
-            'id' => 'parent:' . $comment->time->format('U'),
+            'id' => 'parent:' . $pid,
             'rel' => 'nofollow',
             'title' => $language->comment_hint_reply(To::text($comment->author . ""), true)
         ]],

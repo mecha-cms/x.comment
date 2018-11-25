@@ -1,11 +1,11 @@
 <?php extract($lot); $id = HTTP::get('parent', null); ?>
-<?php $source = $id ? new Comment(COMMENT . DS . $url->path(DS) . DS . (new Date($id))->slug . '.page') : null; ?>
+<?php $source = $id ? new Comment(COMMENT . DS . $url->path(DS) . DS . $id . '.page') : null; ?>
 <?php $advance = Extend::exist('user'); ?>
 <?php $author = $advance ? Is::user() : false; ?>
 <form class="form-comment<?php echo $source ? ' on-reply' : ""; ?>" id="<?php echo $c['anchor'][1]; ?>" action="<?php echo $url->clean . '/' . $c['path'] . $url->query('&amp;'); ?>" method="post">
   <?php echo $message; ?>
   <?php if ($source): ?>
-  <h4><?php echo $language->comment_hintreply(HTML::a($source->author, implode($url->query . '#', explode('#', $source->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>
+  <h4><?php echo $language->comment_hint_reply(HTML::a($source->author, implode($url->query . '#', explode('#', $source->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>
   <?php elseif ($author): ?>
   <h4><?php echo $language->comment_hint_as(HTML::a($user, $user->url, false, ['rel' => 'nofollow']), true); ?></h4>
   <?php endif; ?>
