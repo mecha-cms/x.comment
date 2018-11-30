@@ -19,7 +19,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
     $enter = Extend::exist('user') && Is::user();
     $status = HTTP::post('status', $enter ? 1 : false);
     $content = HTTP::post('content', false);
-    if (!$token || !Guardian::check($token)) {
+    if (!$token || !Guardian::check($token, 'comment')) {
         Message::error('comment_token');
     }
     if (!$author) {

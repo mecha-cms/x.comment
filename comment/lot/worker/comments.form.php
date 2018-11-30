@@ -37,5 +37,5 @@
   </p>
   <?php echo Form::hidden('path', $url->path); ?>
   <?php echo Form::hidden('parent', $id); ?>
-  <?php echo Form::hidden('token', $token); ?>
+  <?php echo Form::hidden('token', Guardian::token('comment')); ?>
 </form>
