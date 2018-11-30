@@ -24,15 +24,15 @@ comment_hint_reply: Balasan kepada %{0}%
 
 do_reply: Balas # verb of `reply`
 
+message_error_comment_agent: Agen pengguna yang diblokir: <em>%{0}%</em>.
 message_error_comment_duplicate: Anda sudah mengirimkan komentar tersebut.
+message_error_comment_ip: Alamat IP yang diblokir: <em>%{0}%</em>.
 message_error_comment_max: %{0}% terlalu panjang.
 message_error_comment_min: %{0}% terlalu pendek.
 message_error_comment_pattern_field: Format %{0}% tidak valid.
 message_error_comment_query: Mohon gunakan kata yang lain: <em>%{0}%</em>.
 message_error_comment_source: Anda tidak dapat menulis komentar di sini. Biasanya ini dikarenakan oleh data halaman yang dihasilkan secara dinamis.
 message_error_comment_token: Token tidak valid.
-message_error_comment_user_agent: Agen pengguna yang diblok: <em>%{0}%</em>.
-message_error_comment_user_ip: Alamat IP yang diblok: <em>%{0}%</em>.
 message_error_comment_void_field: Mohon isi bidang %{0}%.
 
 message_info_comment_save: Komentar Anda akan tampil setelah disetujui oleh penulis.

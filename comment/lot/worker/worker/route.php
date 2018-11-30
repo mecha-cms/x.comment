@@ -78,21 +78,21 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_duplicate');
     } else {
         // Block user by IP address
-        if (!empty($state['x']['user_ip'])) {
+        if (!empty($state['x']['ip'])) {
             $ip = Get::IP();
-            foreach ($state['x']['user_ip'] as $v) {
+            foreach ($state['x']['ip'] as $v) {
                 if ($ip === $v) {
-                    Message::error('comment_user_ip', $ip);
+                    Message::error('comment_ip', $ip);
                     break;
                 }
             }
         }
         // Block user by UA keyword(s)
-        if (!empty($state['x']['user_agent'])) {
+        if (!empty($state['x']['agent'])) {
             $ua = Get::UA();
-            foreach ($state['x']['user_agent'] as $v) {
+            foreach ($state['x']['agent'] as $v) {
                 if (stripos($ua, $v) !== false) {
-                    Message::error('comment_user_agent', $ua);
+                    Message::error('comment_agent', $ua);
                     break;
                 }
             }
