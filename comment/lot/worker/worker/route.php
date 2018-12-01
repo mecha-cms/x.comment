@@ -62,8 +62,11 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         // Permanently disable the `[[e]]` block(s) in comment
         if (Extend::exist('block')) {
-            $u = Extend::state('block', 'union', [1 => [0 => ['[[', ']]', '/']]])[1][0];
-            $content = str_replace([$u[0] . 'e' . $u[1], $u[0] . $u[2] . 'e' . $u[1]], "", $content);
+            $union = Extend::state('block', 'union')[1][0] ?? [];
+            $content = str_replace([
+                $union[0] . 'e' . $union[1], // `[[e]]`
+                $union[0] . $union[2] . 'e' . $union[1] // `[[/e]]`
+            ], "", $content);
         }
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img .*?>#i', '<!-- $0 -->', $content);
@@ -127,10 +130,10 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             }
         }
         Page::set($data)->saveTo($file, 0600);
-        if ($s = HTTP::post('parent', "", false)) {
-            File::put((new Date($s))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+        if ($parent = HTTP::post('parent', "", false)) {
+            File::put((new Date($parent))->slug)->saveTo($directory . DS . 'parent.data', 0600);
         }
-        Hook::fire('on.comment.set', [$file, null], new File($file));
+        Hook::fire('on.comment.set', [null], new File($file));
         Message::success('comment_create');
         Session::set('comment', $data);
         if ($state['comment']['state'] === 'draft') {
