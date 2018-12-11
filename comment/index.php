@@ -1,7 +1,7 @@
 <?php
 
-Hook::set('shield.enter', function() use($site) {
-    if ($site->is('page')) {
+Hook::set('shield.enter', function() use($config) {
+    if ($config->is('page')) {
         $path = __DIR__ . DS . 'lot' . DS . 'asset' . DS;
         Asset::set($path . 'css' . DS . 'comment.min.css', 10);
         Asset::set($path . 'js' . DS . 'comment.min.js', 10, [
@@ -12,6 +12,6 @@ Hook::set('shield.enter', function() use($site) {
     }
 }, 0);
 
-r(['config', 'route'], __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker', Lot::get(null, []));
+r(['config', 'route'], __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker', Lot::get());
 
 require __DIR__ . DS . 'engine' . DS . 'fire.php';
