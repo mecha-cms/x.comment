@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'anchor' => ['comment-%{id}%', 'form-comment'],
+    'anchor' => ['comment-%{id}%', 'form-comment', 'comments'],
     'path' => '.comment',
     'level' => 3, // Set to `1` to disable comment thread, `2` or more to enable comment thread
     'enter' => true, // Show log-in link if user extension available?
