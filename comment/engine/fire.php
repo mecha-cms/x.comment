@@ -104,7 +104,7 @@ function tools(array $in, array $lot = []) {
         if (is_array($v)) {
             $out[] = \HTML::a(...$v);
         } else if (is_callable($v)) {
-            $out[] = \fn($v, $lot, $this);
+            $out[] = \fn($v, $lot, $this, \Shield::class);
         } else {
             $out[] = $v;
         }

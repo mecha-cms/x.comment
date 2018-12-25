@@ -3,7 +3,7 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.9.0
+version: 1.10.0
 
 dependency:
   extension:
@@ -14,7 +14,7 @@ dependency:
 Edit `page.php` file in your active shield folder then put this snippet after the `</article>` tag:
 
 ~~~ .php
-<?php Shield::get('comments'); ?>
+<?php self::comments(); ?>
 ~~~
 
 <!-- block:donate -->
