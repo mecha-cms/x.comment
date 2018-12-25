@@ -42,7 +42,7 @@
   <?php if ($level < $c['level'] && $comment->replys->count): ++$level; ?>
   <ul class="comments" data-level="<?php echo $level; ?>">
     <?php foreach ($comment->replys as $reply): ?>
-    <?php self::get(__FILE__, [
+    <?php static::get(__FILE__, [
         'c' => $c,
         'comment' => $reply,
         'level' => $level

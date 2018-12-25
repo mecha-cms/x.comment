@@ -14,7 +14,7 @@ dependency:
 Edit `page.php` file in your active shield folder then put this snippet after the `</article>` tag:
 
 ~~~ .php
-<?php self::comments(); ?>
+<?php static::comments(); ?>
 ~~~
 
 <!-- block:donate -->
