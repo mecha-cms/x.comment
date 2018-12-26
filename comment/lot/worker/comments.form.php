@@ -3,7 +3,7 @@
 <?php $advance = Extend::exist('user'); ?>
 <?php $author = $advance ? Is::user() : false; ?>
 <form class="form-comment<?php echo $source ? ' on-reply' : ""; ?>" id="<?php echo $c['anchor'][1]; ?>" action="<?php echo $url->clean . '/' . $c['path'] . $url->query('&amp;'); ?>" method="post">
-  <?php echo $message; ?>
+  <?php static::message(); ?>
   <?php if ($source): ?>
   <h4><?php echo $language->comment_hint_reply(HTML::a($source->author, implode($url->query . '#', explode('#', $source->url, 2)), false, ['rel' => 'nofollow']), true); ?></h4>
   <?php elseif ($author): ?>
