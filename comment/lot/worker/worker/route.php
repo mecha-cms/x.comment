@@ -142,7 +142,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             Guardian::kick(Path::D($url->current) . '#' . candy($anchor[0], ['id' => $id]));
         }
     } else {
-        HTTP::save();
+        Session::set(Form::session, HTTP::post());
     }
     Guardian::kick(Path::D($url->current) . $url->query . '#' . $anchor[1]);
 });
