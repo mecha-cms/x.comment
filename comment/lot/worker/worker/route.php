@@ -26,9 +26,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Message::error('comment_void_field', $language->comment_author);
     } else {
         $author = strpos($author, '@') !== 0 ? To::text($author) : $author;
-        if (Is::this($author)->GT($state['max']['author'])) {
+        if (gt($author, $state['max']['author'])) {
             Message::error('comment_max', $language->comment_author);
-        } else if (Is::this($author)->LT($state['min']['author'])) {
+        } else if (lt($author, $state['min']['author'])) {
             Message::error('comment_min', $language->comment_author);
         }
     }
@@ -37,18 +37,18 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             Message::error('comment_void_field', $language->comment_email);
         } else if (!Is::eMail($email)) {
             Message::error('comment_pattern_field', $language->comment_email);
-        } else if (Is::this($email)->GT($state['max']['email'])) {
+        } else if (gt($email, $state['max']['email'])) {
             Message::error('comment_max', $language->comment_email);
-        } else if (Is::this($email)->LT($state['min']['email'])) {
+        } else if (lt($email, $state['min']['email'])) {
             Message::error('comment_min', $language->comment_email);
         }
     }
     if ($link) {
         if (!Is::URL($link)) {
             Message::error('comment_pattern_field', $language->comment_link);
-        } else if (Is::this($link)->GT($state['max']['link'])) {
+        } else if (gt($link, $state['max']['link'])) {
             Message::error('comment_max', $language->comment_link);
-        } else if (Is::this($link)->LT($state['min']['link'])) {
+        } else if (lt($link, $state['min']['link'])) {
             Message::error('comment_min', $language->comment_link);
         }
     }
@@ -70,9 +70,9 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img .*?>#i', '<!-- $0 -->', $content);
-        if (Is::this($content)->GT($state['max']['content'])) {
+        if (gt($content, $state['max']['content'])) {
             Message::error('comment_max', $language->comment_content);
-        } else if (Is::this($content)->LT($state['min']['content'])) {
+        } else if (lt($content, $state['min']['content'])) {
             Message::error('comment_min', $language->comment_content);
         }
     }
