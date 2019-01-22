@@ -77,10 +77,10 @@ if (\Extend::exist('user')) {
             return $v;
         }
         $user = $this->author(false);
-        if ($user && is_string($user) && strpos($user, '@') === 0) {
-            if ($user = \File::exist(USER . DS . substr($user, 1) . '.page')) {
+        if ($user && \is_string($user) && \strpos($user, '@') === 0) {
+            if ($user = \File::exist(USER . DS . \substr($user, 1) . '.page')) {
                 $user = new \User($user);
-                $k = explode('.', $this->_hook, 2)[1];
+                $k = \explode('.', $this->_hook, 2)[1] ?? "";
                 if ($k === 'link') {
                     // Return `link` property or `url` property or the initial value
                     return $user->get($k, $user->get('url', $v));
@@ -101,9 +101,9 @@ if (\Extend::exist('user')) {
 function tools(array $in, array $lot = []) {
     $out = [];
     foreach ($in as $v) {
-        if (is_array($v)) {
+        if (\is_array($v)) {
             $out[] = \HTML::a(...$v);
-        } else if (is_callable($v)) {
+        } else if (\is_callable($v)) {
             $out[] = \fn($v, $lot, $this, \Shield::class);
         } else {
             $out[] = $v;
