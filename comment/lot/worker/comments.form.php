@@ -1,7 +1,27 @@
-<?php extract($lot); $id = HTTP::get('parent', null); ?>
-<?php $source = $id ? new Comment(COMMENT . DS . $url->path(DS) . DS . $id . '.page') : null; ?>
-<?php $advance = Extend::exist('user'); ?>
-<?php $author = $advance ? Is::user() : false; ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+extract($lot, EXTR_SKIP);
+
+$id = HTTP::get('parent', null);
+$source = $id ? new Comment(COMMENT . DS . $url->path(DS) . DS . $id . '.page') : null;
+$advance = Extend::exist('user');
+$author = $advance ? Is::user() : false;
+
+?>
 <form class="form-comment<?php echo $source ? ' on-reply' : ""; ?>" id="<?php echo $c['anchor'][1]; ?>" action="<?php echo $url->clean . '/' . $c['path'] . $url->query('&amp;'); ?>" method="post">
   <?php static::message(); ?>
   <?php if ($source): ?>

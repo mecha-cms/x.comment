@@ -77,7 +77,7 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
     }
     // Check for duplicate comment
-    if (Session::get('comment.content') === $content) {
+    if (Session::get(Comment::session . '.content') === $content) {
         Message::error('comment_duplicate');
     } else {
         // Block user by IP address
@@ -135,7 +135,8 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         }
         Hook::fire('on.comment.set', [null], new File($file));
         Message::success('comment_create');
-        Session::set('comment', $data);
+        Session::set(Comment::session, $data);
+        Session::reset(Form::session);
         if ($state['comment']['state'] === 'draft') {
             Message::info('comment_save');
         } else {

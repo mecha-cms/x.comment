@@ -1,7 +1,7 @@
 <?php
 
-Hook::set('shield.enter', function() use($config) {
-    if ($config->is('page')) {
+Hook::set('shield.enter', function() {
+    if (Config::is('page')) {
         $path = __DIR__ . DS . 'lot' . DS . 'asset' . DS;
         Asset::set($path . 'css' . DS . 'comment.min.css', 10);
         Asset::set($path . 'js' . DS . 'comment.min.js', 10, [

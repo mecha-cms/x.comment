@@ -5,7 +5,6 @@ foreach (\g(__DIR__ . DS . '..' . DS . 'lot' . DS . 'worker', 'php') as $v) {
 }
 
 function comments($source = [], array $lot = []) {
-    global $language;
     $comments = [];
     $count = 0;
     if ($path = $this->path) {
@@ -15,55 +14,29 @@ function comments($source = [], array $lot = []) {
             if (!$comment->parent) {
                 $comments[] = $comment;
             }
-            ++$count;
+            ++$count; // Count comment(s), no filter
         }
-    } else {
-        $source['x'] = true;
     }
     $comments = new \Anemon($comments);
-    $comments->x = $source['x'] ?? false; // Disable comment?
-    if (isset($source['text'])) {
-        $comments->text = \candy($source['text'], [
-            'count' => $count,
-            'text' => [
-                0 => $language->comment,
-                1 => $language->comments
-            ]
-        ]);
-    } else {
-        $comments->text = $count . ' ' . $language->{'comment' . ($count === 1 ? "" : 's')};
-    }
+    $comments->title = $count . ' ' . \Language::get('comment' . ($count === 1 ? "" : 's'));
     return $comments;
 }
 
 function replys($source = [], array $lot = []) {
-    global $language;
     $replys = [];
+    $count = 0;
     if ($path = $this->path) {
         $parent = \Path::N($path);
         foreach (\g(\Path::D($path), 'page', "", true) as $v) {
             $comment = new \Comment($v);
             if ($comment->parent === $parent) {
                 $replys[] = $comment;
+                ++$count; // Count comment(s), filter by `parent` property
             }
         }
-    } else {
-        $source['x'] = true;
     }
     $replys = new \Anemon($replys);
-    $count = $replys->count();
-    $replys->x = $source['x'] ?? false; // Disable comment?
-    if (isset($source['text'])) {
-        $replys->text = \candy($source['text'], [
-            'count' => $count,
-            'text' => [
-                0 => $language->comment_reply,
-                1 => $language->comment_replys
-            ]
-        ]);
-    } else {
-        $replys->text = $count . ' ' . $language->{'comment_reply' . ($count === 1 ? "" : 's')};
-    }
+    $replys->title = $count . ' ' . \Language::get('comment_reply' . ($count === 1 ? "" : 's'));
     return $replys;
 }
 

@@ -36,5 +36,9 @@ message_error_comment_token: Invalid token.
 message_error_comment_void_field: Please fill out the %{0}% field.
 
 message_info_comment_save: Your comment will be visible once approved by the author.
+message_info_comment_x: Comments are closed.
 
 message_success_comment_create: Comment created.
+
+o_page_state:
+  comment: ["Disable comments?", 2]

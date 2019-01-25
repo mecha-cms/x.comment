@@ -36,5 +36,9 @@ message_error_comment_token: Token tidak valid.
 message_error_comment_void_field: Mohon isi bidang %{0}%.
 
 message_info_comment_save: Komentar Anda akan tampil setelah disetujui oleh penulis.
+message_info_comment_x: Komentar telah ditutup.
 
 message_success_comment_create: Komentar berhasil dibuat.
+
+o_page_state:
+  comment: ["Nonaktifkan fitur komentar?", 2]
