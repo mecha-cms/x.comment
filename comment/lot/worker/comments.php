@@ -3,6 +3,11 @@
 $x = X . __FILE__ . X;
 $test = $page->get('state.comment', $lot[0] ?? $x);
 
+// Comment form is disabled and no comment(s)
+if ($page->comments->count() === 0 && $test === 2) {
+    $test = 0; // Is the same as disabled comment(s)
+}
+
 if ($test === $x || ($test !== false && $test !== 0)):
 
 $c = [
