@@ -3,13 +3,13 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.11.1
+version: 1.11.2
 
 dependency:
   extension:
-    - asset
-    - form
-    - page
+  - asset
+  - form
+  - page
 ...
 
 ### Installation

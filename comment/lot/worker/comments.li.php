@@ -5,7 +5,7 @@
   </figure>
   <header class="comment-header">
     <p class="comment-property">
-      <time class="comment-time" datetime="<?php echo $comment->time->W3C; ?>"><?php echo $comment->time->{strtr($config->language, '-', '_')} . ' ' . $comment->time('%h%:%m% %N%'); ?></time>&#x20;
+      <time class="comment-time" datetime="<?php echo $comment->time->ISO8601; ?>"><?php echo $comment->time->{strtr($config->language, '-', '_')} . ' ' . $comment->time('%h%:%m% %N%'); ?></time>&#x20;
       <a class="comment-url" href="<?php echo implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
     </p>
     <h4 class="comment-author">
