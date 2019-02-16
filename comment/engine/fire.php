@@ -4,45 +4,6 @@ foreach (\g(__DIR__ . DS . '..' . DS . 'lot' . DS . 'worker', 'php') as $v) {
     \Shield::set(\Path::N($v), $v);
 }
 
-function comments($source = [], array $lot = []) {
-    $comments = [];
-    $count = 0;
-    if ($path = $this->path) {
-        $parent = \Path::R(\Path::F($path), PAGE);
-        foreach (\g(COMMENT . DS . $parent, 'page', "", true) as $v) {
-            $comment = new \Comment($v);
-            if (!$comment->parent) {
-                $comments[] = $comment;
-            }
-            ++$count; // Count comment(s), no filter
-        }
-    }
-    $comments = new \Anemon($comments);
-    $comments->title = $count . ' ' . \Language::get('comment' . ($count === 1 ? "" : 's'));
-    return $comments;
-}
-
-function replys($source = [], array $lot = []) {
-    $replys = [];
-    $count = 0;
-    if ($path = $this->path) {
-        $parent = \Path::N($path);
-        foreach (\g(\Path::D($path), 'page', "", true) as $v) {
-            $comment = new \Comment($v);
-            if ($comment->parent === $parent) {
-                $replys[] = $comment;
-                ++$count; // Count comment(s), filter by `parent` property
-            }
-        }
-    }
-    $replys = new \Anemon($replys);
-    $replys->title = $count . ' ' . \Language::get('comment_reply' . ($count === 1 ? "" : 's'));
-    return $replys;
-}
-
-\Hook::set('*.comments', __NAMESPACE__ . "\\comments", 0);
-\Hook::set('comment.replys', __NAMESPACE__ . "\\replys", 0);
-
 // Extend user property to comment property
 if (\Extend::exist('user')) {
     function user($v = "", array $lot = []) {

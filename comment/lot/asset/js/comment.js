@@ -13,7 +13,7 @@
         x = form.getElementsByClassName('comment-reply:x')[0],
         content = form.content,
         content_placeholder = content.placeholder,
-        test = /(\?|&(?:amp;)?)parent=\d+/g,
+        test = /(\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g,
         parent = form.parent, i, j;
 
     q = !q || !q.match(test);

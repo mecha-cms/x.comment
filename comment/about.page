@@ -3,7 +3,7 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.11.2
+version: 1.11.3
 
 dependency:
   extension:
@@ -28,7 +28,7 @@ Value | Description
 ----- | -----------
 `0` | Disable comments.
 `1` | Enable comments (default).
-`2` | Disable comments, but keep the published comments remain visible.
+`2` | Disable comments, but keep the published comments visible.
 `false` | Alias for `0`.
 `true` | Alias for `1`.
 

@@ -1,26 +1,29 @@
 <?php
 
 $x = X . __FILE__ . X;
-$test = $page->get('state.comment', $lot[0] ?? $x);
+$type = $page->get('state.comment', $lot[0] ?? $x);
 
 // Comment form is disabled and no comment(s)
-if ($page->comments->count() === 0 && $test === 2) {
-    $test = 0; // Is the same as disabled comment(s)
+if ($page->comments->count() === 0 && $type === 2) {
+    $type = 0; // Is the same as disabled comment(s)
 }
 
-if ($test === $x || ($test !== false && $test !== 0)):
+if ($type === $x || ($type !== false && $type !== 0)):
 
+$reply = HTTP::get('parent');
+$reply = $reply ? new Comment(COMMENT . DS . $url->path(DS) . DS . $reply . '.page') : null;
 $c = [
     'c' => Extend::state('comment'),
-    'type' => $test
+    'type' => $type,
+    'reply' => $reply
 ];
 
-if ($test === true) {
+if ($type === true) {
     $k = 1;
-} else if ($test === false) {
+} else if ($type === false) {
     $k = 0;
-} else if (is_numeric($test)) {
-    $k = $test;
+} else if (is_numeric($type)) {
+    $k = $type;
 }
 
 ?>

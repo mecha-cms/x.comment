@@ -12,6 +12,10 @@ Hook::set('shield.enter', function() {
     }
 }, 0);
 
-r(__DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker' . DS . '%[config,route]%');
+require __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker' . DS . 'config.php';
+require __DIR__ . DS . 'lot' . DS . 'worker' . DS . 'worker' . DS . 'route.php';
+
+require __DIR__ . DS . 'engine' . DS . 'plug' . DS . 'get.php';
+require __DIR__ . DS . 'engine' . DS . 'plug' . DS . 'page.php';
 
 require __DIR__ . DS . 'engine' . DS . 'fire.php';
