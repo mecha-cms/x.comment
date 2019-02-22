@@ -4,12 +4,12 @@ return [
     'path' => '.comment',
     'anchor' => ['comment-%{id}%', 'form-comment', 'comments'],
     'chunk' => 9999, // TODO: Comment pagination
-    'deep' => 3, // Set to `1` to disable comment thread, `2` or more to enable comment thread
+    'deep' => 2, // Set to `0` to disable comment thread, `1` or more to enable comment thread
     'enter' => true, // Show log-in link if user extension available?
     'comment' => [
-        'state' => 'page', // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
+        'x' => 'page', // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
         'status' => 2,
-        'type' => Config::get('page.type', 'HTML') // Inherit `page.type` state or `HTML`
+        'type' => Config::get('page.type') ?? 'HTML' // Inherit `page.type` state or `HTML`
     ],
     'max' => [
         'author' => 100,
