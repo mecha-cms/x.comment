@@ -26,7 +26,7 @@ $author = $advance ? Is::user() : false;
   <p class="form-comment-button form-comment-button:state">
     <label for="form-comment-button:state"></label>
     <span>
-      <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($c['deep'] > 1 ? ' ' . HTML::a($language->comment_cancel, $url->clean . HTTP::query(['parent' => false]) . '#' . $c['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
+      <?php echo Form::submit('state', null, $language->comment_publish, ['class[]' => ['button', 'button-submit'], 'id' => 'form-comment-button:state']) . ($c['deep'] > 0 ? ' ' . HTML::a($language->comment_cancel, $url->clean . HTTP::query(['parent' => false]) . '#' . $c['anchor'][1], false, ['class[]' => ['button', 'button-reset', 'comment-a', 'comment-a:reset', 'comment-reply:x']]) : ""); ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
         <?php $u = Extend::state('user'); ?>
         <?php echo HTML::a($author ?: $language->log_in, ($u['_path'] ?? $u['path']) . HTTP::query([
             'kick' => $url->path

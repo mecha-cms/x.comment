@@ -17,14 +17,14 @@
     </h4>
   </header>
   <div class="comment-body"><?php echo $comment->content; ?></div>
-  <?php if ($reply && $reply->slug === $comment->slug): ?>
+  <?php if ($type && $reply && $reply->slug === $comment->slug): ?>
   <?php static::get('comments.form', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
     <?php
 
     $id = $comment->slug;
-    $tools = fn\comment\tools(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
+    $tools = $type ? fn\comment\tools(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
         'reply' => [$language->do_reply, HTTP::query([
             'parent' => $id
         ]) . '#' . $c['anchor'][1], false, [
@@ -33,7 +33,7 @@
             'rel' => 'nofollow',
             'title' => To::text($language->comment_hint_reply([$comment->author . ""], true))
         ]],
-    ] : [], $page], $comment), [$page], $comment);
+    ] : [], $page], $comment), [$page], $comment) : [];
 
     ?>
     <?php if (!empty($tools)): ?>
@@ -43,7 +43,7 @@
     <?php endif; ?>
   </footer>
   <?php if ($deep < $c['deep'] && $comment->comments->count): ++$deep; ?>
-  <ul class="comments" data-deep="<?php echo $deep; ?>">
+  <ul class="comments" data-level="<?php echo $deep; ?>">
     <?php foreach ($comment->comments(9999) as $v): ?>
     <?php static::get(__FILE__, extend($lot, [
         'comment' => $v,

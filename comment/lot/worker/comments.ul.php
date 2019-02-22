@@ -1,9 +1,9 @@
 <?php if ($page->comments->count()): ?>
-<ul class="comments" data-deep="1">
-  <?php foreach ($page->comments($lot['c']['chunk']) as $comment): ?>
+<ul class="comments" data-level="0">
+  <?php foreach ($page->comments($lot['c']['chunk'] ?? 9999) as $comment): ?>
   <?php static::get('comments.li', extend($lot, [
       'comment' => $comment,
-      'deep' => 1
+      'deep' => 0
   ], false)); ?>
   <?php endforeach; ?>
 </ul>
