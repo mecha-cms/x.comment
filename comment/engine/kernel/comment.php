@@ -4,12 +4,15 @@ class Comment extends Page {
 
     const session = 'comment';
 
-    public function __construct(string $path = null, array $lot = [], $NS = []) {
+    // Set pre-defined comment property
+    public static $data = [];
+
+    public function __construct(string $path = null, array $lot = [], array $prefix = []) {
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U')); // Comment ID by time
         parent::__construct($path, extend([
             'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . candy(Extend::state('comment', 'anchor')[0], ['id' => $id])
-        ], $lot, false), $NS);
+        ], static::$data, $lot), $prefix);
     }
 
     public function comments(int $chunk = 100, int $i = 0): Anemon {
@@ -17,8 +20,12 @@ class Comment extends Page {
         $count = 0;
         if ($path = $this->path) {
             $parent = Path::N($path);
-            $files = g(dirname($path), 'page', "", true);
-            $files = array_chunk($files, $chunk, false);
+            $files = [];
+            foreach (g(dirname($path), 'page') as $v) {
+                $files[] = $v;
+            }
+            sort($files);
+            $files = $chunk === 0 ? [$files] : array_chunk($files, $chunk, false);
             if (!empty($files[$i])) {
                 foreach ($files[$i] as $v) {
                     $comment = new static($v);

@@ -5,13 +5,27 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
     $count = 0;
     if ($path = $this->path) {
         $r = Path::R(Path::F($path), PAGE);
-        $files = g(COMMENT . DS . $r, 'page', "", true);
-        $files = array_chunk($files, $chunk, false);
+        $files = [];
+        foreach (g(COMMENT . DS . $r, 'page') as $v) {
+            ++$count; // Count comment(s), no filter
+            if (is_file($rr = Path::F($v) . DS . 'parent.data') && filesize($rr) > 0) {
+                // Has parent comment, skip!
+                continue;
+            } else if (is_file($v)) {
+                foreach (get($v, 8) as $s) {
+                    if (strpos($s, 'parent:') === 0) {
+                        // Has parent comment, skip!
+                        continue;
+                    }
+                }
+            }
+            $files[] = $v;
+        }
+        sort($files);
+        $files = $chunk === 0 ? [$files] : array_chunk($files, $chunk, false);
         if (!empty($files[$i])) {
             foreach ($files[$i] as $v) {
-                $comment = new Comment($v);
-                $comment->parent || ($comments[] = $comment);
-                ++$count; // Count comment(s), no filter
+                $comments[] = new Comment($v);
             }
         }
     }
