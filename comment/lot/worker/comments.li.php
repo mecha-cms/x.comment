@@ -25,14 +25,17 @@
 
     $id = $comment->slug;
     $tools = $type ? fn\comment\tools(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
-        'reply' => [$language->do_reply, HTTP::query([
-            'parent' => $id
-        ]) . '#' . $c['anchor'][1], false, [
-            'class[]' => ['comment-a', 'comment-a:set', 'comment-reply:v'],
-            'id' => 'parent:' . $id,
-            'rel' => 'nofollow',
-            'title' => To::text($language->comment_hint_reply([$comment->author . ""], true))
-        ]],
+        'reply' => [
+            0 => 'a',
+            1 => $language->do_reply,
+            2 => [
+                'class' => 'comment-a comment-a:set comment-reply:v',
+                'href' => HTTP::query(['parent' => $id]) . '#' . $c['anchor'][1],
+                'id' => 'parent:' . $id,
+                'rel' => 'nofollow',
+                'title' => To::text($language->comment_hint_reply([$comment->author . ""], true))
+            ]
+        ],
     ] : [], $page], $comment), [$page], $comment) : [];
 
     ?>

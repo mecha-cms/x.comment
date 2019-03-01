@@ -36,7 +36,11 @@ function tools(array $in, array $lot = []) {
     $out = [];
     foreach ($in as $v) {
         if (\is_array($v)) {
-            $out[] = \HTML::a(...$v);
+            $a = new \HTML;
+            $a[0] = $v[0] ?? 'a';
+            $a[1] = $v[1] ?? "";
+            $a[2] = $v[2] ?? [];
+            $out[] = $a;
         } else if (\is_callable($v)) {
             $out[] = \fn($v, $lot, $this, \Shield::class);
         } else {

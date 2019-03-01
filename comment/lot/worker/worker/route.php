@@ -135,14 +135,14 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
         Hook::fire('on.comment.set', [null], new File($file));
         Message::success('comment_create');
         Session::set(Comment::session, $data);
-        Session::reset(Form::session);
+        Session::reset('form');
         if ($x === 'draft') {
             Message::info('comment_save');
         } else {
             Guardian::kick(dirname($url->current) . '#' . candy($anchor[0], ['id' => sprintf('%u', $t)]));
         }
     } else {
-        Session::set(Form::session, HTTP::post());
+        Session::set('form', HTTP::post());
     }
     Guardian::kick(dirname($url->current) . $url->query . '#' . $anchor[1]);
 });
