@@ -57,15 +57,13 @@ Route::set('%*%/' . $state['path'], function($path) use($language, $url, $state)
             $content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
-        /*
         if (Extend::exist('block')) {
-            $union = Extend::state('block', 'union')[1][0] ?? [];
+            $e = Block::$config[0];
             $content = str_replace([
-                $union[0] . 'e' . $union[1], // `[[e]]`
-                $union[0] . $union[2] . 'e' . $union[1] // `[[/e]]`
+                $e[0] . 'e' . $e[1], // `[[e]]`
+                $e[0] . $e[2] . 'e' . $e[1] // `[[/e]]`
             ], "", $content);
         }
-        */
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img .*?>#i', '<!-- $0 -->', $content);
         if (gt($content, $state['max']['content'] ?? 0)) {
