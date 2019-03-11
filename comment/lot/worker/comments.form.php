@@ -39,13 +39,13 @@ $author = $advance ? Is::user() : false;
   <p class="form-comment-button form-comment-button:x">
     <label for="form-comment-button:x"></label>
     <span>
-      <button class="button button-submit" id="form-comment-button:x" type="submit"><?php echo $language->comment_publish; ?></button><?php if ($c['deep'] > 0): ?> <a class="button button-reset comment-a comment-a:reset comment-reply:x" href="<?php echo $url->clean . HTTP::query(['parent' => false]) . '#' . $c['anchor'][1]; ?>"><?php echo $language->comment_cancel; ?></a><?php endif; ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
+      <button class="button button-submit" id="form-comment-button:x" type="submit"><?php echo $language->comment_publish; ?></button><?php if ($c['deep'] > 0): ?> <a class="button button-reset comment-a comment-a:reset comment-reply:x" href="<?php echo $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>"><?php echo $language->comment_cancel; ?></a><?php endif; ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
         <?php $u = Extend::state('user'); ?>
-        <a href="<?php echo $url . '/' . ($u['_path'] ?? $u['path']) . HTTP::query(['kick' => $url->path]) . '#' . $c['anchor'][1]; ?>"><?php echo $author ?: $language->log_in; ?></a>
+        <a href="<?php echo $url . '/' . ($u['_path'] ?? $u['path']) . $url->query('&amp;', ['kick' => $url->path]) . '#' . $c['anchor'][1]; ?>"><?php echo $author ?: $language->log_in; ?></a>
       </span><?php endif; ?>
     </span>
   </p>
   <input name="path" type="hidden" value="<?php echo $url->path; ?>">
   <input name="parent" type="hidden" value="<?php echo $reply ? $reply->slug : ""; ?>">
-  <input name="token" type="hidden" value="<?php echo Guardian::token('comment'); ?>">
+  <input name="token" type="hidden" value="<?php echo Guard::token('comment'); ?>">
 </form>

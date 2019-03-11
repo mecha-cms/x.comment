@@ -2,15 +2,13 @@
 
 class Comment extends Page {
 
-    const session = 'comment';
-
     // Set pre-defined comment property
     public static $data = [];
 
     public function __construct(string $path = null, array $lot = [], array $prefix = []) {
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U')); // Comment ID by time
-        parent::__construct($path, extend([
+        parent::__construct($path, array_replace_recursive([
             'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . candy(Extend::state('comment', 'anchor')[0], ['id' => $id])
         ], static::$data, $lot), $prefix);
     }

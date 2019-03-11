@@ -30,7 +30,7 @@
             1 => $language->do_reply,
             2 => [
                 'class' => 'comment-a comment-a:set comment-reply:v',
-                'href' => HTTP::query(['parent' => $id]) . '#' . $c['anchor'][1],
+                'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
                 'id' => 'parent:' . $id,
                 'rel' => 'nofollow',
                 'title' => To::text($language->comment_hint_reply([$comment->author . ""], true))
