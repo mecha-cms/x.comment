@@ -41,7 +41,7 @@ $author = $advance ? Is::user() : false;
     <span>
       <button class="button button-submit" id="form-comment-button:x" type="submit"><?php echo $language->comment_publish; ?></button><?php if ($c['deep'] > 0): ?> <a class="button button-reset comment-a comment-a:reset comment-reply:x" href="<?php echo $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>"><?php echo $language->comment_cancel; ?></a><?php endif; ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
         <?php $u = Extend::state('user'); ?>
-        <a href="<?php echo $url . '/' . ($u['_path'] ?? $u['path']) . $url->query('&amp;', ['kick' => $url->path]) . '#' . $c['anchor'][1]; ?>"><?php echo $author ?: $language->log_in; ?></a>
+        <a href="<?php echo $url . '/' . ($u['_path'] ?? $u['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/')]) . '#' . $c['anchor'][1]; ?>"><?php echo $author ?: $language->log_in; ?></a>
       </span><?php endif; ?>
     </span>
   </p>

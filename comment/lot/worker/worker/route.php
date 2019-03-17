@@ -159,8 +159,8 @@ Route::set('(.+)/' . x($state['path']), function($path) use($language, $url, $st
         if ($x === 'draft') {
             Message::info('comment_save');
         } else {
-            Guard::kick(dirname($url->current) . $url->query('&', ['parent' => false]) . '#' . candy($anchor[0], ['id' => sprintf('%u', $t)]));
+            Guard::kick(dirname($url->clean) . $url->query('&', ['parent' => false]) . '#' . candy($anchor[0], ['id' => sprintf('%u', $t)]));
         }
     }
-    Guard::kick(dirname($url->current) . $url->query . '#' . $anchor[1]);
+    Guard::kick(dirname($url->clean) . $url->query . '#' . $anchor[1]);
 });
