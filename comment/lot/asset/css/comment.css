@@ -179,7 +179,7 @@ li.comment .form-comment {margin-bottom:1em}
   -moz-box-sizing:border-box;
   box-sizing:border-box;
 }
-.form-comment .block {
+.form-comment .width {
   display:block;
   width:100%;
 }

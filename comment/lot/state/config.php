@@ -1,8 +1,7 @@
 <?php
 
 return [
-    'path' => '.comment',
-    'anchor' => ['comment-%{id}%', 'form-comment', 'comments'],
+    'anchor' => ['comment-%s', 'form-comment', 'comments'],
     'chunk' => 9999, // TODO: Comment pagination
     'deep' => 2, // Set to `0` to disable comment thread, `1` or more to enable comment thread
     'enter' => true, // Show log-in link if user extension available?
@@ -26,6 +25,6 @@ return [
     'x' => [
         'query' => ['</script>', '</iframe>'], // Block by word(s)
         'ip' => [], // Block by IP address(es)
-        'agent' => [] // Block by user agent word(s)
+        'ua' => [] // Block by user agent word(s)
     ]
 ];

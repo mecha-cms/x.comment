@@ -20,7 +20,7 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
                     if ($s === '...') {
                         break; // End header(s), no parent!
                     }
-                    if (strpos($s, 'parent:') === 0) {
+                    if (strpos($s, 'parent:') === 0 || strpos($s, '"parent":') === 0 || strpos($s, "'parent':") === 0) {
                         // Has parent comment, skip!
                         $parent = true;
                         break;
@@ -42,6 +42,6 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
         }
     }
     $comments = new Anemon($comments);
-    $comments->title = $count . ' ' . Language::get('comment' . ($count === 1 ? "" : 's'));
+    $comments->title = $GLOBALS['language']->commentCount($count);
     return $comments;
 });

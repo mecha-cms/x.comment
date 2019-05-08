@@ -1,11 +1,10 @@
-<?php extract($lot); ?>
-<li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo candy($c['anchor'][0], ['id' => $comment->id]); ?>">
+<li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo sprintf($c['anchor'][0], $comment->id); ?>">
   <figure class="comment-figure">
     <img class="comment-avatar" alt="" src="<?php echo $comment->avatar(70); ?>" width="70" height="70">
   </figure>
   <header class="comment-header">
     <p class="comment-property">
-      <time class="comment-time" datetime="<?php echo $comment->time->ISO8601; ?>"><?php echo $comment->time->{strtr($config->language, '-', '_')} . ' ' . $comment->time('%h%:%m% %N%'); ?></time>&#x20;
+      <time class="comment-time" datetime="<?php echo $comment->time->ISO8601; ?>"><?php echo $comment->time->{strtr($config->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
       <a class="comment-url" href="<?php echo implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
     </p>
     <h4 class="comment-author">
@@ -24,16 +23,16 @@
     <?php
 
     $id = $comment->slug;
-    $tools = $type ? fn\comment\tools(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
+    $tools = $type ? _\comment\tools(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
         'reply' => [
             0 => 'a',
-            1 => $language->do_reply,
+            1 => $language->doReply,
             2 => [
                 'class' => 'comment-a comment-a:set comment-reply:v',
                 'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
                 'id' => 'parent:' . $id,
                 'rel' => 'nofollow',
-                'title' => To::text($language->comment_hint_reply([$comment->author . ""], true))
+                'title' => To::text($language->commentPlaceholderReply([$comment->author . ""], true))
             ]
         ],
     ] : [], $page], $comment), [$page], $comment) : [];
