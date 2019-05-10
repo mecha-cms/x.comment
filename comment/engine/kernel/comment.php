@@ -40,7 +40,7 @@ class Comment extends Page {
     }
 
     public function parent() {
-        return File::open(Path::F($this->path) . DS . 'parent.data')->get(0);
+        return $this->exist ? content(Path::F($this->path) . DS . 'parent.data') : null;
     }
 
 }

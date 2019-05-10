@@ -2,71 +2,67 @@
 
 // Set a new comment!
 $state = Extend::state('comment');
-Route::set('*/.comment', function($r, $k) {
-    $page = PAGE . $this[0];
-    $comment = COMMENT . $this[0];
+Route::set('*/.comment', function($form, $k) use($config, $language, $state, $url) {
     $errors = 0;
-    if ($k !== 'POST' || !File::exist([
-        $page . '.page',
-        $page . '.archive'
-    ])) {
-        $this->message::error('comment-source');
+    if ($k !== 'POST' || !is_file(PAGE . DS . $this[0] . '.page')) {
+        Message::error('comment-source');
         ++$errors;
     }
-    extract($r, EXTR_SKIP);
-    $type = $type ?? $state['comment']['type'] ?? null;
     $enter = Extend::exist('user') && Is::user();
-    $status = $status ?? ($enter ? 1 : null);
-    if (!isset($token) || !Guard::check($token, 'comment')) {
-        $this->message::error('comment-token');
+    $form['comment'] = array_replace_recursive($state['comment'], $form['comment'], [
+        'status' => $form['comment']['status'] ?? ($enter ? 1 : false)
+    ]);
+    if (!isset($form['token']) || !$this->check($form['token'], 'comment')) {
+        Message::error('comment-token');
         ++$errors;
     }
+    extract($form['comment'], EXTR_SKIP);
     if (!isset($author) || trim($author) === "") {
-        $this->message::error('comment-void-field', $this->language->commentAuthor);
+        Message::error('comment-void-field', $language->commentAuthor);
         ++$errors;
     } else {
         $author = strpos($author, '@') !== 0 ? To::text($author) : $author;
         if (gt($author, $state['max']['author'] ?? 0)) {
-            $this->message::error('comment-max', $this->language->commentAuthor);
+            Message::error('comment-max', $language->commentAuthor);
             ++$errors;
         } else if (lt($author, $state['min']['author'] ?? 0)) {
-            $this->message::error('comment-min', $this->language->commentAuthor);
+            Message::error('comment-min', $language->commentAuthor);
             ++$errors;
         }
     }
     if (!$enter) {
         if (!isset($email) || trim($email) === "") {
-            $this->message::error('comment-void-field', $this->language->commentMail);
+            Message::error('comment-void-field', $language->commentMail);
             ++$errors;
-        } else if (!Is::mail($email)) {
-            $this->message::error('comment-pattern-field', $this->language->commentMail);
+        } else if (!Is::eMail($email)) {
+            Message::error('comment-pattern-field', $language->commentMail);
             ++$errors;
         } else if (gt($email, $state['max']['email'] ?? 0)) {
-            $this->message::error('comment-max', $this->language->commentMail);
+            Message::error('comment-max', $language->commentMail);
             ++$errors;
         } else if (lt($email, $state['min']['email'] ?? 0)) {
-            $this->message::error('comment-min', $this->language->commentMail);
+            Message::error('comment-min', $language->commentMail);
             ++$errors;
         }
-    }
-    if ($link) {
-        if (!Is::URL($link)) {
-            $this->message::error('comment-pattern-field', $this->language->commentLink);
-            ++$errors;
-        } else if (gt($link, $state['max']['link'] ?? 0)) {
-            $this->message::error('comment-max', $this->language->commentLink);
-            ++$errors;
-        } else if (lt($link, $state['min']['link'] ?? 0)) {
-            $this->message::error('comment-min', $this->language->commentLink);
-            ++$errors;
+        if (!empty($link)) {
+            if (!Is::URL($link)) {
+                Message::error('comment-pattern-field', $language->commentLink);
+                ++$errors;
+            } else if (gt($link, $state['max']['link'] ?? 0)) {
+                Message::error('comment-max', $language->commentLink);
+                ++$errors;
+            } else if (lt($link, $state['min']['link'] ?? 0)) {
+                Message::error('comment-min', $language->commentLink);
+                ++$errors;
+            }
         }
     }
     if (!isset($content) || trim($content) === "") {
-        $this->message::error('comment-void-field', $this->language->commentContent);
+        Message::error('comment-void-field', $language->commentContent);
         ++$errors;
     } else {
-        $content = To::text((string) $content, HTML_WISE . ',img', true);
-        if ($type === 'HTML' && strpos($content, '</p>') === false) {
+        $content = To::text($content . "", HTML_WISE . ',img', true);
+        if ((!isset($type) || $type === 'HTML') && strpos($content, '</p>') === false) {
             // Replace new line with `<br>` and `<p>` tag(s)
             $content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
@@ -81,16 +77,16 @@ Route::set('*/.comment', function($r, $k) {
         // Temporarily disallow image(s) in comment to prevent XSS
         $content = preg_replace('#<img(?:\s[^>]*)?>#i', '<!-- $0 -->', $content);
         if (gt($content, $state['max']['content'] ?? 0)) {
-            $this->message::error('comment-max', $this->language->commentContent);
+            Message::error('comment-max', $language->commentContent);
             ++$errors;
         } else if (lt($content, $state['min']['content'] ?? 0)) {
-            $this->message::error('comment-min', $this->language->commentContent);
+            Message::error('comment-min', $language->commentContent);
             ++$errors;
         }
     }
     // Check for duplicate comment
     if (Session::get('comment.content') === $content) {
-        $this->message::error('comment-duplicate');
+        Message::error('comment-exist');
         ++$errors;
     } else {
         // Block user by IP address
@@ -98,7 +94,7 @@ Route::set('*/.comment', function($r, $k) {
             $ip = Get::IP();
             foreach ($state['x']['ip'] as $v) {
                 if ($ip === $v) {
-                    $this->message::error('comment-i-p', $ip);
+                    Message::error('comment-i-p', $ip);
                     ++$errors;
                     break;
                 }
@@ -109,7 +105,7 @@ Route::set('*/.comment', function($r, $k) {
             $ua = Get::UA();
             foreach ($state['x']['ua'] as $v) {
                 if (stripos($ua, $v) !== false) {
-                    $this->message::error('comment-u-a', $ua);
+                    Message::error('comment-u-a', $ua);
                     ++$errors;
                     break;
                 }
@@ -120,7 +116,7 @@ Route::set('*/.comment', function($r, $k) {
             $s = $author . $email . $link . $content;
             foreach ($state['x']['query'] as $v) {
                 if (stripos($s, $v) !== false) {
-                    $this->message::error('comment-query', $v);
+                    Message::error('comment-query', $v);
                     ++$errors;
                     break;
                 }
@@ -129,39 +125,40 @@ Route::set('*/.comment', function($r, $k) {
     }
     $t = time();
     $anchor = $state['anchor'];
-    $directory = $comment . DS . date('Y-m-d-H-i-s', $t);
+    $directory = COMMENT . DS . $this[0] . DS . date('Y-m-d-H-i-s', $t);
     $x = $state['comment']['x'] ?? 'page';
     $file = $directory . '.' . $x;
     $this->status(200);
     if ($errors > 0) {
-        Session::set('form', $r);
+        Session::set('form', $form);
     } else {
-        $data = [
-            'author' => $author ?: false,
-            'email' => $email ?: false,
-            'link' => $link ?: false,
-            'type' => $type ?: false,
-            'status' => $status ?? false,
-            'content' => $content ?? false
-        ];
+        Session::let('form');
+        $form['comment']['author'] = $author;
+        $form['comment']['email'] = $email;
+        $form['comment']['link'] = $link ?: false;
+        $form['comment']['content'] = $content;
         foreach ((array) Comment::$data as $k => $v) {
-            if (isset($data[$k]) && $data[$k] === $v) {
-                unset($data[$k]);
+            if (isset($form['comment'][$k]) && $form['comment'][$k] === $v) {
+                unset($form['comment'][$k]);
             }
         }
-        Page::set($data)->saveTo($file, 0600);
-        if (isset($parent) && trim($parent) !== "") {
-            File::put((new Date($parent))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+        if (isset($form['comment:data']['parent']) && trim($form['comment:data']['parent']) !== "") {
+            $form['comment:data']['parent'] = Date::from($form['comment:data']['parent'])->slug;
         }
-        Hook::fire('on.comment.set', [null], new File($file));
-        $this->message::success('comment-create');
-        Session::set('comment', $data);
-        Session::let('form');
+        Page::set($form['comment'])->saveTo($file, 0600);
+        if (!empty($form['comment:data'])) {
+            foreach ($form['comment:data'] as $k => $v) {
+                File::set($v)->saveTo($directory . DS . $k . '.data', 0600);
+            }
+        }
+        Hook::fire('on.comment.set', [null, null], new File($file));
+        Message::success('comment-create');
+        Session::set('comment', $form['comment']);
         if ($x === 'draft') {
-            $this->message::info('comment-save');
+            Message::info('comment-save');
         } else {
-            $this->kick(dirname($this->url->clean) . $this->url->query('&', ['parent' => false]) . '#' . sprintf($anchor[0], sprintf('%u', $t)));
+            $this->kick(dirname($url->clean) . $url->query('&', ['parent' => false]) . '#' . sprintf($anchor[0], sprintf('%u', $t)));
         }
     }
-    $this->kick(dirname($this->url->clean) . $this->url->query . '#' . $anchor[1]);
+    $this->kick(dirname($url->clean) . $url->query . '#' . $anchor[1]);
 });

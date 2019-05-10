@@ -3,10 +3,10 @@
 // Extend user property to comment property
 if (\Extend::exist('user')) {
     function user($v = "", array $lot = []) {
-        if ($v || $this->status(false) !== 1) {
+        if ($v || $this['status'] !== 1) {
             return $v;
         }
-        $user = $this->author(false);
+        $user = $this['author'];
         if ($user && \is_string($user) && \strpos($user, '@') === 0) {
             if ($user = \File::exist(USER . DS . \substr($user, 1) . '.page')) {
                 $user = new \User($user);
@@ -28,7 +28,7 @@ if (\Extend::exist('user')) {
 }
 
 // Loading asset(s)…
-\Hook::set('enter', function() {
+\Hook::set('set', function() {
     if (\Config::is('page')) {
         $path = __DIR__ . DS . '..' . DS . '..' . DS . 'lot' . DS . 'asset' . DS;
         \Asset::set($path . 'css' . DS . 'comment.min.css', 10);

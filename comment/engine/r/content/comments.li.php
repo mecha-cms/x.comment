@@ -1,6 +1,6 @@
 <li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo sprintf($c['anchor'][0], $comment->id); ?>">
   <figure class="comment-figure">
-    <img class="comment-avatar" alt="" src="<?php echo $comment->avatar(70); ?>" width="70" height="70">
+    <img class="comment-avatar" alt="" src="<?php echo strtr($comment->avatar(70), ['&' => '&amp;']); ?>" width="70" height="70">
   </figure>
   <header class="comment-header">
     <p class="comment-property">
@@ -47,10 +47,10 @@
   <?php if ($deep < $c['deep'] && $comment->comments->count): ++$deep; ?>
   <ul class="comments" data-level="<?php echo $deep; ?>">
     <?php foreach ($comment->comments(9999) as $v): ?>
-    <?php static::get(__FILE__, extend($lot, [
+    <?php static::get(__FILE__, array_replace($lot, [
         'comment' => $v,
         'deep' => $deep
-    ], false)); ?>
+    ])); ?>
     <?php endforeach; ?>
   </ul>
   <?php endif; ?>
