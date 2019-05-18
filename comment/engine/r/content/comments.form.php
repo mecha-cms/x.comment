@@ -5,7 +5,7 @@ $author = $advance ? Is::user() : false;
 
 ?>
 <form class="form-comment<?php echo $reply ? ' on-reply' : ""; ?>" id="<?php echo $c['anchor'][1]; ?>" action="<?php echo $url->clean . '/.comment' . $url->query('&amp;'); ?>" method="post">
-  <?php static::message(); ?>
+  <?php echo $message; ?>
   <?php if ($author): ?>
     <h4><?php echo $language->commentPlaceholderAs('<a href="' . $user->url . '" rel="nofollow">' . $user . '</a>', true); ?></h4>
     <input name="comment[author]" type="hidden" value="<?php echo $author; ?>">
@@ -45,5 +45,5 @@ $author = $advance ? Is::user() : false;
     </span>
   </p>
   <input name="comment:data[parent]" type="hidden" value="<?php echo $reply ? $reply->slug : ""; ?>">
-  <input name="token" type="hidden" value="<?php echo Guard::token('comment'); ?>">
+  <input name="token" type="hidden" value="<?php echo token('comment'); ?>">
 </form>

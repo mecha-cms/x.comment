@@ -5,11 +5,13 @@ author: Taufik Nurrohman
 type: Markdown
 version: 1.12.2
 
-dependency:
-  extension:
+use:
+  extend:
   - asset
   - form
+  - message
   - page
+  - shield
 ...
 
 ### Installation

@@ -20,8 +20,12 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
                     if ($s === '...') {
                         break; // End header(s), no parent!
                     }
-                    if (strpos($s, 'parent:') === 0 || strpos($s, '"parent":') === 0 || strpos($s, "'parent':") === 0) {
-                        // Has parent comment, skip!
+                    if (
+                        strpos($s, 'parent:') === 0 ||
+                        strpos($s, '"parent":') === 0 ||
+                        strpos($s, "'parent':") === 0
+                    ) {
+                        // Has parent comment!
                         $parent = true;
                         break;
                     }
