@@ -13,7 +13,7 @@ if ($type === $x || ($type !== false && $type !== 0)):
 $reply = HTTP::get('parent');
 $reply = $reply ? new Comment(COMMENT . DS . $url->path(DS) . DS . $reply . '.page') : null;
 $c = [
-    'c' => Extend::state('comment'),
+    'c' => extend('comment'),
     'type' => $type,
     'reply' => $reply
 ];

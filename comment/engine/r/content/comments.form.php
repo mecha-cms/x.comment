@@ -1,6 +1,6 @@
 <?php
 
-$advance = Extend::exist('user');
+$advance = extend('user');
 $author = $advance ? Is::user() : false;
 
 ?>
@@ -32,14 +32,14 @@ $author = $advance ? Is::user() : false;
   <div class="form-comment-textarea form-comment-textarea:content p">
     <label for="form-comment-textarea:content"><?php echo $language->commentContent; ?></label>
     <div>
-      <textarea class="textarea width" id="form-comment-textarea:content" name="comment[content]" placeholder="<?php echo To::text($reply ? $language->commentPlaceholderReply([$reply->author . ""], true) : $language->commentPlaceholderContent); ?>" required></textarea>
+      <textarea class="textarea width" id="form-comment-textarea:content" name="comment[content]" placeholder="<?php echo To::text($reply ? $language->commentPlaceholderReply([(string) $reply->author], true) : $language->commentPlaceholderContent); ?>" required></textarea>
     </div>
   </div>
   <p class="form-comment-button form-comment-button:x">
     <label for="form-comment-button:x"></label>
     <span>
       <button class="button button-submit" id="form-comment-button:x" type="submit"><?php echo $language->doPublish; ?></button><?php if ($c['deep'] > 0): ?> <a class="button button-reset comment-a comment-a:reset comment-reply:x" href="<?php echo $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>"><?php echo $language->doCancel; ?></a><?php endif; ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
-        <?php $u = Extend::state('user'); ?>
+        <?php $u = extend('user'); ?>
         <a href="<?php echo $url . '/' . ($u['_path'] ?? $u['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/')]) . '#' . $c['anchor'][1]; ?>"><?php echo $author ?: $language->doLogIn; ?></a>
       </span><?php endif; ?>
     </span>

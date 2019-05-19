@@ -32,7 +32,7 @@
                 'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
                 'id' => 'parent:' . $id,
                 'rel' => 'nofollow',
-                'title' => To::text($language->commentPlaceholderReply([$comment->author . ""], true))
+                'title' => To::text($language->commentPlaceholderReply([(string) $comment->author], true))
             ]
         ],
     ] : [], $page], $comment), [$page], $comment) : [];

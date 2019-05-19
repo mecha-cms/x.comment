@@ -1,7 +1,7 @@
 <?php
 
 // Store comment state to registry…
-$state = Extend::state('comment');
+$state = extend('comment');
 if (!empty($state['comment'])) {
     // Prioritize default state
     Config::alt($state);

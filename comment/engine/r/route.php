@@ -1,14 +1,14 @@
 <?php
 
 // Set a new comment!
-$state = Extend::state('comment');
+$state = extend('comment');
 Route::set('*/.comment', function($form, $k) use($config, $language, $state, $url) {
     $errors = 0;
     if ($k !== 'POST' || !is_file(PAGE . DS . $this[0] . '.page')) {
         Message::error('comment-source');
         ++$errors;
     }
-    $enter = Extend::exist('user') && Is::user();
+    $enter = extend('user') !== null && Is::user();
     $form['comment'] = array_replace_recursive($state['comment'], $form['comment'], [
         'status' => $form['comment']['status'] ?? ($enter ? 1 : false)
     ]);
@@ -61,13 +61,13 @@ Route::set('*/.comment', function($form, $k) use($config, $language, $state, $ur
         Message::error('comment-void-field', $language->commentContent);
         ++$errors;
     } else {
-        $content = To::text($content . "", HTML_WISE . ',img', true);
+        $content = To::text((string) $content, HTML_WISE . ',img', true);
         if ((!isset($type) || $type === 'HTML') && strpos($content, '</p>') === false) {
             // Replace new line with `<br>` and `<p>` tag(s)
             $content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
-        if (Extend::exist('block')) {
+        if (extend('block') !== null) {
             $e = Block::$config[0];
             $content = str_replace([
                 $e[0] . 'e' . $e[1], // `[[e]]`

@@ -1,7 +1,7 @@
 <?php namespace _\comment;
 
 // Extend user property to comment property
-if (\Extend::exist('user')) {
+if (\extend('user') !== null) {
     function user($v = "", array $lot = []) {
         if ($v || $this['status'] !== 1) {
             return $v;
@@ -34,7 +34,7 @@ if (\Extend::exist('user')) {
         \Asset::set($path . 'css' . DS . 'comment.min.css', 10);
         \Asset::set($path . 'js' . DS . 'comment.min.js', 10, [
             'src' => function($src) {
-                return $src . '#' . \Extend::state('comment', 'anchor')[1];
+                return $src . '#' . \extend('comment')['anchor'][1];
             }
         ]);
     }

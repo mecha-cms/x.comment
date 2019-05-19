@@ -9,7 +9,7 @@ class Comment extends Page {
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U')); // Comment ID by time
         parent::__construct($path, array_replace_recursive([
-            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . sprintf(Extend::state('comment', 'anchor')[0], $id)
+            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . sprintf(extend('comment')['anchor'][0], $id)
         ], static::$data, $lot), $prefix);
     }
 
