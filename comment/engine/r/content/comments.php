@@ -1,6 +1,6 @@
 <?php
 
-$x = X . __FILE__ . X;
+$x = P . __FILE__ . P;
 $type = $page->get('state.comment') ?? $lot[0] ?? $x;
 
 // Comment form is disabled and no comment(s)

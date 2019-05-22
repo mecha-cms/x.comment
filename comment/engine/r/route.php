@@ -2,7 +2,7 @@
 
 // Set a new comment!
 $state = extend('comment');
-Route::set('*/.comment', function($form, $k) use($config, $language, $state, $url) {
+Route::set('*/.comment', 200, function($form, $k) use($config, $language, $state, $url) {
     $errors = 0;
     if ($k !== 'POST' || !is_file(PAGE . DS . $this[0] . '.page')) {
         Message::error('comment-source');
@@ -12,7 +12,7 @@ Route::set('*/.comment', function($form, $k) use($config, $language, $state, $ur
     $form['comment'] = array_replace_recursive($state['comment'], $form['comment'], [
         'status' => $form['comment']['status'] ?? ($enter ? 1 : false)
     ]);
-    if (!isset($form['token']) || !$this->check($form['token'], 'comment')) {
+    if (!isset($form['token']) || !Guard::check($form['token'], 'comment')) {
         Message::error('comment-token');
         ++$errors;
     }
@@ -157,8 +157,8 @@ Route::set('*/.comment', function($form, $k) use($config, $language, $state, $ur
         if ($x === 'draft') {
             Message::info('comment-save');
         } else {
-            $this->kick(dirname($url->clean) . $url->query('&', ['parent' => false]) . '#' . sprintf($anchor[0], sprintf('%u', $t)));
+            Guard::kick(dirname($url->clean) . $url->query('&', ['parent' => false]) . '#' . sprintf($anchor[0], sprintf('%u', $t)));
         }
     }
-    $this->kick(dirname($url->clean) . $url->query . '#' . $anchor[1]);
+    Guard::kick(dirname($url->clean) . $url->query . '#' . $anchor[1]);
 });
