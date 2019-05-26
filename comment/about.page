@@ -3,7 +3,7 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.13.0
+version: 1.13.1
 
 lot:
   extend:
