@@ -1,6 +1,6 @@
 <?php
 
-$advance = extend('user');
+$advance = extension('user');
 $author = $advance ? Is::user() : false;
 
 ?>
@@ -39,7 +39,7 @@ $author = $advance ? Is::user() : false;
     <label for="form-comment-button:x"></label>
     <span>
       <button class="button button-submit" id="form-comment-button:x" type="submit"><?php echo $language->doPublish; ?></button><?php if ($c['deep'] > 0): ?> <a class="button button-reset comment-a comment-a:reset comment-reply:x" href="<?php echo $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>"><?php echo $language->doCancel; ?></a><?php endif; ?><?php if (!empty($c['enter']) && $advance): ?> <span class="comment-user button">
-        <?php $u = extend('user'); ?>
+        <?php $u = extension('user'); ?>
         <a href="<?php echo $url . '/' . ($u['_path'] ?? $u['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/')]) . '#' . $c['anchor'][1]; ?>"><?php echo $author ?: $language->doLogIn; ?></a>
       </span><?php endif; ?>
     </span>

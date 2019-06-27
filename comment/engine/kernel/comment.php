@@ -9,7 +9,7 @@ class Comment extends Page {
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U')); // Comment ID by time
         parent::__construct($path, array_replace_recursive([
-            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . sprintf(extend('comment')['anchor'][0], $id)
+            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . sprintf(extension('comment')['anchor'][0], $id)
         ], static::$data, $lot), $prefix);
     }
 
@@ -27,14 +27,14 @@ class Comment extends Page {
             if (!empty($files[$i])) {
                 foreach ($files[$i] as $v) {
                     $comment = new static($v);
-                    if ($comment->parent === $parent) {
-                        $comments[] = $comment;
+                    if ($comment['parent'] === $parent) {
+                        $comments[] = $comment->path;
                         ++$count; // Count comment(s), filter by `parent` property
                     }
                 }
             }
         }
-        $comments = new Anemon($comments);
+        $comments = new Comments($comments);
         $comments->title = $GLOBALS['language']->commentReplyCount($count);
         return $comments;
     }

@@ -1,14 +1,14 @@
 <?php
 
 // Set a new comment!
-$state = extend('comment');
-Route::set('*/.comment', 200, function($form, $k) use($config, $language, $state, $url) {
+$state = extension('comment');
+Route::set('<>/.comment', 200, function($form, $k) use($config, $language, $state, $url) {
     $errors = 0;
     if ($k !== 'post' || !is_file(PAGE . DS . $this[0] . '.page')) {
         Message::error('comment-source');
         ++$errors;
     }
-    $enter = extend('user') !== null && Is::user();
+    $enter = extension('user') !== null && Is::user();
     $form['comment'] = array_replace_recursive($state['comment'], $form['comment'], [
         'status' => $form['comment']['status'] ?? ($enter ? 1 : false)
     ]);
@@ -67,7 +67,7 @@ Route::set('*/.comment', 200, function($form, $k) use($config, $language, $state
             $content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
-        if (extend('block') !== null) {
+        if (extension('block') !== null) {
             $e = Block::$config[0];
             $content = str_replace([
                 $e[0] . 'e' . $e[1], // `[[e]]`

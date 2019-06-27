@@ -6,7 +6,7 @@ type: Markdown
 version: 1.13.2
 
 lot:
-  extend:
+  x:
     asset: 1
     form: 1
     message: 1

@@ -39,13 +39,9 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
         }
         sort($files);
         $files = $chunk === 0 ? [$files] : array_chunk($files, $chunk, false);
-        if (!empty($files[$i])) {
-            foreach ($files[$i] as $v) {
-                $comments[] = new Comment($v);
-            }
-        }
+        $comments = $files[$i] ?? [];
     }
-    $comments = new Anemon($comments);
+    $comments = new Comments($comments);
     $comments->title = $GLOBALS['language']->commentCount($count);
     return $comments;
 });
