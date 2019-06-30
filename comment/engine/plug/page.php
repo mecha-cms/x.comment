@@ -1,6 +1,6 @@
 <?php
 
-Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
+Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
     $comments = [];
     $count = 0;
     if ($path = $this->path) {
@@ -13,17 +13,17 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Anemon {
                 continue;
             } else if (is_file($v)) {
                 $parent = false;
-                foreach (stream($v) as $i => $s) {
-                    if ($i === 0 && $s !== '---') {
+                foreach (stream($v) as $ii => $ss) {
+                    if ($ii === 0 && $ss !== '---') {
                         break; // No header(s), no parent!
                     }
-                    if ($s === '...') {
+                    if ($ss === '...') {
                         break; // End header(s), no parent!
                     }
                     if (
-                        strpos($s, 'parent:') === 0 ||
-                        strpos($s, '"parent":') === 0 ||
-                        strpos($s, "'parent':") === 0
+                        strpos($ss, 'parent:') === 0 ||
+                        strpos($ss, '"parent":') === 0 ||
+                        strpos($ss, "'parent':") === 0
                     ) {
                         // Has parent comment!
                         $parent = true;
