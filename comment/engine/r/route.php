@@ -2,7 +2,7 @@
 
 // Set a new comment!
 $state = extension('comment');
-Route::set('<>/.comment', 200, function($form, $k) use($config, $language, $state, $url) {
+Route::set('*/.comment', 200, function($form, $k) use($config, $language, $state, $url) {
     $errors = 0;
     if ($k !== 'post' || !is_file(PAGE . DS . $this[0] . '.page')) {
         Message::error('comment-source');
