@@ -8,22 +8,24 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
         $files = [];
         foreach (g(COMMENT . DS . $r, 'page') as $v) {
             ++$count; // Count comment(s), no filter
-            if (is_file($rr = Path::F($v) . DS . 'parent.data') && filesize($rr) > 0) {
+            if (is_file($vv = Path::F($v) . DS . 'parent.data') && filesize($vv) > 0) {
                 // Has parent comment, skip!
                 continue;
             } else if (is_file($v)) {
                 $parent = false;
-                foreach (stream($v) as $ii => $ss) {
-                    if ($ii === 0 && $ss !== '---') {
-                        break; // No header(s), no parent!
+                foreach (stream($v) as $kk => $vv) {
+                    if ($kk === 0 && $vv !== '---') {
+                        // No header marker means no property at all
+                        break;
                     }
-                    if ($ss === '...') {
-                        break; // End header(s), no parent!
+                    if ($vv === '...') {
+                        // End header marker means no `parent` property found
+                        break;
                     }
                     if (
-                        strpos($ss, 'parent:') === 0 ||
-                        strpos($ss, '"parent":') === 0 ||
-                        strpos($ss, "'parent':") === 0
+                        strpos($vv, 'parent:') === 0 ||
+                        strpos($vv, '"parent":') === 0 ||
+                        strpos($vv, "'parent':") === 0
                     ) {
                         // Has parent comment!
                         $parent = true;
@@ -42,6 +44,7 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
         $comments = $files[$i] ?? [];
     }
     $comments = new Comments($comments);
-    $comments->title = $GLOBALS['language']->commentCount($count);
+    global $language;
+    $comments->title = $language->commentCount($count);
     return $comments;
 });

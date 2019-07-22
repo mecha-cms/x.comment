@@ -17,13 +17,13 @@
   </header>
   <div class="comment-body"><?php echo $comment->content; ?></div>
   <?php if ($type && $reply && $reply->slug === $comment->slug): ?>
-  <?php static::get('comments.form', $lot); ?>
+  <?php static::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
     <?php
 
     $id = $comment->slug;
-    $tools = $type ? _\comment\tools(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
+    $links = $type ? _\lot\x\comment\links(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
         'reply' => [
             0 => 'a',
             1 => $language->doReply,
@@ -38,9 +38,9 @@
     ] : [], $page], $comment), [$page], $comment) : [];
 
     ?>
-    <?php if (!empty($tools)): ?>
+    <?php if (!empty($links)): ?>
     <ul class="comment-links">
-      <li><?php echo implode('</li><li>', $tools); ?></li>
+      <li><?php echo implode('</li><li>', $links); ?></li>
     </ul>
     <?php endif; ?>
   </footer>

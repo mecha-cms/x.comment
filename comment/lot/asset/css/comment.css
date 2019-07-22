@@ -219,7 +219,7 @@ li.comment .form-comment {
 .form-comment + .comment-footer {
   display: none;
 }
-.form-comment.on-reply .button-reset {
+.form-comment.is-reply .button-reset {
   display: inline-block;
 }
 

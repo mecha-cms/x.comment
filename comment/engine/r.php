@@ -1,7 +1,7 @@
-<?php namespace _\comment;
+<?php namespace _\lot\x\comment;
 
-// Build tool(s) from array
-function tools(array $in, array $lot = []) {
+// Build link(s) from array
+function links(array $in, array $lot = []) {
     $out = [];
     foreach ($in as $v) {
         if (\is_array($v)) {
@@ -11,7 +11,7 @@ function tools(array $in, array $lot = []) {
             $a[2] = $v[2] ?? [];
             $out[] = $a;
         } else if (\is_callable($v)) {
-            $out[] = \fire($v, $lot, $this, \Content::class);
+            $out[] = \fire($v, $lot, $this);
         } else {
             $out[] = $v;
         }

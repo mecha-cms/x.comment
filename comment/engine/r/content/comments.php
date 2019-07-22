@@ -13,7 +13,7 @@ if ($type === $x || ($type !== false && $type !== 0)):
 $reply = HTTP::get('parent');
 $reply = $reply ? new Comment(COMMENT . DS . $url->path(DS) . DS . $reply . '.page') : null;
 $c = [
-    'c' => extension('comment'),
+    'c' => state('comment'),
     'type' => $type,
     'reply' => $reply
 ];
@@ -28,8 +28,8 @@ if ($type === true) {
 
 ?>
 <section class="comments comments:<?php echo $k ?? 1; ?>"<?php echo !empty($c['c']['anchor'][2]) ? ' id="' . $c['c']['anchor'][2] . '"' : ""; ?>>
-  <?php static::get('comments.header', $c); ?>
-  <?php static::get('comments.body', $c); ?>
-  <?php static::get('comments.footer', $c); ?>
+  <?php static::get(__DIR__ . DS . 'comments.header.php', $c); ?>
+  <?php static::get(__DIR__ . DS . 'comments.body.php', $c); ?>
+  <?php static::get(__DIR__ . DS . 'comments.footer.php', $c); ?>
 </section>
 <?php endif; ?>

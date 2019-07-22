@@ -2,18 +2,16 @@
 
 class Comment extends Page {
 
-    // Set pre-defined comment property
-    public static $data = [];
-
     public function __construct(string $path = null, array $lot = [], array $prefix = []) {
+        global $url;
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U')); // Comment ID by time
         parent::__construct($path, array_replace_recursive([
-            'url' => $GLOBALS['URL']['$'] . '/' . $f . '#' . sprintf(extension('comment')['anchor'][0], $id)
-        ], static::$data, $lot), $prefix);
+            'url' => $url . '/' . $f . '#' . sprintf(state('comment')['anchor'][0], $id)
+        ], $lot), $prefix);
     }
 
-    public function comments(int $chunk = 100, int $i = 0): Anemon {
+    public function comments(int $chunk = 100, int $i = 0): Comments {
         $comments = [];
         $count = 0;
         if ($path = $this->path) {
@@ -35,7 +33,8 @@ class Comment extends Page {
             }
         }
         $comments = new Comments($comments);
-        $comments->title = $GLOBALS['language']->commentReplyCount($count);
+        global $language;
+        $comments->title = $language->commentReplyCount($count);
         return $comments;
     }
 

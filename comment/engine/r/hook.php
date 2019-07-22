@@ -1,30 +1,54 @@
-<?php namespace _\comment;
+<?php namespace _\lot\x\comment;
 
 // Extend user property to comment property
-if (\extension('user') !== null) {
-    function user($v = "", array $lot = []) {
-        if ($v || $this['status'] !== 1) {
-            return $v;
+if (\state('user') !== null) {
+    function avatar($avatar, array $lot = []) {
+        if (!$avatar) {
+            global $url;
+            $w = \array_shift($lot) ?? 72;
+            $h = \array_shift($lot) ?? $w;
+            $d = \array_shift($lot) ?? 'monsterid';
+            $avatar = $url->protocol . 'www.gravatar.com/avatar/' . \md5($this['email']) . '?s=' . $w . '&d=' . $d;
+        }
+        if ($avatar || $this['status'] !== 1) {
+            return $avatar;
         }
         $user = $this['author'];
         if ($user && \is_string($user) && \strpos($user, '@') === 0) {
-            if ($user = \File::exist(USER . DS . \substr($user, 1) . '.page')) {
-                $user = new \User($user);
-                $k = \explode('.', $this->_hook, 2)[1] ?? "";
-                if ($k === 'link') {
-                    // Return `link` property or `url` property or the initial value
-                    return $user->get($k) ?? $user->get('url') ?? $v;
-                }
-                return $user->get($k) ?? $v;
+            if (\is_file($user = USER . DS . \substr($user, 1) . '.page')) {
+                return (new \User($user))->avatar ?? $avatar;
             }
         }
-        return $v;
+        return $avatar;
     }
-    \Hook::set([
-        'comment.avatar',
-        'comment.email',
-        'comment.link'
-    ], __NAMESPACE__ . "\\user", 0);
+    function email($email) {
+        if ($email || $this['status'] !== 1) {
+            return $email;
+        }
+        $user = $this['author'];
+        if ($user && \is_string($user) && \strpos($user, '@') === 0) {
+            if (\is_file($user = USER . DS . \substr($user, 1) . '.page')) {
+                return (new \User($user))->email ?? $email;
+            }
+        }
+        return $email;
+    }
+    function link($link) {
+        if ($link || $this['status'] !== 1) {
+            return $link;
+        }
+        $user = $this['author'];
+        if ($user && \is_string($user) && \strpos($user, '@') === 0) {
+            if (\is_file($user = USER . DS . \substr($user, 1) . '.page')) {
+                $user = new \User($user);
+                return $user->link ?? $user->url ?? $link;
+            }
+        }
+        return $link;
+    }
+    \Hook::set('comment.avatar', __NAMESPACE__ . "\\avatar", 0);
+    \Hook::set('comment.email', __NAMESPACE__ . "\\email", 0);
+    \Hook::set('comment.link', __NAMESPACE__ . "\\link", 0);
 }
 
 // Loading asset(s)…
@@ -34,7 +58,7 @@ if (\extension('user') !== null) {
         \Asset::set($path . 'css' . DS . 'comment.min.css', 10);
         \Asset::set($path . 'js' . DS . 'comment.min.js', 10, [
             'src' => function($src) {
-                return $src . '#' . \extension('comment')['anchor'][1];
+                return $src . '#' . \state('comment')['anchor'][1];
             }
         ]);
     }

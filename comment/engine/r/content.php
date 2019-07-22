@@ -1,5 +1,4 @@
 <?php
 
-foreach (g(__DIR__ . DS . 'content', 'php') as $v) {
-    Content::set(Path::N($v), $v);
-}
+Content::set('comments', __DIR__ . DS . 'content' . DS . 'comments.php');
+Content::set('form/comment', __DIR__ . DS . 'content' . DS . 'comments.form.php');
