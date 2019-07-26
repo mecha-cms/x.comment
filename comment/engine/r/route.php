@@ -51,7 +51,7 @@ function route($form, $k) {
         $author = \strpos($author, '@') !== 0 ? \To::text($author) : $author;
     }
     if ($error === 0 && isset($content)) {
-        $content = \To::text((string) $content, HTML_FORMAT . ',img', true);
+        $content = \To::text((string) $content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
         if ((!isset($type) || $type === 'HTML') && \strpos($content, '</p>') === false) {
             // Replace new line with `<br>` and `<p>` tag(s)
             $content = '<p>' . \str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';

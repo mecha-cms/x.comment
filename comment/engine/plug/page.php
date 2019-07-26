@@ -44,7 +44,6 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
         $comments = $files[$i] ?? [];
     }
     $comments = new Comments($comments);
-    global $language;
-    $comments->title = $language->commentCount($count);
+    $comments->title = $GLOBALS['language']->commentCount($count);
     return $comments;
 });

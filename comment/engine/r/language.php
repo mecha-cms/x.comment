@@ -25,7 +25,7 @@ Language::set([
     'comment-placeholder-as' => 'Comment as %s',
     'comment-placeholder-author' => 'Anonymous',
     // There are `&zwnj;` character(s) added just before and after `@`
-    'comment-placeholder-email' => 'hello‌@‌' . $GLOBALS['URL']['host'],
+    'comment-placeholder-email' => 'hello‌@‌' . $url->host,
     // There are also `&zwnj;` character(s) added just before and after `://`
     // to prevent minify extension minifying this placeholder value
     'comment-placeholder-link' => 'http‌://‌',

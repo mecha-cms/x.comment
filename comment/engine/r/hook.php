@@ -4,11 +4,10 @@
 if (\state('user') !== null) {
     function avatar($avatar, array $lot = []) {
         if (!$avatar) {
-            global $url;
             $w = \array_shift($lot) ?? 72;
             $h = \array_shift($lot) ?? $w;
             $d = \array_shift($lot) ?? 'monsterid';
-            $avatar = $url->protocol . 'www.gravatar.com/avatar/' . \md5($this['email']) . '?s=' . $w . '&d=' . $d;
+            $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this['email']) . '?s=' . $w . '&d=' . $d;
         }
         if ($avatar || $this['status'] !== 1) {
             return $avatar;
