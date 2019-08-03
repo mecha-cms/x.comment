@@ -2,12 +2,12 @@
 
 class Comment extends Page {
 
-    public function __construct(string $path = null, array $lot = [], array $prefix = []) {
+    public function __construct(string $path = null, array $lot = []) {
         $f = Path::R(dirname($path), COMMENT, '/');
         $id = sprintf('%u', (new Date(Path::N($path)))->format('U')); // Comment ID by time
-        parent::__construct($path, array_replace_recursive([
+        parent::__construct($path, array_replace([
             'url' => $GLOBALS['url'] . '/' . $f . '#' . sprintf(state('comment')['anchor'][0], $id)
-        ], $lot), $prefix);
+        ], $lot));
     }
 
     public function comments(int $chunk = 100, int $i = 0): Comments {
