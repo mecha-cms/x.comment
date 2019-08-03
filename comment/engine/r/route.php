@@ -52,7 +52,7 @@ function route($form, $k) {
     }
     if ($error === 0 && isset($content)) {
         $content = \To::text((string) $content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
-        if ((!isset($type) || $type === 'HTML') && \strpos($content, '</p>') === false) {
+        if ((!isset($type) || $type === 'HTML' || $type === 'text/html') && \strpos($content, '</p>') === false) {
             // Replace new line with `<br>` and `<p>` tag(s)
             $content = '<p>' . \str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
@@ -140,9 +140,13 @@ function route($form, $k) {
                 unset($data[$k]);
             }
         }
-        \Page::set($data)->saveTo($file, 0600);
+        $p = new \Page($file);
+        $p->set($data);
+        $p->save(0600);
         if (!\Is::void($parent)) {
-            \File::set((new \Date($parent))->slug)->saveTo($directory . DS . 'parent.data', 0600);
+            $f = new \File($directory . DS . 'parent.data');
+            $f->set((new \Date($parent))->name);
+            $f->save(0600);
         }
         \Hook::fire('on.comment.set', [null, null], new \File($file));
         \Alert::success('comment-create');

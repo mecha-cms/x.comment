@@ -5,15 +5,14 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
     $count = 0;
     if ($path = $this->path) {
         $r = Path::R(Path::F($path), PAGE);
-        $files = [];
-        foreach (g(COMMENT . DS . $r, 'page') as $v) {
+        foreach (g(COMMENT . DS . $r, 'page') as $k => $v) {
             ++$count; // Count comment(s), no filter
-            if (is_file($vv = Path::F($v) . DS . 'parent.data') && filesize($vv) > 0) {
+            if (is_file($kk = Path::F($k) . DS . 'parent.data') && filesize($kk) > 0) {
                 // Has parent comment, skip!
                 continue;
-            } else if (is_file($v)) {
+            } else if (is_file($k)) {
                 $parent = false;
-                foreach (stream($v) as $kk => $vv) {
+                foreach (stream($k) as $kk => $vv) {
                     if ($kk === 0 && $vv !== '---') {
                         // No header marker means no property at all
                         break;
@@ -37,13 +36,12 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
                     continue;
                 }
             }
-            $files[] = $v;
+            $comments[] = $k;
         }
-        sort($files);
-        $files = $chunk === 0 ? [$files] : array_chunk($files, $chunk, false);
-        $comments = $files[$i] ?? [];
+        sort($comments);
     }
-    $comments = new Comments($comments);
+    $comments = $chunk === 0 ? [$comments] : array_chunk($comments, $chunk, false);
+    $comments = new Comments($comments[$i] ?? []);
     $comments->title = $GLOBALS['language']->commentCount($count);
     return $comments;
 });

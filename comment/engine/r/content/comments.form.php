@@ -4,7 +4,7 @@ $advance = state('user');
 $author = $advance ? Is::user() : false;
 
 ?>
-<form class="form-comment<?php echo $reply ? ' is-reply' : ""; ?>" id="<?php echo $c['anchor'][1]; ?>" action="<?php echo $url . '/.comment' . $url->path . $url->query('&amp;'); ?>" method="post">
+<form class="form-comment<?php echo $reply ? ' is-reply' : ""; ?>" id="<?php echo $c['anchor'][1]; ?>" action="<?php echo $url . '/.comment' . ($url->path ?? '/' . state('page')['/']) . $url->query('&amp;'); ?>" method="post">
   <?php echo $alert; ?>
   <?php if ($author): ?>
     <h4><?php echo $language->commentPlaceholderAs('<a href="' . $user->url . '" rel="nofollow">' . $user . '</a>', true); ?></h4>
@@ -43,6 +43,6 @@ $author = $advance ? Is::user() : false;
       </span><?php endif; ?>
     </span>
   </p>
-  <input name="parent" type="hidden" value="<?php echo $reply ? $reply->slug : ""; ?>">
+  <input name="parent" type="hidden" value="<?php echo $reply ? $reply->name : ""; ?>">
   <input name="token" type="hidden" value="<?php echo token('comment'); ?>">
 </form>

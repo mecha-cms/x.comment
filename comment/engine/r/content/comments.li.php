@@ -16,13 +16,13 @@
     </h4>
   </header>
   <div class="comment-body"><?php echo $comment->content; ?></div>
-  <?php if ($type && $reply && $reply->slug === $comment->slug): ?>
+  <?php if ($type && $reply && $reply->name === $comment->name): ?>
   <?php static::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
     <?php
 
-    $id = $comment->slug;
+    $id = $comment->name;
     $links = $type ? _\lot\x\comment\links(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
         'reply' => [
             0 => 'a',

@@ -8,7 +8,12 @@ if ($page->comments->count() === 0 && $type === 2) {
     $type = 0; // Is the same as disabled comment(s)
 }
 
-if ($type === $x || ($type !== false && $type !== 0)):
+if (
+    // Make sure current page is active
+    $page->x === 'page' &&
+    // Make sure comment feature is active
+    ($type === $x || ($type !== false && $type !== 0))
+):
 
 $reply = HTTP::get('parent');
 $reply = $reply ? new Comment(COMMENT . DS . $url->path(DS) . DS . $reply . '.page') : null;

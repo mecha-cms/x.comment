@@ -15,23 +15,17 @@ class Comment extends Page {
         $count = 0;
         if ($path = $this->path) {
             $parent = Path::N($path);
-            $files = [];
-            foreach (g(dirname($path), 'page') as $v) {
-                $files[] = $v;
-            }
-            sort($files);
-            $files = $chunk === 0 ? [$files] : array_chunk($files, $chunk, false);
-            if (!empty($files[$i])) {
-                foreach ($files[$i] as $v) {
-                    $comment = new static($v);
-                    if ($comment['parent'] === $parent) {
-                        $comments[] = $comment->path;
-                        ++$count; // Count comment(s), filter by `parent` property
-                    }
+            foreach (g(dirname($path), 'page') as $k => $v) {
+                $comment = new static($k);
+                if ($comment['parent'] === $parent) {
+                    $comments[] = $k;
+                    ++$count; // Count comment(s), filter by `parent` property
                 }
             }
+            sort($comments);
         }
-        $comments = new Comments($comments);
+        $comments = $chunk === 0 ? [$comments] : array_chunk($comments, $chunk, false);
+        $comments = new Comments($comments[$i] ?? []);
         $comments->title = $GLOBALS['language']->commentReplyCount($count);
         return $comments;
     }
