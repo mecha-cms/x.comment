@@ -5,5 +5,5 @@ function comment(...$v) {
 }
 
 function comments(...$v) {
-    return Get::comments(...$v);
+    return Comments::from(...$v);
 }

@@ -123,7 +123,6 @@ function route($form, $k) {
     $anchor = $state['anchor'];
     $directory = COMMENT . DS . $this[0] . DS . \date('Y-m-d-H-i-s', $t);
     $file = $directory . '.' . ($x = $state['comment']['x'] ?? 'page');
-    $this->status(200);
     if ($error > 0) {
         \Session::set('form', $form);
     } else {
