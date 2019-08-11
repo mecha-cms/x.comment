@@ -3,7 +3,7 @@
 // Set a new comment!
 function route($form, $k) {
     $state = \state('comment');
-    $guard = \state('comment:guard');
+    $guard = \state('comment', 'guard');
     $enter = \state('user') !== null && \Is::user();
     $error = $form['_error'] ?? 0;
     if ($k !== 'post' || !\is_file(PAGE . DS . $this[0] . '.page')) {
