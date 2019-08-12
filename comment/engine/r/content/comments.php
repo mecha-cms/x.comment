@@ -15,7 +15,7 @@ if (
     ($type === $x || ($type !== false && $type !== 0))
 ):
 
-$reply = $_GET['parent'] ?? null;
+$reply = Get::get('parent');
 $reply = $reply ? new Comment(COMMENT . DS . $url->path(DS) . DS . $reply . '.page') : null;
 $c = [
     'c' => state('comment'),
