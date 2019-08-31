@@ -6,7 +6,7 @@ function route($form, $k) {
     $guard = \state('comment', 'guard');
     $enter = \state('user') !== null && \Is::user();
     $error = $form['_error'] ?? 0;
-    if ($k !== 'post' || !\is_file(PAGE . DS . $this[0] . '.page')) {
+    if ($k !== 'post' || !\is_file(\PAGE . \DS . $this[0] . '.page')) {
         \Alert::error('comment-for');
         ++$error;
     }
@@ -121,7 +121,7 @@ function route($form, $k) {
     // Store comment to file
     $t = \time();
     $anchor = $state['anchor'];
-    $directory = COMMENT . DS . $this[0] . DS . \date('Y-m-d-H-i-s', $t);
+    $directory = \COMMENT . \DS . $this[0] . \DS . \date('Y-m-d-H-i-s', $t);
     $file = $directory . '.' . ($x = $state['comment']['x'] ?? 'page');
     if ($error > 0) {
         \Session::set('form', $form);
@@ -143,7 +143,7 @@ function route($form, $k) {
         $p->set($data);
         $p->save(0600);
         if (!\Is::void($parent)) {
-            $f = new \File($directory . DS . 'parent.data');
+            $f = new \File($directory . \DS . 'parent.data');
             $f->set((new \Date($parent))->name);
             $f->save(0600);
         }

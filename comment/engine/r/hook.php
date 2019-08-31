@@ -14,7 +14,7 @@ if (\state('user') !== null) {
         }
         $user = $this['author'];
         if ($user && \is_string($user) && \strpos($user, '@') === 0) {
-            if (\is_file($user = USER . DS . \substr($user, 1) . '.page')) {
+            if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
                 return (new \User($user))->avatar ?? $avatar;
             }
         }
@@ -26,7 +26,7 @@ if (\state('user') !== null) {
         }
         $user = $this['author'];
         if ($user && \is_string($user) && \strpos($user, '@') === 0) {
-            if (\is_file($user = USER . DS . \substr($user, 1) . '.page')) {
+            if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
                 return (new \User($user))->email ?? $email;
             }
         }
@@ -38,7 +38,7 @@ if (\state('user') !== null) {
         }
         $user = $this['author'];
         if ($user && \is_string($user) && \strpos($user, '@') === 0) {
-            if (\is_file($user = USER . DS . \substr($user, 1) . '.page')) {
+            if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
                 $user = new \User($user);
                 return $user->link ?? $user->url ?? $link;
             }
@@ -53,9 +53,9 @@ if (\state('user') !== null) {
 // Loading asset(s)…
 \Hook::set('set', function() {
     if (\Config::is('page')) {
-        $path = __DIR__ . DS . '..' . DS . '..' . DS . 'lot' . DS . 'asset' . DS;
-        \Asset::set($path . 'css' . DS . 'comment.min.css', 10);
-        \Asset::set($path . 'js' . DS . 'comment.min.js', 10, [
+        $path = __DIR__ . \DS . '..' . \DS . '..' . \DS . 'lot' . \DS . 'asset' . \DS;
+        \Asset::set($path . 'css' . \DS . 'comment.min.css', 10);
+        \Asset::set($path . 'js' . \DS . 'comment.min.js', 10, [
             'src' => function($src) {
                 return $src . '#' . \state('comment')['anchor'][1];
             }
