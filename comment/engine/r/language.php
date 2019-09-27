@@ -15,6 +15,14 @@ Language::set([
     'alert-info-comment-x' => 'Comments are closed.',
     'alert-success-comment-create' => 'Comment created.',
     'comment' => ['Comment', 'Comment', 'Comments'],
+    'comment-alt-as' => 'Comment as %s',
+    'comment-alt-author' => 'Anonymous',
+    'comment-alt-email' => S . 'hello' . S . '@' . S . $url->host . S,
+    // There are also `&zwnj;` character(s) added just before and after `://`
+    // to prevent minify extension minifying this placeholder value
+    'comment-alt-link' => S . 'http' . S . '://' . S,
+    'comment-alt-content' => 'Message goes here…',
+    'comment-alt-reply' => 'Reply to %s',
     'comment-author' => 'Name',
     'comment-content' => 'Message',
     'comment-count' => function(int $i) {
@@ -22,19 +30,7 @@ Language::set([
     },
     'comment-link' => 'URL',
     'comment-email' => 'E-Mail',
-    'comment-placeholder-as' => 'Comment as %s',
-    'comment-placeholder-author' => 'Anonymous',
-    // There are `&zwnj;` character(s) added just before and after `@`
-    'comment-placeholder-email' => 'hello‌@‌' . $url->host,
-    // There are also `&zwnj;` character(s) added just before and after `://`
-    // to prevent minify extension minifying this placeholder value
-    'comment-placeholder-link' => 'http‌://‌',
-    'comment-placeholder-content' => 'Message goes here…',
-    'comment-placeholder-reply' => 'Reply to %s',
     'comment-reply-count' => function(int $i) {
         return $i . ' Repl' . ($i === 1 ? 'y' : 'ies');
-    },
-    'o:page-state' => [
-        'comment' => ['Disable comments?', 2]
-    ]
+    }
 ]);

@@ -4,7 +4,7 @@
   </figure>
   <header class="comment-header">
     <p class="comment-property">
-      <time class="comment-time" datetime="<?php echo $comment->time->ISO8601; ?>"><?php echo $comment->time->{strtr($config->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
+      <time class="comment-time" datetime="<?php echo $comment->time->ISO8601; ?>"><?php echo $comment->time->{strtr($state->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
       <a class="comment-url" href="<?php echo implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
     </p>
     <h4 class="comment-author">
@@ -32,7 +32,7 @@
                 'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
                 'id' => 'parent:' . $id,
                 'rel' => 'nofollow',
-                'title' => To::text($language->commentPlaceholderReply([(string) $comment->author], true))
+                'title' => To::text($language->commentAltReply([(string) $comment->author], true))
             ]
         ],
     ] : [], $page], $comment), [$page], $comment) : [];
@@ -44,7 +44,7 @@
     </ul>
     <?php endif; ?>
   </footer>
-  <?php if ($deep < $c['deep'] && $comment->comments->count): ++$deep; ?>
+  <?php if ($deep < $c['deep'] && $comment->comments->count()): ++$deep; ?>
   <ul class="comments" data-level="<?php echo $deep; ?>">
     <?php foreach ($comment->comments(9999) as $v): ?>
     <?php static::get(__FILE__, array_replace($lot, [

@@ -4,7 +4,7 @@ $x = P . __FILE__ . P;
 $type = $page->get('state.comment') ?? $lot[0] ?? $x;
 
 // Comment form is disabled and no comment(s)
-if ($page->comments->count() === 0 && $type === 2) {
+if (!$page->comments || ($page->comments->count() === 0 && $type === 2)) {
     $type = 0; // Is the same as disabled comment(s)
 }
 
@@ -16,9 +16,9 @@ if (
 ):
 
 $reply = Get::get('parent');
-$reply = $reply ? new Comment(COMMENT . DS . $url->path(DS) . DS . $reply . '.page') : null;
+$reply = $reply ? new Comment(COMMENT . $url->path(DS) . DS . $reply . '.page') : null;
 $c = [
-    'c' => state('comment'),
+    'c' => State::get('x.comment', true),
     'type' => $type,
     'reply' => $reply
 ];

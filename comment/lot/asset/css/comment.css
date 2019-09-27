@@ -215,11 +215,11 @@ li.comment .form-comment {
   display: block;
   width: 100%;
 }
-.form-comment .button-reset,
+.form-comment .button-let,
 .form-comment + .comment-footer {
   display: none;
 }
-.form-comment.is-reply .button-reset {
+.form-comment.is-reply .button-let {
   display: inline-block;
 }
 

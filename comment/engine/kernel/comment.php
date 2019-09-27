@@ -5,7 +5,7 @@ class Comment extends Page {
     public function URL(...$lot) {
         $f = Path::R(dirname($path = $this->path), LOT . DS . 'comment', '/');
         $id = sprintf('%u', parent::time()->format('U')); // Comment ID by time
-        return $GLOBALS['url'] . '/' . $f . '#' . sprintf(state('comment')['anchor'][0], $id);
+        return $GLOBALS['url'] . '/' . $f . '#' . sprintf(State::get('x.comment.anchor.0'), $id);
     }
 
     public function comments(int $chunk = 100, int $i = 0): Comments {

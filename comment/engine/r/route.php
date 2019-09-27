@@ -1,46 +1,41 @@
 <?php namespace _\lot\x\comment;
 
 // Set a new comment!
-function route($form, $k) {
-    $state = \state('comment');
-    $guard = \state('comment', 'guard');
-    $enter = \state('user') !== null && \Is::user();
-    $error = $form['_error'] ?? 0;
-    if ($k !== 'post' || !\is_file(\PAGE . \DS . $this[0] . '.page')) {
+function route($lot, $type) {
+    $active = \State::get('x.user') !== null && \Is::user();
+    $state = \State::get('x.comment', true);
+    $error = $lot['_error'] ?? 0;
+    if ($type !== 'Post' || !\is_file(\PAGE . \DS . $this[0] . '.page')) {
         \Alert::error('comment-for');
         ++$error;
     }
-    $defaults = \array_replace_recursive(
-        // Inherit to `page` configuration value
-        (array) \Config::get('page', true),
-        // Inherit to `comment` configuration value
-        (array) \Config::get('comment', true)
-    );
-    $form = \array_replace_recursive($defaults, $form);
-    $form['status'] = $enter ? 1 : 2;
-    extract($form, \EXTR_SKIP);
-    global $config, $language, $url;
-    if (\Is::void($token) || !\Guard::check($token, 'comment')) {
+    $default = \array_replace_recursive((array) \State::get('x.page', true), $state);
+    $lot = \array_replace_recursive($default, $lot);
+    $lot['status'] = $active ? 1 : 2;
+    extract($lot, \EXTR_SKIP);
+    global $language, $state, $url;
+    if (empty($token) || !\Guard::check($token, 'comment')) {
         \Alert::error('comment-token');
         ++$error;
     }
+    $guard = $state['guard'] ?? [];
     foreach (['author', 'email', 'link', 'content'] as $key) {
-        if (!isset($form[$key])) {
+        if (!isset($lot[$key])) {
             continue;
         }
         $k = 'comment' . \To::pascal($key);
         // Check for empty field(s)
-        if (\Is::void($form[$key])) {
+        if (\Is::void($lot[$key])) {
             if ($key !== 'link') { // `link` field is optional
                 \Alert::error('comment-void-field', $language->{$k});
                 ++$error;
             }
         }
         // Check for field(s) length
-        if (isset($guard['max'][$key]) && \gt($form[$key], $guard['max'][$key])) {
+        if (isset($guard['max'][$key]) && \gt($lot[$key], $guard['max'][$key])) {
             \Alert::error('comment-max', $language->{$k});
             ++$error;
-        } else if (isset($guard['min'][$key]) && \lt($form[$key], $guard['min'][$key])) {
+        } else if (isset($guard['min'][$key]) && \lt($lot[$key], $guard['min'][$key])) {
             if ($key !== 'link') { // `link` field is optional
                 \Alert::error('comment-min', $language->{$k});
                 ++$error;
@@ -52,13 +47,20 @@ function route($form, $k) {
     }
     if ($error === 0 && isset($content)) {
         $content = \To::text((string) $content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
-        if ((!isset($type) || $type === 'HTML' || $type === 'text/html') && \strpos($content, '</p>') === false) {
+        if (
+            (
+                !isset($lot['type']) ||
+                $lot['type'] === 'HTML' ||
+                $lot['type'] === 'text/html'
+            ) &&
+            \strpos($content, '</p>') === false
+        ) {
             // Replace new line with `<br>` and `<p>` tag(s)
             $content = '<p>' . \str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
-        if (\state('block') !== null) {
-            $e = \Block::$config[0];
+        if (\State::get('x.block') !== null) {
+            $e = \Block::$state[0];
             $content = \str_replace([
                 $e[0] . 'e' . $e[1], // `[[e]]`
                 $e[0] . $e[2] . 'e' . $e[1] // `[[/e]]`
@@ -69,7 +71,7 @@ function route($form, $k) {
             $content = \preg_replace('#<img(?:\s[^>]*)?>#i', '<!-- $0 -->', $content);
         }
     }
-    if ($error === 0 && !$enter) {
+    if ($error === 0 && !$active) {
         if (!empty($email) && !\Is::email($email)) {
             \Alert::error('comment-pattern-field', $language->commentEmail);
             ++$error;
@@ -122,7 +124,7 @@ function route($form, $k) {
     $t = \time();
     $anchor = $state['anchor'];
     $directory = \COMMENT . \DS . $this[0] . \DS . \date('Y-m-d-H-i-s', $t);
-    $file = $directory . '.' . ($x = $state['comment']['x'] ?? 'page');
+    $file = $directory . '.' . ($x = $state['x'] ?? 'page');
     if ($error > 0) {
         \Session::set('form', $form);
     } else {
@@ -134,20 +136,18 @@ function route($form, $k) {
             'status' => $status,
             'content' => $content
         ];
-        foreach ($defaults as $k => $v) {
+        foreach ($default as $k => $v) {
             if (isset($data[$k]) && $data[$k] === $v) {
                 unset($data[$k]);
             }
         }
         $p = new \Page($file);
-        $p->set($data);
-        $p->save(0600);
+        $p->set($data)->save(0600);
         if (!\Is::void($parent)) {
             $f = new \File($directory . \DS . 'parent.data');
-            $f->set((new \Date($parent))->name);
-            $f->save(0600);
+            $f->set((new \Date($parent))->name)->save(0600);
         }
-        \Hook::fire('on.comment.set', [null, null], new \File($file));
+        \Hook::fire('on.comment.set', [new \File($file), null], new \Comment($file));
         \Alert::success('comment-create');
         \Session::set('comment', $data);
         if ($x === 'draft') {

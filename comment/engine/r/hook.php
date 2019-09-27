@@ -1,7 +1,7 @@
 <?php namespace _\lot\x\comment;
 
 // Extend user property to comment property
-if (\state('user') !== null) {
+if (\State::get('x.user') !== null) {
     function avatar($avatar, array $lot = []) {
         if (!$avatar) {
             $w = $lot[0] ?? 72;
@@ -52,12 +52,13 @@ if (\state('user') !== null) {
 
 // Loading asset(s)…
 \Hook::set('set', function() {
-    if (\Config::is('page')) {
+    $state = \State::get(null, true);
+    if (!empty($state['is']['page']) && !empty($state['has']['page'])) {
         $path = __DIR__ . \DS . '..' . \DS . '..' . \DS . 'lot' . \DS . 'asset' . \DS;
         \Asset::set($path . 'css' . \DS . 'comment.min.css', 10);
         \Asset::set($path . 'js' . \DS . 'comment.min.js', 10, [
-            'src' => function($src) {
-                return $src . '#' . \state('comment')['anchor'][1];
+            'src' => function($src) use($state) {
+                return $src . '#' . ($state['x']['comment']['anchor'][1] ?? "");
             }
         ]);
     }

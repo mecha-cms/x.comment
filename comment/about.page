@@ -3,7 +3,7 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.14.3
+version: 1.15.0
 
 use:
   '.\lot\x\alert': 1
@@ -14,7 +14,7 @@ use:
 
 ### Installation
 
-Edit `page.php` file in your active shield folder then put this snippet after the `</article>` tag:
+Edit `page.php` file in your active skin folder then put this snippet after the `</article>` tag:
 
 ~~~ .php
 <?php static::comments(); ?>
@@ -47,10 +47,8 @@ state:
 Page content.
 ~~~
 
-To set pre-defined comment visibility globally, specify a comment flag on the first array of the shield arguments:
+To set pre-defined comment visibility globally, specify a comment flag on the first array of the skin arguments:
 
 ~~~ .php
 <?php static::comments([2]); ?>
 ~~~
-
-<!-- block:donate -->
