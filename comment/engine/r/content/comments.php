@@ -32,9 +32,9 @@ if ($type === true) {
 }
 
 ?>
-<section class="comments comments:<?php echo $k ?? 1; ?>"<?php echo !empty($c['c']['anchor'][2]) ? ' id="' . $c['c']['anchor'][2] . '"' : ""; ?>>
-  <?php static::get(__DIR__ . DS . 'comments.header.php', $c); ?>
-  <?php static::get(__DIR__ . DS . 'comments.body.php', $c); ?>
-  <?php static::get(__DIR__ . DS . 'comments.footer.php', $c); ?>
+<section class="comments comments:<?= $k ?? 1; ?>"<?= !empty($c['c']['anchor'][2]) ? ' id="' . $c['c']['anchor'][2] . '"' : ""; ?>>
+  <?= self::get(__DIR__ . DS . 'comments.header.php', $c); ?>
+  <?= self::get(__DIR__ . DS . 'comments.body.php', $c); ?>
+  <?= self::get(__DIR__ . DS . 'comments.footer.php', $c); ?>
 </section>
 <?php endif; ?>

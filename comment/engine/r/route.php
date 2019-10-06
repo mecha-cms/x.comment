@@ -13,7 +13,7 @@ function route($lot, $type) {
     $lot = \array_replace_recursive($default, $lot);
     $lot['status'] = $active ? 1 : 2;
     extract($lot, \EXTR_SKIP);
-    global $language, $state, $url;
+    global $language, $url;
     if (empty($token) || !\Guard::check($token, 'comment')) {
         \Alert::error('comment-token');
         ++$error;
@@ -131,8 +131,8 @@ function route($lot, $type) {
         \Session::let('form');
         $data = [
             'author' => $author,
-            'email' => $email ?: false,
-            'link' => $link ?: false,
+            'email' => $email ?? false ?: false,
+            'link' => $link ?? false ?: false,
             'status' => $status,
             'content' => $content
         ];

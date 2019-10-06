@@ -1,23 +1,23 @@
-<li class="comment comment-status:<?php echo $comment->status; ?>" id="<?php echo sprintf($c['anchor'][0], $comment->id); ?>">
+<li class="comment comment-status:<?= $comment->status; ?>" id="<?= sprintf($c['anchor'][0], $comment->id); ?>">
   <figure class="comment-figure">
-    <img class="comment-avatar" alt="" src="<?php echo strtr($comment->avatar(70), ['&' => '&amp;']); ?>" width="70" height="70">
+    <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(70), ['&' => '&amp;']); ?>" width="70" height="70">
   </figure>
   <header class="comment-header">
     <p class="comment-property">
-      <time class="comment-time" datetime="<?php echo $comment->time->ISO8601; ?>"><?php echo $comment->time->{strtr($state->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
-      <a class="comment-url" href="<?php echo implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
+      <time class="comment-time" datetime="<?= $comment->time->ISO8601; ?>"><?= $comment->time->{strtr($state->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
+      <a class="comment-url" href="<?= implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
     </p>
     <h4 class="comment-author">
       <?php if ($comment->link): ?>
-      <a class="comment-link" href="<?php echo $comment->link; ?>" rel="nofollow" target="_blank"><?php echo $comment->author; ?></a>
+      <a class="comment-link" href="<?= $comment->link; ?>" rel="nofollow" target="_blank"><?= $comment->author; ?></a>
       <?php else: ?>
-      <span class="comment-link"><?php echo $comment->author; ?></span>
+      <span class="comment-link"><?= $comment->author; ?></span>
       <?php endif; ?>
     </h4>
   </header>
-  <div class="comment-body"><?php echo $comment->content; ?></div>
+  <div class="comment-body"><?= $comment->content; ?></div>
   <?php if ($type && $reply && $reply->name === $comment->name): ?>
-  <?php static::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
+  <?= self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
     <?php
@@ -40,14 +40,14 @@
     ?>
     <?php if (!empty($links)): ?>
     <ul class="comment-links">
-      <li><?php echo implode('</li><li>', $links); ?></li>
+      <li><?= implode('</li><li>', $links); ?></li>
     </ul>
     <?php endif; ?>
   </footer>
   <?php if ($deep < $c['deep'] && $comment->comments->count()): ++$deep; ?>
-  <ul class="comments" data-level="<?php echo $deep; ?>">
+  <ul class="comments" data-level="<?= $deep; ?>">
     <?php foreach ($comment->comments(9999) as $v): ?>
-    <?php static::get(__FILE__, array_replace($lot, [
+    <?= self::get(__FILE__, array_replace($lot, [
         'comment' => $v,
         'deep' => $deep
     ])); ?>

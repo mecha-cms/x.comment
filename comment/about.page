@@ -17,7 +17,7 @@ use:
 Edit `page.php` file in your active skin folder then put this snippet after the `</article>` tag:
 
 ~~~ .php
-<?php static::comments(); ?>
+<?= self::comments(); ?>
 ~~~
 
 ### Comment Flags
@@ -50,5 +50,5 @@ Page content.
 To set pre-defined comment visibility globally, specify a comment flag on the first array of the skin arguments:
 
 ~~~ .php
-<?php static::comments([2]); ?>
+<?= self::comments([2]); ?>
 ~~~
