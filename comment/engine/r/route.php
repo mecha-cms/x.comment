@@ -9,7 +9,10 @@ function route($lot, $type) {
         \Alert::error('comment-for');
         ++$error;
     }
-    $default = \array_replace_recursive((array) \State::get('x.page', true), $state);
+    $default = \array_replace_recursive(
+        (array) \State::get('x.page.page', true),
+        (array) ($state['page'] ?? [])
+    );
     $lot = \array_replace_recursive($default, $lot);
     $lot['status'] = $active ? 1 : 2;
     extract($lot, \EXTR_SKIP);
@@ -124,7 +127,7 @@ function route($lot, $type) {
     $t = \time();
     $anchor = $state['anchor'];
     $directory = \COMMENT . \DS . $this[0] . \DS . \date('Y-m-d-H-i-s', $t);
-    $file = $directory . '.' . ($x = $state['x'] ?? 'page');
+    $file = $directory . '.' . ($x = $state['page']['x'] ?? 'page');
     if ($error > 0) {
         \Session::set('form', $form);
     } else {

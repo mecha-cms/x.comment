@@ -29,7 +29,7 @@ Language::set([
         return $i . ' Comment' . ($i === 1 ? "" : 's');
     },
     'comment-link' => 'URL',
-    'comment-email' => 'E-Mail',
+    'comment-email' => 'Email',
     'comment-reply-count' => function(int $i) {
         return $i . ' Repl' . ($i === 1 ? 'y' : 'ies');
     }
