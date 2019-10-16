@@ -24,7 +24,7 @@ class Comment extends Page {
         }
         $comments = $chunk === 0 ? [$comments] : array_chunk($comments, $chunk, false);
         $comments = new Comments($comments[$i] ?? []);
-        $comments->title = $GLOBALS['language']->commentReplyCount($count);
+        $comments->title = i('%d Repl' . ($count === 1 ? 'y' : 'ies'), $count);
         return $comments;
     }
 

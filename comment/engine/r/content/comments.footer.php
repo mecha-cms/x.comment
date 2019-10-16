@@ -2,6 +2,6 @@
   <?php if ($type && $type !== 2): ?>
   <?= $reply ? "" : self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php else: ?>
-  <p><?= $language->alertInfoCommentX; ?></p>
+  <p><?= i('Comments are closed.'); ?></p>
   <?php endif; ?>
 </footer>

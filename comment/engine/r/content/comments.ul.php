@@ -8,5 +8,5 @@
   <?php endforeach; ?>
 </ul>
 <?php else: ?>
-<p><?= $language->alertInfoVoid($language->comment(2)); ?></p>
+<p><?= i('No comments yet.'); ?></p>
 <?php endif; ?>

@@ -26,13 +26,13 @@
     $links = $type ? _\lot\x\comment\links(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
         'reply' => [
             0 => 'a',
-            1 => $language->doReply,
+            1 => i('Reply'),
             2 => [
                 'class' => 'comment-a comment-a:set comment-reply:v',
                 'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
                 'id' => 'parent:' . $id,
                 'rel' => 'nofollow',
-                'title' => To::text($language->commentAltReply([(string) $comment->author], true))
+                'title' => To::text(i('Reply to %s', (string) $comment->author))
             ]
         ],
     ] : [], $page], $comment), [$page], $comment) : [];

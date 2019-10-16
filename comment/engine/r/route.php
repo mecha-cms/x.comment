@@ -6,7 +6,7 @@ function route($lot, $type) {
     $state = \State::get('x.comment', true);
     $error = $lot['_error'] ?? 0;
     if ($type !== 'Post' || !\is_file(\PAGE . \DS . $this[0] . '.page')) {
-        \Alert::error('comment-for');
+        \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
         ++$error;
     }
     $default = \array_replace_recursive(
@@ -16,9 +16,9 @@ function route($lot, $type) {
     $lot = \array_replace_recursive($default, $lot);
     $lot['status'] = $active ? 1 : 2;
     extract($lot, \EXTR_SKIP);
-    global $language, $url;
+    global $url;
     if (empty($token) || !\Guard::check($token, 'comment')) {
-        \Alert::error('comment-token');
+        \Alert::error('Invalid token.');
         ++$error;
     }
     $guard = $state['guard'] ?? [];
@@ -26,21 +26,21 @@ function route($lot, $type) {
         if (!isset($lot[$key])) {
             continue;
         }
-        $k = 'comment' . \To::pascal($key);
+        $k = \ucfirst($key);
         // Check for empty field(s)
         if (\Is::void($lot[$key])) {
             if ($key !== 'link') { // `link` field is optional
-                \Alert::error('comment-void-field', $language->{$k});
+                \Alert::error('Please fill out the %s field.', $k);
                 ++$error;
             }
         }
         // Check for field(s) length
         if (isset($guard['max'][$key]) && \gt($lot[$key], $guard['max'][$key])) {
-            \Alert::error('comment-max', $language->{$k});
+            \Alert::error('%s too long.', $k);
             ++$error;
         } else if (isset($guard['min'][$key]) && \lt($lot[$key], $guard['min'][$key])) {
             if ($key !== 'link') { // `link` field is optional
-                \Alert::error('comment-min', $language->{$k});
+                \Alert::error('%s too short.', $k);
                 ++$error;
             }
         }
@@ -76,17 +76,17 @@ function route($lot, $type) {
     }
     if ($error === 0 && !$active) {
         if (!empty($email) && !\Is::email($email)) {
-            \Alert::error('comment-pattern-field', $language->commentEmail);
+            \Alert::error('Invalid %s format.', 'Email');
             ++$error;
         }
         if (!empty($link) && !\Is::URL($link)) {
-            \Alert::error('comment-pattern-field', $language->commentLink);
+            \Alert::error('Invalid %s format.', 'Link');
             ++$error;
         }
     }
     // Check for duplicate comment
     if (\Session::get('comment.content') === $content) {
-        \Alert::error('comment-exist');
+        \Alert::error('You have sent that comment already.');
         ++$error;
     } else {
         // Block user by IP address
@@ -94,7 +94,7 @@ function route($lot, $type) {
             $ip = \Get::IP();
             foreach ($guard['x']['ip'] as $v) {
                 if ($ip === $v) {
-                    \Alert::error('comment-ip', $ip);
+                    \Alert::error('Blocked IP address: %s', $ip);
                     ++$error;
                     break;
                 }
@@ -105,7 +105,7 @@ function route($lot, $type) {
             $ua = \Get::UA();
             foreach ($guard['x']['ua'] as $v) {
                 if (\stripos($ua, $v) !== false) {
-                    \Alert::error('comment-ua', $ua);
+                    \Alert::error('Blocked user agent: %s', $ua);
                     ++$error;
                     break;
                 }
@@ -116,7 +116,7 @@ function route($lot, $type) {
             $any = ($author ?? "") . ($email ?? "") . ($link ?? "") . ($content ?? "");
             foreach ($guard['x']['query'] as $v) {
                 if (\stripos($any, $v) !== false) {
-                    \Alert::error('comment-query', $v);
+                    \Alert::error('Please choose another word: %s', $v);
                     ++$error;
                     break;
                 }
@@ -148,13 +148,13 @@ function route($lot, $type) {
         $p->set($data)->save(0600);
         if (!\Is::void($parent)) {
             $f = new \File($directory . \DS . 'parent.data');
-            $f->set((new \Date($parent))->name)->save(0600);
+            $f->set((new \Time($parent))->name)->save(0600);
         }
         \Hook::fire('on.comment.set', [new \File($file), null], new \Comment($file));
-        \Alert::success('comment-create');
+        \Alert::success('Comment created.');
         \Session::set('comment', $data);
         if ($x === 'draft') {
-            \Alert::info('comment-save');
+            \Alert::info('Your comment will be visible once approved by the author.');
         } else {
             \Guard::kick($this[0] . $url->query('&', ['parent' => false]) . '#' . \sprintf($anchor[0], \sprintf('%u', $t)));
         }

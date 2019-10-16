@@ -42,6 +42,6 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
     }
     $comments = $chunk === 0 ? [$comments] : array_chunk($comments, $chunk, false);
     $comments = new Comments($comments[$i] ?? []);
-    $comments->title = $GLOBALS['language']->commentCount($count);
+    $comments->title = i('%d Comment' . ($count === 1 ? "" : 's'), $count);
     return $comments;
 });
