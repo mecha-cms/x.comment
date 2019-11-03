@@ -3,7 +3,7 @@ title: Comment
 description: Built-in commenting system.
 author: Taufik Nurrohman
 type: Markdown
-version: 1.15.1
+version: 1.15.2
 
 use:
   '.\lot\x\alert': 1
@@ -14,7 +14,7 @@ use:
 
 ### Installation
 
-Edit `page.php` file in your active skin folder then put this snippet after the `</article>` tag:
+The comment system will be activated automatically, but you need to manually install the comment area in the layout file. Edit `.\lot\layout\page.php` file then put this snippet just after the `</article>` tag:
 
 ~~~ .php
 <?= self::comments(); ?>
@@ -22,7 +22,7 @@ Edit `page.php` file in your active skin folder then put this snippet after the 
 
 ### Comment Flags
 
-You can set specific comment visibility through page properties. Add a `comment` property within your page’s `state` property with one of these values:
+Set specific comment visibility through page properties. Add a `comment` property within your page’s `state` property with one of these values:
 
 Value | Description
 ----- | -----------
@@ -47,7 +47,7 @@ state:
 Page content.
 ~~~
 
-To set pre-defined comment visibility globally, specify a comment flag on the first array of the skin arguments:
+To set pre-defined comment visibility globally, specify a comment flag on the first array of the layout arguments:
 
 ~~~ .php
 <?= self::comments([2]); ?>

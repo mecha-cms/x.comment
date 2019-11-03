@@ -1,7 +1,7 @@
 <?php namespace _\lot\x\comment;
 
 // Extend user property to comment property
-if (\State::get('x.user') !== null) {
+if (null !== \State::get('x.user')) {
     function avatar($avatar, array $lot = []) {
         if (!$avatar) {
             $w = $lot[0] ?? 72;
@@ -9,23 +9,23 @@ if (\State::get('x.user') !== null) {
             $d = $lot[2] ?? 'monsterid';
             $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this['email']) . '?s=' . $w . '&d=' . $d;
         }
-        if ($avatar || $this['status'] !== 1) {
+        if ($avatar || 1 !== $this['status']) {
             return $avatar;
         }
         $user = $this['author'];
-        if ($user && \is_string($user) && \strpos($user, '@') === 0) {
+        if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
             if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
-                return (new \User($user))->avatar ?? $avatar;
+                return (new \User($user))->avatar(...$lot) ?? $avatar;
             }
         }
         return $avatar;
     }
     function email($email) {
-        if ($email || $this['status'] !== 1) {
+        if ($email || 1 !== $this['status']) {
             return $email;
         }
         $user = $this['author'];
-        if ($user && \is_string($user) && \strpos($user, '@') === 0) {
+        if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
             if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
                 return (new \User($user))->email ?? $email;
             }
@@ -33,11 +33,11 @@ if (\State::get('x.user') !== null) {
         return $email;
     }
     function link($link) {
-        if ($link || $this['status'] !== 1) {
+        if ($link || 1 !== $this['status']) {
             return $link;
         }
         $user = $this['author'];
-        if ($user && \is_string($user) && \strpos($user, '@') === 0) {
+        if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
             if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
                 $user = new \User($user);
                 return $user->link ?? $user->url ?? $link;

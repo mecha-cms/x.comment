@@ -13,18 +13,18 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
             } else if (is_file($k)) {
                 $parent = false;
                 foreach (stream($k) as $kk => $vv) {
-                    if ($kk === 0 && $vv !== '---') {
+                    if (0 === $kk && '---' !== $vv) {
                         // No header marker means no property at all
                         break;
                     }
-                    if ($vv === '...') {
+                    if ('...' === $vv) {
                         // End header marker means no `parent` property found
                         break;
                     }
                     if (
-                        strpos($vv, 'parent:') === 0 ||
-                        strpos($vv, '"parent":') === 0 ||
-                        strpos($vv, "'parent':") === 0
+                        0 === strpos($vv, 'parent:') ||
+                        0 === strpos($vv, '"parent":') ||
+                        0 === strpos($vv, "'parent':")
                     ) {
                         // Has parent comment!
                         $parent = true;
@@ -40,8 +40,8 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
         }
         sort($comments);
     }
-    $comments = $chunk === 0 ? [$comments] : array_chunk($comments, $chunk, false);
+    $comments = 0 === $chunk ? [$comments] : array_chunk($comments, $chunk, false);
     $comments = new Comments($comments[$i] ?? []);
-    $comments->title = i('%d Comment' . ($count === 1 ? "" : 's'), $count);
+    $comments->title = i('%d Comment' . (1 === $count ? "" : 's'), $count);
     return $comments;
 });

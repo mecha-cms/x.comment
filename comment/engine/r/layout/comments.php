@@ -4,15 +4,15 @@ $x = P . __FILE__ . P;
 $type = $page->get('state.comment') ?? $lot[0] ?? $x;
 
 // Comment form is disabled and no comment(s)
-if (!$page->comments || ($page->comments->count() === 0 && $type === 2)) {
+if (!$page->comments || (0 === $page->comments->count() && 2 === $type)) {
     $type = 0; // Is the same as disabled comment(s)
 }
 
 if (
     // Make sure current page is active
-    $page->x === 'page' &&
+    'page' === $page->x &&
     // Make sure comment feature is active
-    ($type === $x || ($type !== false && $type !== 0))
+    ($type === $x || (false !== $type && 0 !== $type))
 ):
 
 $reply = Get::get('parent');
@@ -23,9 +23,9 @@ $c = [
     'reply' => $reply
 ];
 
-if ($type === true) {
+if (true === $type) {
     $k = 1;
-} else if ($type === false) {
+} else if (false === $type) {
     $k = 0;
 } else if (is_numeric($type)) {
     $k = $type;

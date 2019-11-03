@@ -15,20 +15,20 @@ class Comment extends Page {
             $parent = Path::N($path);
             foreach (g(dirname($path), 'page') as $k => $v) {
                 $comment = new static($k);
-                if ($comment['parent'] === $parent) {
+                if ($parent === $comment['parent']) {
                     $comments[] = $k;
                     ++$count; // Count comment(s), filter by `parent` property
                 }
             }
             sort($comments);
         }
-        $comments = $chunk === 0 ? [$comments] : array_chunk($comments, $chunk, false);
+        $comments = 0 === $chunk ? [$comments] : array_chunk($comments, $chunk, false);
         $comments = new Comments($comments[$i] ?? []);
-        $comments->title = i('%d Repl' . ($count === 1 ? 'y' : 'ies'), $count);
+        $comments->title = i('%d Repl' . (1 === $count ? 'y' : 'ies'), $count);
         return $comments;
     }
 
-    public function parent() {
+    public function parent(int $i = 1) {
         return $this->exist ? content(Path::F($this->path) . DS . 'parent.data') : null;
     }
 

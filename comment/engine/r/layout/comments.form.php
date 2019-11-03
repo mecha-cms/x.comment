@@ -19,7 +19,7 @@ $author = $advance ? Is::user() : false;
     <p class="form-comment-input form-comment-input:email p">
       <label for="form-comment-input:email"><?= i('Email'); ?></label>
       <span>
-        <input class="input width" id="form-comment-input:email" name="email" placeholder="<?= S . i('hello') . S . '@' . S $url->host . S; ?>" type="email" required>
+        <input class="input width" id="form-comment-input:email" name="email" placeholder="<?= S . i('hello') . S . '@' . S . $url->host . S; ?>" type="email" required>
       </span>
     </p>
     <p class="form-comment-input form-comment-input:link p">
@@ -32,7 +32,7 @@ $author = $advance ? Is::user() : false;
   <div class="form-comment-textarea form-comment-textarea:content p">
     <label for="form-comment-textarea:content"><?= i('Message'); ?></label>
     <div>
-      <textarea class="textarea width" id="form-comment-textarea:content" name="content" placeholder="<?= To::text($reply ? i('Reply to %s', (string) $reply->author) : i('Message goes here...'); ?>" required></textarea>
+      <textarea class="textarea width" id="form-comment-textarea:content" name="content" placeholder="<?= To::text($reply ? i('Reply to %s', (string) $reply->author) : i('Message goes here...')); ?>" required></textarea>
     </div>
   </div>
   <p class="form-comment-button form-comment-button:x p">
