@@ -28,7 +28,7 @@ class Comment extends Page {
         return $comments;
     }
 
-    public function parent(int $i = 1) {
+    public function parent() {
         return $this->exist ? content(Path::F($this->path) . DS . 'parent.data') : null;
     }
 

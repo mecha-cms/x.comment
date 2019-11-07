@@ -91,7 +91,7 @@ function route($any) {
     } else {
         // Block user by IP address
         if (!empty($guard['x']['ip'])) {
-            $ip = \Get::IP();
+            $ip = \Client::IP();
             foreach ($guard['x']['ip'] as $v) {
                 if ($ip === $v) {
                     \Alert::error('Blocked IP address: %s', $ip);
@@ -102,7 +102,7 @@ function route($any) {
         }
         // Block user by UA keyword(s)
         if (!empty($guard['x']['ua'])) {
-            $ua = \Get::UA();
+            $ua = \Client::UA();
             foreach ($guard['x']['ua'] as $v) {
                 if (false !== \stripos($ua, $v)) {
                     \Alert::error('Blocked user agent: %s', $ua);
