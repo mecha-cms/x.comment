@@ -4,7 +4,7 @@
 function route($any) {
     $active = null !== \State::get('x.user') && \Is::user();
     $state = \State::get('x.comment', true);
-    $error = $lot['_error'] ?? 0;
+    $error = 0;
     if (\Request::is('Get') || !\is_file(\PAGE . \DS . $any . '.page')) {
         \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
         ++$error;
