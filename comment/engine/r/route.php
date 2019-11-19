@@ -13,7 +13,7 @@ function route($any) {
         (array) \State::get('x.page.page', true),
         (array) ($state['page'] ?? [])
     );
-    $lot = \array_replace_recursive($default, \Post::get());
+    $lot = \array_replace_recursive($default, \Post::get('comment'));
     $lot['status'] = $active ? 1 : 2;
     extract($lot, \EXTR_SKIP);
     global $url;
@@ -52,9 +52,9 @@ function route($any) {
         $content = \To::text((string) $content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
         if (
             (
-                !isset($lot['type']) ||
-                'HTML' === $lot['type'] ||
-                'text/html' === $lot['type']
+                !isset($type) ||
+                'HTML' === $type ||
+                'text/html' === $type
             ) &&
             false === \strpos($content, '</p>')
         ) {
@@ -93,7 +93,7 @@ function route($any) {
         if (!empty($guard['x']['ip'])) {
             $ip = \Client::IP();
             foreach ($guard['x']['ip'] as $v) {
-                if ($ip === $v) {
+                if ($v === $ip) {
                     \Alert::error('Blocked IP address: %s', $ip);
                     ++$error;
                     break;
@@ -129,22 +129,26 @@ function route($any) {
     $directory = \COMMENT . \DS . $any . \DS . \date('Y-m-d-H-i-s', $t);
     $file = $directory . '.' . ($x = $state['page']['x'] ?? 'page');
     if ($error > 0) {
-        \Session::set('form', $form);
+        \Session::set('form.comment', $lot);
     } else {
-        \Session::let('form');
-        $data = [
+        \Session::let('form.comment');
+        foreach ($data = [
             'author' => $author,
             'email' => $email ?? false ?: false,
             'link' => $link ?? false ?: false,
             'status' => $status,
             'content' => $content
-        ];
+        ] as $k => $v) {
+            if (!isset($v) || false === $v) {
+                unset($data[$k]);
+            }
+        }
         foreach ($default as $k => $v) {
             if (isset($data[$k]) && $data[$k] === $v) {
                 unset($data[$k]);
             }
         }
-        (new \Page($file))->set($data)->save(0600);
+        (new \File($file))->set(\To::page($data))->save(0600);
         if (!\Is::void($parent)) {
             (new \File($directory . \DS . 'parent.data'))->set((new \Time($parent))->name)->save(0600);
         }

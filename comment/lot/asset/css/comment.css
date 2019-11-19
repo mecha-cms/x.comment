@@ -1,3 +1,7 @@
+/*
+ * Make the appearance to look like a plain text
+ * but keep the padding and margin around it
+ */
 .button.comment-user,
 .button.comment-user:focus,
 .button.comment-user:hover,
@@ -14,9 +18,9 @@
   user-select: text;
 }
 .comments,
-.comments-header,
 .comments-body,
-.comments-footer {
+.comments-footer,
+.comments-header {
   margin: 0;
 }
 .comments,
@@ -25,8 +29,8 @@
 .comments-footer {
   margin-top: 5%;
 }
-ul.comments,
-li.comment {
+li.comment,
+ul.comments {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -53,10 +57,10 @@ li.comment ul.comments,
 li.comment .form-comment {
   margin-bottom: 1em;
 }
-.comment-figure,
-.comment-header,
 .comment-body,
-.comment-footer {
+.comment-figure,
+.comment-footer,
+.comment-header {
   margin: 0;
   clear: none;
 }
@@ -84,14 +88,14 @@ li.comment .form-comment {
 .comment-links li:last-child::after {
   display: none;
 }
-.comment-links .comment-a {
+.comment-links .comment-link {
   display: inline-block;
   vertical-align: middle;
 }
-.comment-figure::after,
-.comment-header::after,
 .comment-body::after,
-.comment-footer::after {
+.comment-figure::after,
+.comment-footer::after,
+.comment-header::after {
   content: "";
   display: table;
   clear: both;
@@ -143,7 +147,7 @@ li.comment .form-comment {
   clear: both;
 }
 .comment-author,
-.comment-property {
+.comment-meta {
   margin: 0;
   padding: 0;
   font: inherit;
@@ -153,7 +157,7 @@ li.comment .form-comment {
 .comment-author {
   float: left;
 }
-.comment-property {
+.comment-meta {
   float: right;
 }
 .comment-url::before {
@@ -215,25 +219,25 @@ li.comment .form-comment {
   display: block;
   width: 100%;
 }
-.form-comment .button-let,
-.form-comment + .comment-footer {
+.form-comment + .comment-footer,
+.form-comment .comment-reply\:x {
   display: none;
 }
-.form-comment.is-reply .button-let {
+.form-comment.is\:reply .comment-reply\:x {
   display: inline-block;
 }
 
-@media (max-width:730px) {
+@media (max-width: 730px) {
   .comment-author,
-  .comment-property {
+  .comment-meta {
     float: none;
   }
-  .comment-property {
+  .comment-meta {
     margin-bottom: .5em;
   }
 }
 
-@media (max-width:450px) {
+@media (max-width: 450px) {
   .comment-figure + .comment-header + .comment-body + .comment-footer + ul.comments {
     margin-left: 1em;
   }

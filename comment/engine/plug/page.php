@@ -10,7 +10,7 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
             if (is_file($kk = Path::F($k) . DS . 'parent.data') && filesize($kk) > 0) {
                 // Has parent comment, skip!
                 continue;
-            } else if (is_file($k)) {
+            } else {
                 $parent = false;
                 foreach (stream($k) as $kk => $vv) {
                     if (0 === $kk && '---' !== $vv) {

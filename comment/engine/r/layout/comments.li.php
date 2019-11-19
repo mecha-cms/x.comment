@@ -3,7 +3,7 @@
     <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(70), ['&' => '&amp;']); ?>" width="70" height="70">
   </figure>
   <header class="comment-header">
-    <p class="comment-property">
+    <p class="comment-meta">
       <time class="comment-time" datetime="<?= $comment->time->ISO8601; ?>"><?= $comment->time->{strtr($state->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
       <a class="comment-url" href="<?= implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
     </p>
@@ -28,7 +28,7 @@
             0 => 'a',
             1 => i('Reply'),
             2 => [
-                'class' => 'comment-a comment-a:set comment-reply:v',
+                'class' => 'comment-link comment-reply:v',
                 'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
                 'id' => 'parent:' . $id,
                 'rel' => 'nofollow',

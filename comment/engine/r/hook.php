@@ -51,7 +51,7 @@ if (null !== \State::get('x.user')) {
 }
 
 // Loading asset(s)…
-\Hook::set('set', function() {
+\Hook::set('content', function() {
     $state = \State::get(null, true);
     if (!empty($state['is']['page']) && !empty($state['has']['page'])) {
         $path = __DIR__ . \DS . '..' . \DS . '..' . \DS . 'lot' . \DS . 'asset' . \DS;
@@ -61,5 +61,9 @@ if (null !== \State::get('x.user')) {
                 return $src . '#' . ($state['x']['comment']['anchor'][1] ?? "");
             }
         ]);
+        \State::set([
+            'can' => ['comment' => true],
+            'has' => ['comments' => !empty($GLOBALS['page']->comments->count())]
+        ]);
     }
-}, 0);
+}, -1); // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
