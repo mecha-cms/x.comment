@@ -2,6 +2,12 @@
 
 class Comment extends Page {
 
+    public function __construct(string $path = null, array $lot = []) {
+        $c = c2f(self::class);
+        parent::__construct($path, array_replace_recursive((array) State::get('x.' . $c . '.page', true), $lot));
+        $this->h[] = $c;
+    }
+
     public function URL(...$lot) {
         $f = Path::R(dirname($path = $this->path), LOT . DS . 'comment', '/');
         $id = sprintf('%u', parent::time()->format('U')); // Comment ID by time
