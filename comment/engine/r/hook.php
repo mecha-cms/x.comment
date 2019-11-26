@@ -14,7 +14,7 @@ if (null !== \State::get('x.user')) {
         }
         $user = $this['author'];
         if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
-            if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
+            if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
                 return (new \User($user))->avatar(...$lot) ?? $avatar;
             }
         }
@@ -26,7 +26,7 @@ if (null !== \State::get('x.user')) {
         }
         $user = $this['author'];
         if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
-            if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
+            if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
                 return (new \User($user))->email ?? $email;
             }
         }
@@ -38,7 +38,7 @@ if (null !== \State::get('x.user')) {
         }
         $user = $this['author'];
         if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
-            if (\is_file($user = \USER . \DS . \substr($user, 1) . '.page')) {
+            if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
                 $user = new \User($user);
                 return $user->link ?? $user->url ?? $link;
             }

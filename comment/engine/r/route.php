@@ -5,7 +5,7 @@ function route($any) {
     $active = null !== \State::get('x.user') && \Is::user();
     $state = \State::get('x.comment', true);
     $error = 0;
-    if (\Request::is('Get') || !\is_file(\PAGE . \DS . $any . '.page')) {
+    if (\Request::is('Get') || !\is_file(\LOT . \DS . 'page' . \DS . $any . '.page')) {
         \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
         ++$error;
     }
@@ -126,7 +126,7 @@ function route($any) {
     // Store comment to file
     $t = \time();
     $anchor = $state['anchor'];
-    $directory = \COMMENT . \DS . $any . \DS . \date('Y-m-d-H-i-s', $t);
+    $directory = \LOT . \DS . 'comment' . \DS . $any . \DS . \date('Y-m-d-H-i-s', $t);
     $file = $directory . '.' . ($x = $state['page']['x'] ?? 'page');
     if ($error > 0) {
         \Session::set('form.comment', $lot);

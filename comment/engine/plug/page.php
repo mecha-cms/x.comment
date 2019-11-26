@@ -4,8 +4,8 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
     $comments = [];
     $count = 0;
     if ($path = $this->path) {
-        $r = Path::R(Path::F($path), PAGE);
-        foreach (g(COMMENT . DS . $r, 'page') as $k => $v) {
+        $r = Path::R(Path::F($path), LOT . DS . 'page');
+        foreach (g(LOT . DS . 'comment' . DS . $r, 'page') as $k => $v) {
             ++$count; // Count comment(s), no filter
             if (is_file($kk = Path::F($k) . DS . 'parent.data') && filesize($kk) > 0) {
                 // Has parent comment, skip!

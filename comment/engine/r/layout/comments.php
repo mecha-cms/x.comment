@@ -16,7 +16,7 @@ if (
 ):
 
 $reply = Get::get('parent');
-$reply = $reply ? new Comment(COMMENT . $url->path(DS) . DS . $reply . '.page') : null;
+$reply = $reply ? new Comment(LOT . DS . 'comment' . $url->path(DS) . DS . $reply . '.page') : null;
 $c = [
     'c' => State::get('x.comment', true),
     'type' => $type,
