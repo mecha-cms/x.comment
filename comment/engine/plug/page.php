@@ -13,12 +13,11 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
             } else {
                 $parent = false;
                 foreach (stream($k) as $kk => $vv) {
-                    $vv = trim($vv, "\n");
-                    if (0 === $kk && '---' !== $vv) {
+                    if (0 === $kk && "---\n" !== $vv) {
                         // No header marker means no property at all
                         break;
                     }
-                    if ('...' === $vv) {
+                    if ("...\n" === $vv) {
                         // End header marker means no `parent` property found
                         break;
                     }
