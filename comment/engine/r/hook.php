@@ -7,7 +7,7 @@ if (null !== \State::get('x.user')) {
             $w = $lot[0] ?? 72;
             $h = $lot[1] ?? $w;
             $d = $lot[2] ?? 'mp';
-            $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this['email']) . '.jpg?s=' . $w . '&d=' . $d;
+            $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this->email) . '.jpg?s=' . $w . '&d=' . $d;
         }
         if ($avatar || 1 !== $this['status']) {
             return $avatar;

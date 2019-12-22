@@ -59,7 +59,10 @@ function route($any) {
             false === \strpos($content, '</p>')
         ) {
             // Replace new line with `<br>` and `<p>` tag(s)
-            $content = '<p>' . \str_replace(["\n\n", "\n"], ['</p><p>', '<br>'], $content) . '</p>';
+            $content = '<p>' . \strtr($content, [
+                "\n\n" => '</p><p>',
+                "\n" => '<br>'
+            ]) . '</p>';
         }
         // Permanently disable the `[[e]]` block(s) in comment
         if (null !== \State::get('x.block')) {
@@ -152,7 +155,7 @@ function route($any) {
         if (!\Is::void($parent)) {
             (new \File($directory . \DS . 'parent.data'))->set((new \Time($parent))->name)->save(0600);
         }
-        \Hook::fire('on.comment.set', [new \File($file), null], new \Comment($file));
+        \Hook::fire('on.comment.set', [$file]);
         \Alert::success('Comment created.');
         \Session::set('comment', $data);
         if ('draft' === $x) {

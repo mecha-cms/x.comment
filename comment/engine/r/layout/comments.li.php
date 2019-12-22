@@ -20,24 +20,7 @@
   <?= self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
-    <?php
-
-    $id = $comment->name;
-    $links = $type ? _\lot\x\comment\links(Hook::fire('page.a.comment', [$deep < $c['deep'] ? [
-        'reply' => [
-            0 => 'a',
-            1 => i('Reply'),
-            2 => [
-                'class' => 'comment-link comment-reply:v',
-                'href' => $url->query('&', ['parent' => $id]) . '#' . $c['anchor'][1],
-                'id' => 'parent:' . $id,
-                'rel' => 'nofollow',
-                'title' => To::text(i('Reply to %s', (string) $comment->author))
-            ]
-        ],
-    ] : [], $page], $comment), [$page], $comment) : [];
-
-    ?>
+    <?php $links = $type ? _\lot\x\comment\a(Hook::fire('comment.a', [[], $page, $deep], $comment), [$page], $comment) : []; ?>
     <?php if (!empty($links)): ?>
     <ul class="comment-links">
       <li><?= implode('</li><li>', $links); ?></li>
