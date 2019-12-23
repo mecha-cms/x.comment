@@ -5,7 +5,7 @@
   <header class="comment-header">
     <p class="comment-meta">
       <time class="comment-time" datetime="<?= $comment->time->ISO8601; ?>"><?= $comment->time->{strtr($state->language, '-', '_')} . ' ' . $comment->time('%I:%M %p'); ?></time>&#x20;
-      <a class="comment-url" href="#<?= sprintf($c['anchor'][0], $comment->id); ?>" rel="nofollow"></a>
+      <a class="comment-url" href="<?= implode($url->query('&amp;') . '#', explode('#', $comment->url, 2)); ?>" rel="nofollow"></a>
     </p>
     <h4 class="comment-author">
       <?php if ($comment->link): ?>
