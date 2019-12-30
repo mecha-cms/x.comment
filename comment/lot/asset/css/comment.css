@@ -185,23 +185,24 @@ li.comment .form-comment {
   clear: both;
 }
 .form-comment p > label,
-.form-comment .p > label {
-  float: left;
-  width: 4em;
-  text-align: right;
-}
-.form-comment p > label,
 .form-comment .p > label,
-.form-comment p > label + span,
-.form-comment .p > label + span,
-.form-comment p > label + div,
-.form-comment .p > label + div {
+.form-comment p > label + br + span,
+.form-comment .p > label + br + span,
+.form-comment p > label + br + div,
+.form-comment .p > label + br + div {
   display: block;
   margin-left: 5em;
 }
 .form-comment p > label,
 .form-comment .p > label {
+  float: left;
   margin-left: 0;
+  width: 4em;
+  text-align: right;
+}
+.form-comment p > label + br,
+.form-comment .p > label + br {
+  display: none;
 }
 .form-comment-button > label {
   visibility: hidden;
