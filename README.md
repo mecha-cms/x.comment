@@ -4,6 +4,10 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### 1.15.4
+
+ - Layout updates.
+
 ### 1.15.3
 
  - Added ability to specify the depth level of comment replies.

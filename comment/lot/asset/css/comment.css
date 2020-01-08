@@ -27,7 +27,7 @@
 .comments-body,
 .comments-body .form-comment,
 .comments-footer {
-  margin-top: 5%;
+  margin-top: 2em;
 }
 li.comment,
 ul.comments {
@@ -45,8 +45,7 @@ ul.comments {
 }
 ul.comments ul.comments {
   clear: both;
-  margin-top: .5em;
-  margin-left: 1em;
+  margin-top: 0;
 }
 li.comment {
   padding-top: 1em;
@@ -63,6 +62,14 @@ li.comment .form-comment {
 .comment-header {
   margin: 0;
   clear: none;
+}
+.comment-body::after,
+.comment-figure::after,
+.comment-footer::after,
+.comment-header::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 .comment-links,
 .comment-links li {
@@ -92,19 +99,11 @@ li.comment .form-comment {
   display: inline-block;
   vertical-align: middle;
 }
-.comment-body::after,
-.comment-figure::after,
-.comment-footer::after,
-.comment-header::after {
-  content: "";
-  display: table;
-  clear: both;
-}
 .comment-figure + .comment-header,
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
 .comment-figure + .comment-header + .comment-body + .comment-footer + ul.comments {
-  margin-left: 5em;
+  margin-left: 5.5em;
 }
 .comment-body,
 .comment-footer {
@@ -122,8 +121,8 @@ li.comment .form-comment {
   margin-top: 0;
 }
 .comment-figure {
-  width: 4em;
-  height: 4em;
+  width: 4.5em;
+  height: 4.5em;
   position: absolute;
   top: 1.2em; /* `padding-top` + `.2em` */
   bottom: 0;
@@ -140,11 +139,6 @@ li.comment .form-comment {
   background: rgba(0, 0, 0, .05);
   border: 0;
   outline: 0;
-}
-.comment-header::after {
-  content: "";
-  display: table;
-  clear: both;
 }
 .comment-author,
 .comment-meta {
@@ -191,13 +185,13 @@ li.comment .form-comment {
 .form-comment p > label + br + div,
 .form-comment .p > label + br + div {
   display: block;
-  margin-left: 5em;
+  margin-left: 5.5em;
 }
 .form-comment p > label,
 .form-comment .p > label {
   float: left;
   margin-left: 0;
-  width: 4em;
+  width: 4.5em;
   text-align: right;
 }
 .form-comment p > label + br,
