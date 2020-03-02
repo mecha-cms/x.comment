@@ -1,7 +1,10 @@
 <?php namespace _\lot\x\comment;
 
-// Set a new comment!
 function route($any) {
+    \Route::fire('*', [$any]);
+}
+
+function set($any) {
     $active = null !== \State::get('x.user') && \Is::user();
     $state = \State::get('x.comment', true);
     $error = 0;
@@ -167,4 +170,5 @@ function route($any) {
     \Guard::kick($any . $url->query . '#' . $anchor[1]);
 }
 
-\Route::set('.comment/*', 200, __NAMESPACE__ . "\\route");
+\Route::set('.comment/*', 200, __NAMESPACE__ . "\\set");
+\Route::set('*' . (\State::get('x.comment.path') ?? '/comment'), __NAMESPACE__ . "\\route", 10);

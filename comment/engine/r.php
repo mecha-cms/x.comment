@@ -4,7 +4,7 @@ namespace _\lot\x\comment\a {
     // Add comment reply link
     function reply($a, $page, $deep) {
         $state = \State::get('x.comment', true);
-        if ($deep < ($state['deep'] ?? 0)) {
+        if ($deep < ($state['page']['deep'] ?? 0)) {
             $id = $this->name;
             $a['reply'] = [
                 0 => 'a',

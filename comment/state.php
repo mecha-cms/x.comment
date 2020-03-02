@@ -1,13 +1,16 @@
 <?php
 
 return [
+    'path' => '/comment',
     'page' => [
+        // Paginate comment(s) if comment(s) total that has no parent has reached this limit
+        'chunk' => 2,
+        // Set to `0` to disable comment thread, `1` or more to enable comment thread
+        'deep' => 2,
         // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
         'x' => 'page'
     ],
     'anchor' => ['comment:%s', 'form-comment', 'comments'],
-    'chunk' => 9999, // TODO: Comment pagination
-    'deep' => 2, // Set to `0` to disable comment thread, `1` or more to enable comment thread
     'user' => true, // Show log-in button if user extension is available
     'guard' => [
         'max' => [

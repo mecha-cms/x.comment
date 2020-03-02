@@ -55,8 +55,9 @@ if (null !== \State::get('x.user')) {
     $state = \State::get(null, true);
     if (!empty($state['is']['page']) && !empty($state['has']['page'])) {
         $path = __DIR__ . \DS . '..' . \DS . '..' . \DS . 'lot' . \DS . 'asset' . \DS;
-        \Asset::set($path . 'css' . \DS . 'comment.min.css', 10);
-        \Asset::set($path . 'js' . \DS . 'comment.min.js', 10, [
+        $z = \defined("\\DEBUG") && \DEBUG ? '.' : '.min.';
+        \Asset::set($path . 'css' . \DS . 'comment' . $z . 'css', 10);
+        \Asset::set($path . 'js' . \DS . 'comment' . $z . 'js', 10, [
             'src' => function($src) use($state) {
                 return $src . '#' . ($state['x']['comment']['anchor'][1] ?? "");
             }

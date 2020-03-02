@@ -27,7 +27,7 @@
     </ul>
     <?php endif; ?>
   </footer>
-  <?php if ($deep < $c['deep'] && $comment->comments->count()): ++$deep; ?>
+  <?php if ($deep < ($c['page']['deep'] ?? 0) && $comment->comments->count()): ++$deep; ?>
   <ul class="comments" data-level="<?= $deep; ?>">
     <?php foreach ($comment->comments(9999) as $v): ?>
     <?= self::get(__FILE__, array_replace($lot, [

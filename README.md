@@ -4,6 +4,10 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### 2.0.0
+
+ - Added comment pagination feature.
+
 ### 1.15.4
 
  - Layout updates.

@@ -40,8 +40,8 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
         }
         sort($comments);
     }
-    $comments = 0 === $chunk ? [$comments] : array_chunk($comments, $chunk, false);
-    $comments = new Comments($comments[$i] ?? []);
+    $comments = new Comments($comments);
+    $comments = $comments->chunk($chunk, $i);
     $comments->title = i('%d Comment' . (1 === $count ? "" : 's'), $count);
     return $comments;
 });

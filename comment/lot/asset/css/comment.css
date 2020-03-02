@@ -26,8 +26,21 @@
 .comments,
 .comments-body,
 .comments-body .form-comment,
-.comments-footer {
+.comments-footer,
+.comments-pager {
   margin-top: 2em;
+}
+.comments-pager {
+  text-align: center;
+}
+.comments-pager b {
+  font-weight: normal;
+}
+.comments-pager > span {
+  margin-right: .5em;
+}
+.comments-pager > span:last-child {
+  margin-right: 0;
 }
 li.comment,
 ul.comments {
@@ -237,3 +250,4 @@ li.comment .form-comment {
     margin-left: 1em;
   }
 }
+
