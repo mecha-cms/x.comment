@@ -11,9 +11,10 @@ namespace _\lot\x\comment\a {
                 1 => \i('Reply'),
                 2 => [
                     'class' => 'comment-link comment-reply:v',
+                    'data-parent' => $id,
                     'href' => $GLOBALS['url']->query('&', ['parent' => $id]) . '#' . $state['anchor'][1],
-                    'id' => 'parent:' . $id,
                     'rel' => 'nofollow',
+                    'target' => \sprintf($state['anchor'][0], $this->id),
                     'title' => \To::text(i('Reply to %s', (string) $this->author))
                 ]
             ];

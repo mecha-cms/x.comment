@@ -1,6 +1,11 @@
 <?php namespace _\lot\x\comment;
 
 function route($any) {
+    \State::set([
+        'is' => [
+            'error' => false
+        ]
+    ]);
     \Route::fire('*', [$any]);
 }
 

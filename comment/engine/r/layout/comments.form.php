@@ -43,7 +43,7 @@ $author = $advance ? Is::user() : false;
     <label for="form-comment-button:x"><?= i('Actions'); ?></label>
     <br>
     <span>
-      <button class="button type:submit" id="form-comment-button:x" type="submit"><?= i('Publish'); ?></button><?php if (isset($c['page']['deep']) && $c['page']['deep'] > 0): ?> <a class="button comment-reply:x" href="<?= $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>"><?= i('Cancel'); ?></a><?php endif; ?><?php if ($advance && !empty($c['user'])): ?> <span class="button comment-user">
+      <button class="button type:submit" id="form-comment-button:x" type="submit"><?= i('Publish'); ?></button><?php if (isset($c['page']['deep']) && $c['page']['deep'] > 0): ?> <a class="button comment-reply:x" href="<?= $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>" target="<?= $c['anchor'][1]; ?>"><?= i('Cancel'); ?></a><?php endif; ?><?php if ($advance && !empty($c['user'])): ?> <span class="button comment-user">
         <a href="<?= $url . ($advance['guard']['path'] ?? $advance['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/') . $url->query . '#' . $c['anchor'][1]]); ?>"><?= $author ?: i('Log In'); ?></a>
       </span><?php endif; ?>
     </span>

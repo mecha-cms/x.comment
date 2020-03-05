@@ -37,7 +37,7 @@
   font-weight: normal;
 }
 .comments-pager > span {
-  margin-right: .5em;
+  margin-right: .25em;
 }
 .comments-pager > span:last-child {
   margin-right: 0;

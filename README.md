@@ -7,10 +7,11 @@ Release Notes
 ### 2.0.0
 
  - Added comment pagination feature.
+ - Added `target` attribute on every comment reply link (and comment cancel link as well).
 
 ### 1.15.4
 
- - Layout updates.
+ - Updated layout.
 
 ### 1.15.3
 

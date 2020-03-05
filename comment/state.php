@@ -3,8 +3,8 @@
 return [
     'path' => '/comment',
     'page' => [
-        // Paginate comment(s) if comment(s) total that has no parent has reached this limit
-        'chunk' => 2,
+        // Paginate comment(s) if total of comment(s) that has no `parent` property has reached this limit
+        'chunk' => 50,
         // Set to `0` to disable comment thread, `1` or more to enable comment thread
         'deep' => 2,
         // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)

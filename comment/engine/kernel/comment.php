@@ -26,8 +26,7 @@ class Comment extends Page {
             }
             sort($comments);
         }
-        $comments = 0 === $chunk ? [$comments] : array_chunk($comments, $chunk, false);
-        $comments = new Comments($comments[$i] ?? []);
+        $comments = (new Comments($comments))->chunk($chunk, $i);
         $comments->title = i('%d Repl' . (1 === $count ? 'y' : 'ies'), $count);
         return $comments;
     }

@@ -1,13 +1,13 @@
 (function(win, doc) {
 
-    var script = doc.currentScript || doc.getElementsByTagName('script').pop(),
+    let script = doc.currentScript,
         src = script.src,
         id = src.split('#')[1],
         form = id && doc.getElementById(id);
 
     if (!form) return;
 
-    var footer = form.parentNode,
+    let footer = form.parentNode,
         q = win.location.search,
         a = doc.getElementsByClassName('comment-reply:v'),
         x = form.getElementsByClassName('comment-reply:x')[0],
@@ -20,9 +20,9 @@
 
     function reply(a) {
         a.addEventListener('click', function(e) {
-            var s = this.parentNode.parentNode.parentNode, // `a < li < ul.comment-links < footer.comment-footer`
+            let s = this.parentNode.parentNode.parentNode, // `a < li < ul.comment-links < footer.comment-footer`
                 a = form.getAttribute('action'),
-                i = this.id.split(':')[1];
+                i = this.getAttribute('data-parent');
             s.parentNode.insertBefore(form, s);
             a = a.replace(test, "");
             a += (a.indexOf('?') > -1 ? '&' : '?') + 'parent=' + i;
@@ -51,4 +51,4 @@
         }
     }
 
-})(window, document);
+})(this, this.document);
