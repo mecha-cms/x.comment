@@ -1,6 +1,13 @@
 <?php namespace _\lot\x\comment;
 
 function route($any) {
+    $n = \State::get('x.comment.path') ?? '/comment';
+    if (\File::exist([
+        \LOT . \DS . 'page' . \DS . $any . $n . '.archive',
+        \LOT . \DS . 'page' . \DS . $any . $n . '.page'
+    ])) {
+        \Route::fire('*', [$any . $n]);
+    }
     \State::set([
         'is' => [
             'error' => false
