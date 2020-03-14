@@ -4,7 +4,7 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
-### 2.0.0
+### 1.16.0
 
  - Added comment pagination feature.
  - Added `target` attribute on every comment reply link (and comment cancel link as well).
