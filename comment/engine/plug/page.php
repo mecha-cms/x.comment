@@ -41,6 +41,6 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
         sort($comments);
     }
     $comments = (new Comments($comments))->chunk($chunk, $i);
-    $comments->title = i('%d Comment' . (1 === $count ? "" : 's'), $count);
+    $comments->title = i(0 === $count ? '0 Comments' : (1 === $count ? '1 Comment' : '%d Comments'), $count);
     return $comments;
 });

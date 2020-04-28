@@ -27,7 +27,7 @@ class Comment extends Page {
             sort($comments);
         }
         $comments = (new Comments($comments))->chunk($chunk, $i);
-        $comments->title = i('%d Repl' . (1 === $count ? 'y' : 'ies'), $count);
+        $comments->title = i(0 === $count ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), $count);
         return $comments;
     }
 

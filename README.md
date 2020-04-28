@@ -4,6 +4,10 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### 1.16.1
+
+ - Differentiate between `0 Comments`, `1 Comment`, `%d Comment` and `%d Comments` translation items.
+
 ### 1.16.0
 
  - Added comment pagination feature.
