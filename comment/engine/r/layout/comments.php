@@ -23,16 +23,16 @@ $c = [
     'reply' => $reply
 ];
 
-if (true === $type) {
-    $k = 1;
-} else if (false === $type) {
+if (false === $type) {
     $k = 0;
 } else if (is_numeric($type)) {
     $k = $type;
+} else /* if (true === $type) */ {
+    $k = 1;
 }
 
 ?>
-<section class="comments comments:<?= $k ?? 1; ?>"<?= !empty($c['c']['anchor'][2]) ? ' id="' . $c['c']['anchor'][2] . '"' : ""; ?>>
+<section class="comments comments:<?= $k; ?>"<?= !empty($c['c']['anchor'][2]) ? ' id="' . $c['c']['anchor'][2] . '"' : ""; ?>>
   <?= self::get(__DIR__ . DS . 'comments.header.php', $c); ?>
   <?= self::get(__DIR__ . DS . 'comments.body.php', $c); ?>
   <?= self::get(__DIR__ . DS . 'comments.footer.php', $c); ?>

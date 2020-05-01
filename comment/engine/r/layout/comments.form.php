@@ -6,31 +6,31 @@ $author = $advance ? Is::user() : false;
 ?>
 <form class="form-comment<?= $reply ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][1]; ?>" action="<?= $url . '/.comment' . ($url->path ?? State::get('path')) . $url->query('&amp;'); ?>" method="post">
   <?= $alert; ?>
-    <?php if ($author): ?>
-    <h4><?= i('Comment as %s', '<a href="' . $user->url . '" rel="nofollow">' . $user . '</a>'); ?></h4>
-    <input name="comment[author]" type="hidden" value="<?= $author; ?>">
-    <?php else: ?>
-    <p class="form-comment-input form-comment-input:author p">
-      <label for="form-comment-input:author"><?= i('Name'); ?></label>
-      <br>
-      <span>
-        <input class="input width" id="form-comment-input:author" name="comment[author]" placeholder="<?= i('Anonymous'); ?>" type="text" required>
-      </span>
-    </p>
-    <p class="form-comment-input form-comment-input:email p">
-      <label for="form-comment-input:email"><?= i('Email'); ?></label>
-      <br>
-      <span>
-        <input class="input width" id="form-comment-input:email" name="comment[email]" placeholder="<?= S . i('hello') . S . '@' . S . $url->host . S; ?>" type="email" required>
-      </span>
-    </p>
-    <p class="form-comment-input form-comment-input:link p">
-      <label for="form-comment-input:link"><?= i('Link'); ?></label>
-      <br>
-      <span>
-        <input class="input width" id="form-comment-input:link" name="comment[link]" placeholder="<?= S . $url->protocol . S . $url->host . S; ?>" type="url">
-      </span>
-    </p>
+  <?php if ($author): ?>
+  <h4><?= i('Comment as %s', '<a href="' . $user->url . '" rel="nofollow">' . $user . '</a>'); ?></h4>
+  <input name="comment[author]" type="hidden" value="<?= $author; ?>">
+  <?php else: ?>
+  <p class="form-comment-input form-comment-input:author p">
+    <label for="form-comment-input:author"><?= i('Name'); ?></label>
+    <br>
+    <span>
+      <input class="input width" id="form-comment-input:author" name="comment[author]" placeholder="<?= i('Anonymous'); ?>" type="text" required>
+    </span>
+  </p>
+  <p class="form-comment-input form-comment-input:email p">
+    <label for="form-comment-input:email"><?= i('Email'); ?></label>
+    <br>
+    <span>
+      <input class="input width" id="form-comment-input:email" name="comment[email]" placeholder="<?= S . i('hello') . S . '@' . S . $url->host . S; ?>" type="email" required>
+    </span>
+  </p>
+  <p class="form-comment-input form-comment-input:link p">
+    <label for="form-comment-input:link"><?= i('Link'); ?></label>
+    <br>
+    <span>
+      <input class="input width" id="form-comment-input:link" name="comment[link]" placeholder="<?= S . $url->protocol . S . $url->host . S; ?>" type="url">
+    </span>
+  </p>
   <?php endif; ?>
   <div class="form-comment-textarea form-comment-textarea:content p">
     <label for="form-comment-textarea:content"><?= i('Message'); ?></label>
