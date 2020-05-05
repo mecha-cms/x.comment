@@ -7,6 +7,7 @@ Release Notes
 ### 1.16.1
 
  - Differentiate between `0 Comments`, `1 Comment`, `%d Comment` and `%d Comments` translation items.
+ - Redirect to the correct page URL immediately whenever users try to access the form action URL directly (using the `GET` request type).
 
 ### 1.16.0
 
