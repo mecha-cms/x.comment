@@ -17,21 +17,22 @@ function route($any) {
 }
 
 function set($any) {
+    global $url;
     $active = null !== \State::get('x.user') && \Is::user();
     $state = \State::get('x.comment', true);
-    $error = 0;
+    $anchor = $state['anchor'];
     if (\Request::is('Get') || !\is_file(\LOT . \DS . 'page' . \DS . $any . '.page')) {
         \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
-        ++$error;
+        \Guard::kick($any . $url->query . '#' . $anchor[1]);
     }
+    $error = 0;
     $default = \array_replace_recursive(
         (array) \State::get('x.page.page', true),
         (array) ($state['page'] ?? [])
     );
-    $lot = \array_replace_recursive($default, \Post::get('comment'));
+    $lot = \array_replace_recursive($default, (array) \Post::get('comment'));
     $lot['status'] = $active ? 1 : 2;
     extract($lot, \EXTR_SKIP);
-    global $url;
     if (empty($token) || !\Guard::check($token, 'comment')) {
         \Alert::error('Invalid token.');
         ++$error;
@@ -64,7 +65,9 @@ function set($any) {
         $author = 0 !== \strpos($author, '@') ? \To::text($author) : $author;
     }
     if (0 === $error && isset($content)) {
-        $content = \To::text((string) $content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
+        // Force `To::text()` function to detect `$content` as HTML input instead of file name input
+        $content = '<div>' . $content . '</div>';
+        $content = \To::text($content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
         if (
             (
                 !isset($type) ||
@@ -89,7 +92,7 @@ function set($any) {
         }
         // Temporarily disallow image(s) in comment to prevent XSS
         if (false !== \strpos($content, '<img ')) {
-            $content = \preg_replace('#<img(?:\s[^>]*)?>#i', '<!-- $0 -->', $content);
+            $content = \preg_replace('#<(img(?:\s[^>]*)?)>#i', '&lt;$1&gt;', $content);
         }
     }
     if (0 === $error && !$active) {
@@ -143,20 +146,20 @@ function set($any) {
     }
     // Store comment to file
     $t = \time();
-    $anchor = $state['anchor'];
     $directory = \LOT . \DS . 'comment' . \DS . $any . \DS . \date('Y-m-d-H-i-s', $t);
     $file = $directory . '.' . ($x = $state['page']['x'] ?? 'page');
     if ($error > 0) {
         \Session::set('form.comment', $lot);
     } else {
         \Session::let('form.comment');
-        foreach ($data = [
+        $data = [
             'author' => $author,
-            'email' => $email ?? false ?: false,
-            'link' => $link ?? false ?: false,
+            'email' => ($email ?? false) ?: false,
+            'link' => ($link ?? false) ?: false,
             'status' => $status,
             'content' => $content
-        ] as $k => $v) {
+        ];
+        foreach ($data as $k => $v) {
             if (!isset($v) || false === $v) {
                 unset($data[$k]);
             }
@@ -170,12 +173,13 @@ function set($any) {
         if (!\Is::void($parent)) {
             (new \File($directory . \DS . 'parent.data'))->set((new \Time($parent))->name)->save(0600);
         }
-        \Hook::fire('on.comment.set', [$file]);
         \Alert::success('Comment created.');
-        \Session::set('comment', $data);
         if ('draft' === $x) {
             \Alert::info('Your comment will be visible once approved by the author.');
-        } else {
+        }
+        \Hook::fire('on.comment.set', [$file]);
+        \Session::set('comment', $data);
+        if ('draft' !== $x) {
             \Guard::kick($any . $url->query('&', ['parent' => false]) . '#' . \sprintf($anchor[0], \sprintf('%u', $t)));
         }
     }

@@ -26,7 +26,7 @@ return [
             'content' => 2
         ],
         'x' => [
-            'query' => ['</script>', '</iframe>'], // Block by word(s)
+            'query' => ['f*ck'], // Block by word(s)
             'ip' => [], // Block by IP address(es)
             'ua' => [] // Block by user agent word(s)
         ]
