@@ -1,6 +1,6 @@
 <?php
 
-namespace _\lot\x\comment\a {
+namespace _\lot\x\comment\footer {
     // Add comment reply link
     function reply($a, $page, $deep) {
         $state = \State::get('x.comment', true);
@@ -10,7 +10,7 @@ namespace _\lot\x\comment\a {
                 0 => 'a',
                 1 => \i('Reply'),
                 2 => [
-                    'class' => 'comment-link comment-reply:v',
+                    'class' => 'comment-link js:reply',
                     'data-parent' => $id,
                     'href' => $GLOBALS['url']->query('&', ['parent' => $id]) . '#' . $state['anchor'][1],
                     'rel' => 'nofollow',
@@ -21,12 +21,12 @@ namespace _\lot\x\comment\a {
         }
         return $a;
     }
-    \Hook::set('comment.a', __NAMESPACE__ . "\\reply", 0);
+    \Hook::set('comment.footer', __NAMESPACE__ . "\\reply", 0);
 }
 
 namespace _\lot\x\comment {
     // Build link(s) from array
-    function a(array $in, array $lot = [], $comment) {
+    function footer(array $in, array $lot = [], $comment) {
         $out = [];
         foreach ($in as $v) {
             if (\is_array($v)) {

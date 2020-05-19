@@ -1,18 +1,16 @@
 (function(win, doc) {
 
-    let script = doc.currentScript,
-        src = script.src,
-        id = src.split('#')[1],
-        form = id && doc.getElementById(id);
+    let form = doc.forms.comment;
 
     if (!form) return;
 
     let footer = form.parentNode,
+        comments = footer.parentNode,
         q = win.location.search,
-        a = doc.getElementsByClassName('comment-reply:v'),
-        x = form.getElementsByClassName('comment-reply:x')[0],
+        a = comments.getElementsByClassName('js:reply'),
+        x = form.getElementsByClassName('js:cancel')[0],
         content = form['comment[content]'],
-        content_placeholder = content.placeholder,
+        placeholder = content.placeholder,
         test = /(\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g,
         parent = form['comment[parent]'], i, j;
 
@@ -43,7 +41,7 @@
                 footer.appendChild(form);
                 form.setAttribute('action', form.getAttribute('action').replace(test, ""));
                 form.classList.remove('is:reply');
-                content.placeholder = content_placeholder;
+                content.placeholder = placeholder;
                 content.focus();
                 parent.removeAttribute('value');
                 e.preventDefault();

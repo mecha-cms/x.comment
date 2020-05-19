@@ -65,6 +65,12 @@ function set($any) {
         $author = 0 !== \strpos($author, '@') ? \To::text($author) : $author;
     }
     if (0 === $error && isset($content)) {
+        // Permanently disable PHP expression written in the comment body. Why? I don’t know!
+        $content = \strtr($content, [
+            '<?php' => '&lt;?php',
+            '<?=' => '&lt;?=',
+            '?>' => '?&gt;'
+        ]);
         // Force `To::text()` function to detect `$content` as HTML input instead of file name input
         $content = '<div>' . $content . '</div>';
         $content = \To::text($content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
@@ -82,7 +88,7 @@ function set($any) {
                 "\n" => '<br>'
             ]) . '</p>';
         }
-        // Permanently disable the `[[e]]` block(s) in comment
+        // Permanently disable the `[[e]]` block(s) written in the comment body
         if (null !== \State::get('x.block')) {
             $e = \Block::$state[0];
             $content = \str_replace([

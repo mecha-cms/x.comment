@@ -20,7 +20,7 @@
   <?= self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
-    <?php $links = $type ? _\lot\x\comment\a(Hook::fire('comment.a', [[], $page, $deep], $comment), [$page], $comment) : []; ?>
+    <?php $links = $type ? _\lot\x\comment\footer(Hook::fire('comment.footer', [[], $page, $deep], $comment), [$page], $comment) : []; ?>
     <?php if (!empty($links)): ?>
     <ul class="comment-links">
       <li><?= implode('</li><li>', $links); ?></li>

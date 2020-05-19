@@ -57,11 +57,7 @@ if (null !== \State::get('x.user')) {
         $path = __DIR__ . \DS . '..' . \DS . '..' . \DS . 'lot' . \DS . 'asset' . \DS;
         $z = \defined("\\DEBUG") && \DEBUG ? '.' : '.min.';
         \Asset::set($path . 'css' . \DS . 'comment' . $z . 'css', 10);
-        \Asset::set($path . 'js' . \DS . 'comment' . $z . 'js', 10, [
-            'src' => function($src) use($state) {
-                return $src . '#' . ($state['x']['comment']['anchor'][1] ?? "");
-            }
-        ]);
+        \Asset::set($path . 'js' . \DS . 'comment' . $z . 'js', 10);
         \State::set([
             'can' => ['comment' => true],
             'has' => ['comments' => !empty($GLOBALS['page']->comments->count())]

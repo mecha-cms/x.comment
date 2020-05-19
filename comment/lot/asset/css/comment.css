@@ -2,10 +2,10 @@
  * Make the appearance to look like a plain text
  * but keep the padding and margin around it
  */
-.button.comment-user,
-.button.comment-user:focus,
-.button.comment-user:hover,
-.button.comment-user:active {
+.button.js\:user,
+.button.js\:user:focus,
+.button.js\:user:hover,
+.button.js\:user:active {
   color: inherit;
   text-shadow: none;
   background: none;
@@ -13,8 +13,6 @@
   border-radius: 0;
   box-shadow: none;
   cursor: auto;
-  -webkit-user-select: text;
-  -moz-user-select: text;
   user-select: text;
 }
 .comments,
@@ -25,7 +23,7 @@
 }
 .comments,
 .comments-body,
-.comments-body .form-comment,
+.comments-body .comment-form,
 .comments-footer,
 .comments-pager {
   margin-top: 2em;
@@ -66,7 +64,7 @@ li.comment {
   word-wrap: break-word;
 }
 li.comment ul.comments,
-li.comment .form-comment {
+li.comment .comment-form {
   margin-bottom: 1em;
 }
 .comment-body,
@@ -122,17 +120,6 @@ li.comment .form-comment {
 .comment-footer {
   margin-top: .5em;
 }
-.comment-body figure:first-child,
-.comment-body h3:first-child,
-.comment-body h4:first-child,
-.comment-body h5:first-child,
-.comment-body h6:first-child,
-.comment-body iframe:first-child,
-.comment-body p:first-child,
-.comment-body pre:first-child,
-.comment-body table:first-child {
-  margin-top: 0;
-}
 .comment-figure {
   width: 4.5em;
   height: 4.5em;
@@ -170,68 +157,68 @@ li.comment .form-comment {
 .comment-url::before {
   content: '#';
 }
-.form-comment {
+.comment-form {
   clear: both;
 }
-.form-comment h4 {
+.comment-form h3 {
   margin-bottom: 1rem;
 }
-.form-comment > p,
-.form-comment > .p {
-  margin: 1em 0 0;
+.comment-form p,
+.comment-form .p {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
   padding: 0;
 }
-.form-comment > p:first-child,
-.form-comment > .p:first-child {
-  margin-top: 0;
+.comment-form > p + p,
+.comment-form > p + .p,
+.comment-form > .p + p,
+.comment-form > .p + .p {
+  margin-top: 1em;
 }
-.form-comment p::after,
-.form-comment .p::after {
-  content: "";
-  display: table;
-  clear: both;
+.comment-form > p > *,
+.comment-form > .p > * {
+  display: table-cell;
+  vertical-align: top;
 }
-.form-comment p > label,
-.form-comment .p > label,
-.form-comment p > label + br + span,
-.form-comment .p > label + br + span,
-.form-comment p > label + br + div,
-.form-comment .p > label + br + div {
-  display: block;
-  margin-left: 5.5em;
-}
-.form-comment p > label,
-.form-comment .p > label {
-  float: left;
-  margin-left: 0;
+.comment-form p > label,
+.comment-form .p > label {
   width: 4.5em;
+  padding-right: 1em;
   text-align: right;
 }
-.form-comment p > label + br,
-.form-comment .p > label + br {
+.comment-form p > label + br,
+.comment-form .p > label + br {
   display: none;
 }
-.form-comment-button > label {
+.comment-form p > label:not([for]),
+.comment-form .p > label:not([for]) {
   visibility: hidden;
 }
-.form-comment .button,
-.form-comment .input,
-.form-comment .select,
-.form-comment .textarea {
+.comment-form .alert,
+.comment-form .alert p,
+.comment-form .alert .p {
+  display: block;
+  width: auto;
+}
+.comment-form .button,
+.comment-form .input,
+.comment-form .select,
+.comment-form .textarea {
   display: inline-block;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
+  vertical-align: middle;
   box-sizing: border-box;
 }
-.form-comment .width {
+.comment-form .width {
   display: block;
   width: 100%;
 }
-.form-comment + .comment-footer,
-.form-comment .comment-reply\:x {
+.comment-form + .comment-footer,
+.comment-form .js\:cancel {
   display: none;
 }
-.form-comment.is\:reply .comment-reply\:x {
+.comment-form.is\:reply .js\:cancel {
   display: inline-block;
 }
 
@@ -250,4 +237,3 @@ li.comment .form-comment {
     margin-left: 1em;
   }
 }
-
