@@ -214,6 +214,19 @@ li.comment .comment-form {
   display: block;
   width: 100%;
 }
+.comment-form .button + br,
+.comment-form .input + br,
+.comment-form .select + br,
+.comment-form .textarea + br {
+  display: none;
+}
+.comment-form .button + br + small,
+.comment-form .input + br + small,
+.comment-form .select + br + small,
+.comment-form .textarea + br + small {
+  display: block;
+  margin-top: .5em;
+}
 .comment-form + .comment-footer,
 .comment-form .js\:cancel {
   display: none;
