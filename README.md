@@ -6,7 +6,8 @@ Release Notes
 
 ### 1.17.0
 
- - Simplify comment form markup.
+ - Simplified comment form markup.
+ - Added posibility to insert hint message on every comment form field.
 
 ### 1.16.1
 
