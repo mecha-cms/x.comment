@@ -7,6 +7,8 @@ return [
         'chunk' => 50,
         // Set to `0` to disable comment thread, `1` or more to enable comment thread
         'deep' => 2,
+        // Default comment type
+        'type' => 'HTML',
         // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
         'x' => 'page'
     ],

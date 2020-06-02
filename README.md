@@ -4,6 +4,14 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### 1.18.0
+
+Starts from this version, default comment type will be set to `HTML`. The default comment type value can be modified through `x.comment.page.type` setter/getter. Omitting this value will make the default comment type inherit to the current page type.
+
+Please note that the default XSS filter currently only applies if the comment type is set to `HTML` or `text/html` explicitly. When you set the default comment type to other than `HTML` and `text/html` (or when you omit the default comment type, where the current page type is not set to `HTML` or `text/html`), then the default XSS filter will not work. You must make your own XSS filter specific to each comment type.
+
+Some examples of custom XSS filters already exist in [markdown.comment](https://github.com/mecha-cms/x.markdown.comment) and [b-b-code.comment](https://github.com/mecha-cms/x.b-b-code.comment) projects where all HTML tags will be removed in the comment body unless it is written in the code block markup.
+
 ### 1.17.0
 
  - Simplified comment form markup.

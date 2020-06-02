@@ -71,23 +71,6 @@ function set($any) {
             '<?=' => '&lt;?=',
             '?>' => '?&gt;'
         ]);
-        // Force `To::text()` function to detect `$content` as HTML input instead of file name input
-        $content = '<div>' . $content . '</div>';
-        $content = \To::text($content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
-        if (
-            (
-                !isset($type) ||
-                'HTML' === $type ||
-                'text/html' === $type
-            ) &&
-            false === \strpos($content, '</p>')
-        ) {
-            // Replace new line with `<br>` and `<p>` tag(s)
-            $content = '<p>' . \strtr($content, [
-                "\n\n" => '</p><p>',
-                "\n" => '<br>'
-            ]) . '</p>';
-        }
         // Permanently disable the `[[e]]` block(s) written in the comment body
         if (null !== \State::get('x.block')) {
             $e = \Block::$state[0];
@@ -96,9 +79,23 @@ function set($any) {
                 $e[0] . $e[2] . 'e' . $e[1] // `[[/e]]`
             ], "", $content);
         }
-        // Temporarily disallow image(s) in comment to prevent XSS
-        if (false !== \strpos($content, '<img ')) {
-            $content = \preg_replace('#<(img(?:\s[^>]*)?)>#i', '&lt;$1&gt;', $content);
+        if (
+            !isset($type) ||
+            'HTML' === $type ||
+            'text/html' === $type
+        ) {
+            // Force `To::text()` function to detect `$content` as HTML input instead of file name input
+            $content = '<div>' . $content . '</div>';
+            $content = \To::text($content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
+            // Replace new line with `<br>` and `<p>` tag(s)
+            $content = '<p>' . \strtr($content, [
+                "\n\n" => '</p><p>',
+                "\n" => '<br>'
+            ]) . '</p>';
+            // Temporarily disallow image(s) in comment to prevent XSS
+            if (false !== \strpos($content, '<img ')) {
+                $content = \preg_replace('#<(img(?:\s[^>]*)?)>#i', '&lt;$1&gt;', $content);
+            }
         }
     }
     if (0 === $error && !$active) {
@@ -163,6 +160,7 @@ function set($any) {
             'email' => ($email ?? false) ?: false,
             'link' => ($link ?? false) ?: false,
             'status' => $status,
+            'type' => ($type ?? false) ?: false,
             'content' => $content
         ];
         foreach ($data as $k => $v) {
