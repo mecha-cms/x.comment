@@ -4,6 +4,10 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### 1.18.x
+
+ - Improved default XSS filter. Now will also filter HTML attributes started with `on` and HTML values started with `javascript:`.
+
 ### 1.18.0
 
 Start from this version, default comment type will be set to `HTML`. The default comment type value can be modified through `x.comment.page.type` setter/getter. Omitting this value will make the default comment type inherit to the current page type.

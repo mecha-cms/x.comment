@@ -79,23 +79,34 @@ function set($any) {
                 $e[0] . $e[2] . 'e' . $e[1] // `[[/e]]`
             ], "", $content);
         }
-        if (
-            !isset($type) ||
-            'HTML' === $type ||
-            'text/html' === $type
-        ) {
-            // Force `To::text()` function to detect `$content` as HTML input instead of file name input
-            $content = '<div>' . $content . '</div>';
-            $content = \To::text($content, 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var', true);
+        // Implement default XSS filter to the comment with type of `HTML` or `text/html`
+        if (!isset($type) || 'HTML' === $type || 'text/html' === $type) {
+            $tags = 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var';
+            $content = \strip_tags($content, '<' . \strtr($tags, [',' => '><']) . '>');
+            // Replace potential XSS via HTML attribute(s) into a `data-*` attribute(s)
+            $content = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s[^>]*)?>/', function($m) {
+                if ('img' === $m[1]) {
+                    // Temporarily disallow image(s) in comment to prevent XSS
+                    return '&lt;' . $m[1] . $m[2] . '&gt;';
+                }
+                if (!empty($m[2])) {
+                    // Replace `onerror` to `data-onerror`
+                    $m[2] = \preg_replace('/(\s)on(\w+)=([\'"]?)/', '$1data-on$2=$3', $m[2]);
+                    // Replace `javascript:*` value to `javascript:;`
+                    $m[2] = \preg_replace([
+                        '/="javascript:[^"]+"/',
+                        '/=\'javascript:[^\']+\'/',
+                        '/=javascript:[^\s>]+/'
+                    ], '="javascript:;"', $m[2]);
+                    return '<' . $m[1] . $m[2] . '>';
+                }
+                return '<' . $m[1] . '>';
+            }, $content);
             // Replace new line with `<br>` and `<p>` tag(s)
             $content = '<p>' . \strtr($content, [
                 "\n\n" => '</p><p>',
                 "\n" => '<br>'
             ]) . '</p>';
-            // Temporarily disallow image(s) in comment to prevent XSS
-            if (false !== \strpos($content, '<img ')) {
-                $content = \preg_replace('#<(img(?:\s[^>]*)?)>#i', '&lt;$1&gt;', $content);
-            }
         }
     }
     if (0 === $error && !$active) {
