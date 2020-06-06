@@ -4,9 +4,9 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
-### 1.18.x
+### 1.18.1
 
- - Improved default XSS filter. Now will also filter HTML attributes started with `on` and HTML values started with `javascript:`.
+ - Improved default XSS filter. Now will also filter HTML attribute names started with `on` and HTML attribute values started with `javascript:`.
 
 ### 1.18.0
 
