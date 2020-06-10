@@ -163,8 +163,8 @@ li.comment .comment-form {
 .comment-form h3 {
   margin-bottom: 1rem;
 }
-.comment-form p,
-.comment-form .p {
+.comment-form > p,
+.comment-form > .p {
   display: table;
   table-layout: fixed;
   width: 100%;
