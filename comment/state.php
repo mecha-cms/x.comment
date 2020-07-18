@@ -26,11 +26,6 @@ return [
             'email' => 3, // `a@b`
             'link' => 8, // `http://a`
             'content' => 2
-        ],
-        'x' => [
-            'query' => ['f*ck'], // Block by word(s)
-            'ip' => [], // Block by IP address(es)
-            'ua' => [] // Block by user agent word(s)
         ]
     ]
 ];

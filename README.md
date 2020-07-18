@@ -4,6 +4,10 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### master
+
+ - Removed default spam filter. This feature can be created as a separate extension (#2)
+
 ### 1.18.1
 
  - Improved default XSS filter. Now will also filter HTML attribute names started with `on` and HTML attribute values started with `javascript:`.

@@ -123,40 +123,6 @@ function set($any) {
     if ($content === \Session::get('comment.content')) {
         \Alert::error('You have sent that comment already.');
         ++$error;
-    } else {
-        // Block user by IP address
-        if (!empty($guard['x']['ip'])) {
-            $ip = \Client::IP();
-            foreach ($guard['x']['ip'] as $v) {
-                if ($v === $ip) {
-                    \Alert::error('Blocked IP address: %s', $ip);
-                    ++$error;
-                    break;
-                }
-            }
-        }
-        // Block user by UA keyword(s)
-        if (!empty($guard['x']['ua'])) {
-            $ua = \Client::UA();
-            foreach ($guard['x']['ua'] as $v) {
-                if (false !== \stripos($ua, $v)) {
-                    \Alert::error('Blocked user agent: %s', $ua);
-                    ++$error;
-                    break;
-                }
-            }
-        }
-        // Check for spam keyword(s) in comment
-        if (!empty($guard['x']['query'])) {
-            $words = ($author ?? "") . ($email ?? "") . ($link ?? "") . ($content ?? "");
-            foreach ($guard['x']['query'] as $v) {
-                if (false !== \stripos($words, $v)) {
-                    \Alert::error('Please choose another word: %s', $v);
-                    ++$error;
-                    break;
-                }
-            }
-        }
     }
     // Store comment to file
     $t = \time();
