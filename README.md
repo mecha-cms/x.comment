@@ -4,7 +4,7 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
-### master
+### 1.19.0
 
  - Removed default spam filter. This feature can be created as a separate extension (#2)
 
