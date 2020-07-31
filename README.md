@@ -7,7 +7,7 @@ Release Notes
 ### 1.19.1
 
  - Fixed bug of invalid `parent` query string value that generates a new empty comment (#3)
- - Fixed bug of default avatar not showing in comments due to the user extension that does not exist.
+ - Fixed bug of default avatar not showing in comments due to the [user](https://github.com/mecha-cms/x.user) extension that does not exist.
  - Make sure to disable the comment form if comments are closed (#4)
 
 ### 1.19.0
