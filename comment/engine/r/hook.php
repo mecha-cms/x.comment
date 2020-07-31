@@ -1,25 +1,29 @@
 <?php namespace _\lot\x\comment;
 
-// Extend user property to comment property
-if (null !== \State::get('x.user')) {
-    function avatar($avatar, array $lot = []) {
-        if (!$avatar) {
-            $w = $lot[0] ?? 72;
-            $h = $lot[1] ?? $w;
-            $d = $lot[2] ?? 'mp';
-            $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this->email) . '.jpg?s=' . $w . '&d=' . $d;
-        }
-        if ($avatar || 1 !== $this['status']) {
-            return $avatar;
-        }
-        $user = $this['author'];
-        if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
-            if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
-                return (new \User($user))->avatar(...$lot) ?? $avatar;
-            }
-        }
+// Set default avatar using Gravatar service
+function avatar($avatar, array $lot = []) {
+    if (!$avatar) {
+        $w = $lot[0] ?? 72;
+        $h = $lot[1] ?? $w;
+        $d = $lot[2] ?? 'mp';
+        $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this->email) . '.jpg?s=' . $w . '&d=' . $d;
+    }
+    if ($avatar || 1 !== $this['status']) {
         return $avatar;
     }
+    $user = $this['author'];
+    if ($user && \is_string($user) && 0 === \strpos($user, '@') && null !== \State::get('x.user')) {
+        if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
+            return (new \User($user))->avatar(...$lot) ?? $avatar;
+        }
+    }
+    return $avatar;
+}
+
+\Hook::set('comment.avatar', __NAMESPACE__ . "\\avatar", 0);
+
+// Extend user property to comment property
+if (null !== \State::get('x.user')) {
     function email($email) {
         if ($email || 1 !== $this['status']) {
             return $email;
@@ -45,7 +49,6 @@ if (null !== \State::get('x.user')) {
         }
         return $link;
     }
-    \Hook::set('comment.avatar', __NAMESPACE__ . "\\avatar", 0);
     \Hook::set('comment.email', __NAMESPACE__ . "\\email", 0);
     \Hook::set('comment.link', __NAMESPACE__ . "\\link", 0);
 }
