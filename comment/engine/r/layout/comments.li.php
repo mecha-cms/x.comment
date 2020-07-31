@@ -1,6 +1,6 @@
 <li class="comment comment-status:<?= $comment->status; ?>" id="<?= sprintf($c['anchor'][0], $comment->id); ?>">
   <figure class="comment-figure">
-    <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(70), ['&' => '&amp;']); ?>" width="70" height="70">
+    <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(80), ['&' => '&amp;']); ?>" width="80" height="80">
   </figure>
   <header class="comment-header">
     <p class="comment-meta">
@@ -16,7 +16,7 @@
     </h4>
   </header>
   <div class="comment-body"><?= $comment->content; ?></div>
-  <?php if ($type && $reply && $reply->name === $comment->name): ?>
+  <?php if ((1 === $type || true === $type) && $reply && $reply->name === $comment->name): ?>
   <?= self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">

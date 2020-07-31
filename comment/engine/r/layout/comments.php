@@ -12,11 +12,20 @@ if (
     // Make sure current page is active
     'page' === $page->x &&
     // Make sure comment feature is active
-    ($type === $x || (false !== $type && 0 !== $type))
+    ($x === $type || (false !== $type && 0 !== $type))
 ):
 
-$reply = Get::get('parent');
-$reply = $reply ? new Comment(LOT . DS . 'comment' . $url->path(DS) . DS . $reply . '.page') : null;
+if ($reply = Get::get('parent')) {
+    // Make sure parent comment exists
+    if (is_file($f = LOT . DS . 'comment' . $url->path(DS) . DS . $reply . '.page')) {
+        $reply = new Comment($f);
+    } else {
+        // Otherwise, kick!
+        Alert::error('Parent comment does not exist.');
+        Guard::kick($page->url);
+    }
+}
+
 $c = [
     'c' => State::get('x.comment', true),
     'type' => $type,

@@ -4,7 +4,8 @@ namespace _\lot\x\comment\footer {
     // Add comment reply link
     function reply($a, $page, $deep) {
         $state = \State::get('x.comment', true);
-        if ($deep < ($state['page']['deep'] ?? 0)) {
+        $k = $page->get('state.comment') ?? $state['page']['state']['comment'] ?? 1;
+        if ($deep < ($state['page']['deep'] ?? 0) && (1 === $k || true === $k)) {
             $id = $this->name;
             $a['reply'] = [
                 0 => 'a',

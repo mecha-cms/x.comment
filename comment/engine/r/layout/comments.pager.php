@@ -1,8 +1,13 @@
-<?php $i = $url['i'] ?? 1; if ($page->comments($chunk = $c['page']['chunk'] ?? 9999, $i)->count()): ?>
+<?php
+
+$i = $url['i'] ?? 1;
+$path = $c['path'] ?? '/comment';
+$chunk = $c['page']['chunk'] ?? 9999;
+
+if ($page->comments->count() > $chunk): ?>
 <nav class="comments-pager">
 <?php
 
-$path = $c['path'] ?? '/comment';
 if ($i > 1) {
     $current = $path === substr($url['path'], -strlen($path)) ? $i : -1;
 } else {
@@ -72,6 +77,4 @@ echo (function($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last
     return $page->url . ($i > 1 ? $path . '/' . $i : "") . $url->query . '#' . $c['anchor'][2];
 }, i('First'), i('Previous'), i('Next'), i('Last')); ?>
 </nav>
-<?php elseif ($i > 1): ?>
-<p><?= i('No more comments to load.'); ?></p>
 <?php endif; ?>
