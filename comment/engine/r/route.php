@@ -90,9 +90,9 @@ function set($any) {
                     return '&lt;' . $m[1] . $m[2] . '&gt;';
                 }
                 if (!empty($m[2])) {
-                    // Replace `onerror` to `data-onerror`
+                    // Replace `onerror` with `data-onerror`
                     $m[2] = \preg_replace('/(\s)on(\w+)=([\'"]?)/', '$1data-on$2=$3', $m[2]);
-                    // Replace `javascript:*` value to `javascript:;`
+                    // Replace `javascript:*` value with `javascript:;`
                     $m[2] = \preg_replace([
                         '/="javascript:[^"]+"/',
                         '/=\'javascript:[^\']+\'/',
