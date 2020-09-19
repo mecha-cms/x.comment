@@ -12,12 +12,14 @@ Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
                 continue;
             } else {
                 $parent = false;
+                $soh = defined("YAML\\SOH") ? YAML\SOH : '---';
+                $eot = defined("YAML\\EOT") ? YAML\EOT : '...';
                 foreach (stream($k) as $kk => $vv) {
-                    if (0 === $kk && "---\n" !== $vv) {
+                    if (0 === $kk && $soh . "\n" !== $vv) {
                         // No header marker means no property at all
                         break;
                     }
-                    if ("...\n" === $vv) {
+                    if ($eot . "\n" === $vv) {
                         // End header marker means no `parent` property found
                         break;
                     }

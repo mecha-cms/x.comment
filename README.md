@@ -4,6 +4,10 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### 1.19.2
+
+ - [@mecha-cms/mecha#94](https://github.com/mecha-cms/mecha/issues/94)
+
 ### 1.19.1
 
  - Fixed bug of invalid `parent` query string value that generates a new empty comment (#3)
