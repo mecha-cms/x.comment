@@ -4,7 +4,7 @@ $advance = State::get('x.user', true);
 $author = $advance ? Is::user() : false;
 
 ?>
-<form action="<?= $url . '/.comment' . ($url->path ?? State::get('path')) . $url->query('&amp;'); ?>" class="comment-form<?= $reply ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][1]; ?>" method="post" name="comment">
+<form action="<?= strtr($page->url, [$url . '/' => $url . '/.comment/']); ?>" class="comment-form<?= $reply ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][1]; ?>" method="post" name="comment">
   <?= $alert; ?>
   <?php if ($author): ?>
   <h3><?= i('Commenting as %s', '<a href="' . $user->url . '" rel="nofollow">' . $user . '</a>'); ?></h3>
