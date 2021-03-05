@@ -1,6 +1,6 @@
 <?php
 
-namespace _\lot\x\comment\footer {
+namespace _\lot\x\comment\links {
     // Add comment reply link
     function reply($a, $page, $deep) {
         $state = \State::get('x.comment', true);
@@ -22,12 +22,12 @@ namespace _\lot\x\comment\footer {
         }
         return $a;
     }
-    \Hook::set('comment.footer', __NAMESPACE__ . "\\reply", 0);
+    \Hook::set('comment:links', __NAMESPACE__ . "\\reply", 0);
 }
 
 namespace _\lot\x\comment {
     // Build link(s) from array
-    function footer(array $in, array $lot = [], $comment) {
+    function hooks(array $in, array $lot = [], $comment) {
         $out = [];
         foreach ($in as $v) {
             if (\is_array($v)) {

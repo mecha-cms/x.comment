@@ -4,6 +4,12 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
+### main
+
+ - [x] Added `comment:body`, `comment:footer`, `comment:header` and `comment:links` hooks.
+ - [x] Removed `comment.footer` hook (has ben replaced by `comment:links`).
+ - [x] Improved comment pagination feature. If there isn&rsquo;t any comment pagination offset appear in the URL, by default, the current comments chunk in the comments section will be the last comments page.
+
 ### 1.19.2
 
  - [@mecha-cms/mecha#94](https://github.com/mecha-cms/mecha/issues/94)

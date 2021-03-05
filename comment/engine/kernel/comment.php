@@ -12,7 +12,7 @@ class Comment extends Page {
         return $GLOBALS['url'] . '/' . Path::R(dirname($this->path), LOT . DS . 'comment', '/');
     }
 
-    public function comments(int $chunk = 100, int $i = 0): Comments {
+    public function comments(int $chunk = 100, int $i = 0) {
         $comments = [];
         $count = 0;
         if ($path = $this->path) {
