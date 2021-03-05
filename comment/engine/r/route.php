@@ -16,7 +16,7 @@ function set($any) {
     $anchor = $state['anchor'];
     if (\Request::is('Get') || !\is_file(\LOT . \DS . 'page' . \DS . $any . '.page')) {
         \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
-        \Guard::kick($any . $url->query . '#' . $anchor[1]);
+        \Guard::kick($any . $url->query . '#' . $anchor[0]);
     }
     $error = 0;
     $default = \array_replace_recursive(
@@ -154,10 +154,10 @@ function set($any) {
         \Hook::fire('on.comment.set', [$file]);
         \Session::set('comment', $data);
         if ('draft' !== $x) {
-            \Guard::kick($any . $url->query('&', ['parent' => false]) . '#' . \sprintf($anchor[0], \sprintf('%u', $t)));
+            \Guard::kick($any . $url->query('&', ['parent' => false]) . '#' . \sprintf($anchor[2], \sprintf('%u', $t)));
         }
     }
-    \Guard::kick($any . $url->query . '#' . $anchor[1]);
+    \Guard::kick($any . $url->query . '#' . $anchor[0]);
 }
 
 \Route::set('.comment/*', 200, __NAMESPACE__ . "\\set");

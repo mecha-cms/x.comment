@@ -6,9 +6,10 @@ Release Notes
 
 ### main
 
- - [x] Added `comment:body`, `comment:footer`, `comment:header` and `comment:links` hooks.
+ - [x] Added `comment:body`, `comment:footer`, `comment:header` and `comment:tasks` hooks.
  - [x] Improved comment pagination feature. If there isn&rsquo;t any comment pagination offset appear in the URL, by default, the current comments chunk in the comments section will be the last comments page.
- - [x] Removed `comment.footer` hook (has been replaced by `comment:links` hook).
+ - [x] Improved comments markup. They are now uses combination of `<article>` and `<section>` tags.
+ - [x] Removed `comment.footer` hook (has been replaced by `comment:tasks` hook).
 
 ### 1.19.2
 

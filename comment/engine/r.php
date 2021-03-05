@@ -13,16 +13,16 @@ namespace _\lot\x\comment\links {
                 2 => [
                     'class' => 'comment-link js:reply',
                     'data-parent' => $id,
-                    'href' => $GLOBALS['url']->query('&', ['parent' => $id]) . '#' . $state['anchor'][1],
+                    'href' => $GLOBALS['url']->query('&', ['parent' => $id]) . '#' . $state['anchor'][0],
                     'rel' => 'nofollow',
-                    'target' => \sprintf($state['anchor'][0], $this->id),
+                    'target' => \sprintf($state['anchor'][2], $this->id),
                     'title' => \To::text(i('Reply to %s', (string) $this->author))
                 ]
             ];
         }
         return $a;
     }
-    \Hook::set('comment:links', __NAMESPACE__ . "\\reply", 0);
+    \Hook::set('comment:tasks', __NAMESPACE__ . "\\reply", 10);
 }
 
 namespace _\lot\x\comment {

@@ -12,7 +12,7 @@ return [
         // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
         'x' => 'page'
     ],
-    'anchor' => ['comment:%s', 'form:comment', 'comments'],
+    'anchor' => ['comment', 'comments', 'comment:%s', 'comments:%s'],
     'user' => true, // Show log-in button if user extension is available
     'guard' => [
         'max' => [

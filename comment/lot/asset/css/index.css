@@ -1,191 +1,90 @@
-/*
- * Make the appearance to look like a plain text
- * but keep the padding and margin around it
- */
-.button.js\:user,
-.button.js\:user:focus,
-.button.js\:user:hover,
-.button.js\:user:active {
-  color: inherit;
-  text-shadow: none;
-  background: none;
-  border-color: transparent;
-  border-radius: 0;
-  box-shadow: none;
-  cursor: auto;
-  user-select: text;
-}
+.comment,
+.comment-author,
+.comment-avatar,
+.comment-body,
+.comment-figure,
+.comment-footer,
+.comment-form,
+.comment-form p,
+.comment-form .p,
+.comment-header,
+.comment-meta,
+.comment-tasks,
+.comment-tasks li,
 .comments,
 .comments-body,
 .comments-footer,
 .comments-header {
   margin: 0;
-}
-.comments,
-.comments-body,
-.comments-body .comment-form,
-.comments-footer,
-.comments-pager {
-  margin-top: 2em;
-}
-.comments-pager {
-  text-align: center;
-}
-.comments-pager b {
-  font-weight: normal;
-}
-.comments-pager > span {
-  margin-right: .25em;
-}
-.comments-pager > span:last-child {
-  margin-right: 0;
-}
-li.comment,
-ul.comments {
-  margin: 0;
   padding: 0;
   list-style: none;
+  background: none;
+  border: 0;
+  outline: 0;
 }
-li.comment::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-ul.comments {
-  margin-top: -1em;
-}
-ul.comments ul.comments {
-  clear: both;
-  margin-top: 0;
-}
-li.comment {
-  padding-top: 1em;
+.comment {
   position: relative;
-  word-wrap: break-word;
 }
-li.comment ul.comments,
-li.comment .comment-form {
-  margin-bottom: 1em;
+.comment .comments,
+.comment + .comment {
+  margin-top: 1rem;
 }
-.comment-body,
-.comment-figure,
-.comment-footer,
-.comment-header {
-  margin: 0;
-  clear: none;
-}
-.comment-body::after,
-.comment-figure::after,
-.comment-footer::after,
-.comment-header::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.comment-links,
-.comment-links li {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.comment-links::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.comment-links li {
-  display: block;
-  float: left;
-}
-.comment-links li::after {
-  content: '\00B7';
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 .5em;
-}
-.comment-links li:last-child::after {
-  display: none;
-}
-.comment-links .comment-link {
-  display: inline-block;
-  vertical-align: middle;
-}
-.comment-figure + .comment-header,
-.comment-figure + .comment-header + .comment-body,
-.comment-figure + .comment-header + .comment-body + .comment-footer,
-.comment-figure + .comment-header + .comment-body + .comment-footer + ul.comments {
-  margin-left: 5.5em;
-}
-.comment-body,
-.comment-footer {
-  margin-top: .5em;
-}
-.comment-figure {
-  width: 4.5em;
-  height: 4.5em;
-  position: absolute;
-  top: 1.2em; /* `padding-top` + `.2em` */
-  bottom: 0;
-  left: 0;
+.comment-author,
+.comment-meta {
+  font: inherit;
+  text-shadow: inherit;
 }
 .comment-avatar {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   max-width: 100%;
   max-height: 100%;
-  margin: 0;
-  padding: 0;
-  background: rgba(0, 0, 0, .05);
-  border: 0;
-  outline: 0;
 }
-.comment-author,
-.comment-meta {
-  margin: 0;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  text-shadow: inherit;
+.comment-header {
+  display: flex;
+  gap: 0 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
-.comment-author {
-  float: left;
+.comment-body,
+.comment-footer {
+  margin-top: 1rem;
 }
-.comment-meta {
-  float: right;
+.comment-figure + .comment-header,
+.comment-figure + .comment-header + .comment-body,
+.comment-figure + .comment-header + .comment-body + .comment-footer,
+.comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
+  margin-left: 6rem;
 }
-.comment-url::before {
-  content: '#';
+.comment-figure {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5rem;
 }
 .comment-form {
-  clear: both;
-}
-.comment-form h3 {
-  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 .comment-form > p,
 .comment-form > .p {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+  display: flex;
+  gap: 0 1rem;
+}
+.comment-form > p > *,
+.comment-form > .p > * {
+  flex: 1;
 }
 .comment-form > p + p,
 .comment-form > p + .p,
 .comment-form > .p + p,
 .comment-form > .p + .p {
-  margin-top: 1em;
-}
-.comment-form > p > *,
-.comment-form > .p > * {
-  display: table-cell;
-  vertical-align: top;
+  margin-top: 1rem;
 }
 .comment-form p > label,
 .comment-form .p > label {
-  width: 5.5em;
-  padding-right: 1em;
+  max-width: 5rem;
   text-align: right;
 }
 .comment-form p > label + br,
@@ -200,7 +99,6 @@ li.comment .comment-form {
 .comment-form .alert p,
 .comment-form .alert .p {
   display: block;
-  width: auto;
 }
 .comment-form .button,
 .comment-form .input,
@@ -225,28 +123,77 @@ li.comment .comment-form {
 .comment-form .select + br + small,
 .comment-form .textarea + br + small {
   display: block;
-  margin-top: .5em;
+  margin-top: .5rem;
 }
-.comment-form + .comment-footer,
+.comment .comment-form {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.comment .comment-form + .comment-footer {
+  display: none;
+}
 .comment-form .js\:cancel {
   display: none;
 }
 .comment-form.is\:reply .js\:cancel {
   display: inline-block;
+  display: unset;
+}
+.comments-pager {
+  display: flex;
+  gap: 0 1rem;
+  justify-content: center;
+}
+.comments-pager > span {
+  display: flex;
+  gap: 0 .5rem;
+}
+.comments-pager > span b {
+  font: inherit;
+}
+.comment-tasks {
+  display: flex;
+  gap: 0 1rem;
+  align-content: center;
+}
+.comment-url::before {
+  content: '#';
+}
+.comments,
+.comments-body,
+.comments-footer,
+.comments-pager {
+  margin-top: 2rem;
+}
+.comments:empty,
+.comments-body:empty,
+.comments-footer:empty {
+  display: none;
+}
+.comments-footer > p:only-child {
+  text-align: center;
 }
 
-@media (max-width: 730px) {
-  .comment-author,
-  .comment-meta {
-    float: none;
-  }
-  .comment-meta {
-    margin-bottom: .5em;
-  }
+/*
+ * Make button appearance to look like a plain text,
+ * but preserve padding and margin around it.
+ */
+.button.js\:user,
+.button.js\:user:focus,
+.button.js\:user:hover,
+.button.js\:user:active {
+  color: inherit;
+  text-shadow: inherit;
+  background: none;
+  border-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: inherit;
+  user-select: text;
 }
 
-@media (max-width: 450px) {
-  .comment-figure + .comment-header + .comment-body + .comment-footer + ul.comments {
-    margin-left: 1em;
+@media (max-width: 600px) {
+  .comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
+    margin-left: 1rem;
   }
 }

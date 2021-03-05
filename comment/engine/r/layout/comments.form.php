@@ -4,7 +4,7 @@ $advance = State::get('x.user', true);
 $author = $advance ? Is::user() : false;
 
 ?>
-<form action="<?= $url . '/.comment' . substr($page->url, strlen($url . "")) . $url->query('&amp;'); ?>" class="comment-form<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][1]; ?>" method="post" name="comment">
+<form action="<?= $url . '/.comment' . substr($page->url, strlen($url . "")) . $url->query('&amp;'); ?>" class="comment-form<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
   <?= $alert; ?>
   <?php if ($author): ?>
     <h3>
@@ -13,7 +13,7 @@ $author = $advance ? Is::user() : false;
     <input name="comment[author]" type="hidden" value="<?= $author; ?>">
   <?php else: ?>
     <p>
-      <label for="<?= $for = sprintf($c['anchor'][0], 'author'); ?>">
+      <label for="<?= $for = sprintf($c['anchor'][2], 'author'); ?>">
         <?= i('Name'); ?>
       </label>
       <br>
@@ -22,7 +22,7 @@ $author = $advance ? Is::user() : false;
       </span>
     </p>
     <p>
-      <label for="<?= $for = sprintf($c['anchor'][0], 'email'); ?>">
+      <label for="<?= $for = sprintf($c['anchor'][2], 'email'); ?>">
         <?= i('Email'); ?>
       </label>
       <br>
@@ -31,7 +31,7 @@ $author = $advance ? Is::user() : false;
       </span>
     </p>
     <p>
-      <label for="<?= $for = sprintf($c['anchor'][0], 'link'); ?>">
+      <label for="<?= $for = sprintf($c['anchor'][2], 'link'); ?>">
         <?= i('Link'); ?>
       </label>
       <br>
@@ -41,7 +41,7 @@ $author = $advance ? Is::user() : false;
     </p>
   <?php endif; ?>
   <div class="p">
-    <label for="<?= $for = sprintf($c['anchor'][0], 'content'); ?>">
+    <label for="<?= $for = sprintf($c['anchor'][2], 'content'); ?>">
       <?= i('Message'); ?>
     </label>
     <br>
@@ -55,12 +55,12 @@ $author = $advance ? Is::user() : false;
     </label>
     <br>
     <span>
-      <button class="button" id="<?= $for = sprintf($c['anchor'][0], 'x'); ?>" type="submit">
+      <button class="button" id="<?= $for = sprintf($c['anchor'][2], 'x'); ?>" type="submit">
         <?= i('Publish'); ?>
-      </button><?php if (isset($c['page']['deep']) && $c['page']['deep'] > 0): ?> <a class="button js:cancel" href="<?= $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][1]; ?>" target="<?= $c['anchor'][1]; ?>">
+      </button><?php if (isset($c['page']['deep']) && $c['page']['deep'] > 0): ?> <a class="button js:cancel" href="<?= $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][0]; ?>" target="<?= $c['anchor'][0]; ?>">
         <?= i('Cancel'); ?>
       </a><?php endif; ?><?php if ($advance && !empty($c['user'])): ?> <span class="button js:user">
-        <a href="<?= $url . ($advance['guard']['path'] ?? $advance['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/') . $url->query . '#' . $c['anchor'][1]]); ?>">
+        <a href="<?= $url . ($advance['guard']['path'] ?? $advance['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/') . $url->query . '#' . $c['anchor'][0]]); ?>">
           <?= $author ?: i('Log In'); ?>
         </a>
       </span><?php endif; ?>

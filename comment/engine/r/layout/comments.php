@@ -27,7 +27,7 @@ if (
         }
     }
 
-    $c = [
+    $lot = [
         'c' => State::get('x.comment', true),
         'count' => $count,
         'parent' => $parent,
@@ -42,9 +42,9 @@ if (
         $k = 1;
     }
 
-    echo '<section class="comments comments:' . $k . '"' . (!empty($c['c']['anchor'][2]) ? ' id="' . $c['c']['anchor'][2] . '"' : "") . '>';
-    echo self::get(__DIR__ . DS . 'comments.header.php', $c);
-    echo self::get(__DIR__ . DS . 'comments.body.php', $c);
-    echo self::get(__DIR__ . DS . 'comments.footer.php', $c);
+    echo '<section class="comments comments:' . $k . '">';
+    echo self::get(__DIR__ . DS . 'comments.header.php', $lot);
+    echo self::get(__DIR__ . DS . 'comments.body.php', $lot);
+    echo self::get(__DIR__ . DS . 'comments.footer.php', $lot);
     echo '</section>';
 }
