@@ -1,6 +1,6 @@
 <?php
 
-Page::_('comments', function(int $chunk = 100, int $i = 0): Comments {
+Page::_('comments', function(int $chunk = 100, int $i = 0) {
     $comments = [];
     $count = 0;
     if ($path = $this->path) {

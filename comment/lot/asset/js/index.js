@@ -1,4 +1,4 @@
-(function(win, doc) {
+((win, doc) => {
 
     let form = doc.forms.comment;
 
@@ -49,4 +49,4 @@
         }
     }
 
-})(this, this.document);
+})(window, document);
