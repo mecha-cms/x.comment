@@ -13,7 +13,6 @@ return [
         'x' => 'page'
     ],
     'anchor' => ['comment', 'comments', 'comment:%s', 'comments:%s'],
-    'user' => true, // Show log-in button if user extension is available
     'guard' => [
         'max' => [
             'author' => 100,
@@ -26,6 +25,7 @@ return [
             'email' => 3, // `a@b`
             'link' => 8, // `http://a`
             'content' => 2
-        ]
+        ],
+        'user' => true // Show log-in button if user extension is available
     ]
 ];

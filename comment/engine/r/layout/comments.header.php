@@ -1,5 +1,8 @@
 <header class="comments-header">
-  <h3>
-    <?= $page->comments->title; ?>
-  </h3>
+  <?= _\lot\x\comment\layout('comments:header', [[
+      'title' => [
+          0 => 'h3',
+          1 => $page->comments->title
+      ]
+  ], $page, null]); ?>
 </header>

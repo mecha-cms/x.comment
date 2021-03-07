@@ -5,8 +5,6 @@
 .comment-figure,
 .comment-footer,
 .comment-form,
-.comment-form p,
-.comment-form .p,
 .comment-header,
 .comment-meta,
 .comment-tasks,
@@ -14,7 +12,8 @@
 .comments,
 .comments-body,
 .comments-footer,
-.comments-header {
+.comments-header,
+.comments-pager {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -37,7 +36,6 @@
 .comment-avatar {
   display: block;
   width: 100%;
-  height: auto;
   max-width: 100%;
   max-height: 100%;
 }
@@ -65,7 +63,7 @@
   width: 5rem;
 }
 .comment-form {
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 .comment-form > p,
 .comment-form > .p {
@@ -126,7 +124,6 @@
   margin-top: .5rem;
 }
 .comment .comment-form {
-  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 .comment .comment-form + .comment-footer {
@@ -162,7 +159,8 @@
 .comments,
 .comments-body,
 .comments-footer,
-.comments-pager {
+.comments-pager,
+.comments-pager + p {
   margin-top: 2rem;
 }
 .comments:empty,
@@ -170,7 +168,8 @@
 .comments-footer:empty {
   display: none;
 }
-.comments-footer > p:only-child {
+.comments-footer > p:only-child,
+.comments-footer > .comments-pager + p {
   text-align: center;
 }
 
@@ -178,10 +177,10 @@
  * Make button appearance to look like a plain text,
  * but preserve padding and margin around it.
  */
-.button.js\:user,
-.button.js\:user:focus,
-.button.js\:user:hover,
-.button.js\:user:active {
+.button.is\:user,
+.button.is\:user:focus,
+.button.is\:user:hover,
+.button.is\:user:active {
   color: inherit;
   text-shadow: inherit;
   background: none;

@@ -46,5 +46,7 @@ if (
     echo self::get(__DIR__ . DS . 'comments.header.php', $lot);
     echo self::get(__DIR__ . DS . 'comments.body.php', $lot);
     echo self::get(__DIR__ . DS . 'comments.footer.php', $lot);
+    echo _\lot\x\comment\layout('comments:tasks', [[], $page, null]);
     echo '</section>';
 }
+
