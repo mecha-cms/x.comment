@@ -1,17 +1,16 @@
 <?php
 
-$n = count($page->comments->lot);
 $path = $c['path'] ?? '/comment';
 $chunk = $c['page']['chunk'] ?? 9999;
 
 // Calculate last page offset
-$max = (int) ceil($n / $chunk);
+$max = (int) ceil($count / $chunk);
 
 // Show last page by default if `$i` is `null`
 $i = $url['i'] ?? $max;
 
 ?>
-<?php if ($n > $count): ?>
+<?php if ($count > $chunk): ?>
   <nav class="comments-pager">
     <?php
 
@@ -82,7 +81,7 @@ $i = $url['i'] ?? $max;
             $out .= '</span>';
         }
         return $out;
-    })($current, $n, $chunk, 2, static function($i) use($c, $max, $page, $path, $url) {
+    })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $path, $url) {
         return $page->url . ($max === $i ? "" : $path . '/' . $i) . $url->query . '#' . $c['anchor'][1];
     }, i('First'), i('Previous'), i('Next'), i('Last')); ?>
   </nav>

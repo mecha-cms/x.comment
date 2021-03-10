@@ -173,24 +173,6 @@
   text-align: center;
 }
 
-/*
- * Make button appearance to look like a plain text,
- * but preserve padding and margin around it.
- */
-.button.is\:user,
-.button.is\:user:focus,
-.button.is\:user:hover,
-.button.is\:user:active {
-  color: inherit;
-  text-shadow: inherit;
-  background: none;
-  border-color: transparent;
-  border-radius: 0;
-  box-shadow: none;
-  cursor: inherit;
-  user-select: text;
-}
-
 @media (max-width: 600px) {
   .comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
     margin-left: 1rem;

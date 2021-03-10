@@ -1,4 +1,4 @@
-<?php namespace _\lot\x\comment;
+<?php namespace x\comment;
 
 function route($any) {
     \State::set([
@@ -14,7 +14,11 @@ function set($any) {
     $active = null !== \State::get('x.user') && \Is::user();
     $state = \State::get('x.comment', true);
     $anchor = $state['anchor'];
-    if (\Request::is('Get') || !\is_file(\LOT . \DS . 'page' . \DS . $any . '.page')) {
+    if (\Request::is('Get')) {
+        \Alert::error('Method not allowed.');
+        \Guard::kick($any . $url->query . '#' . $anchor[0]);
+    }
+    if (!\is_file(\LOT . \DS . 'page' . \DS . $any . '.page')) {
         \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
         \Guard::kick($any . $url->query . '#' . $anchor[0]);
     }

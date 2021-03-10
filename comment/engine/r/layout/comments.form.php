@@ -12,30 +12,16 @@ $author = $advance ? Is::user() : false;
   $t = microtime();
   $guard = $state->x->comment->guard ?? null;
   foreach ([
-      'author' => [
-          'hint' => i('Anonymous'),
-          'title' => i('Name'),
-          'type' => 'text',
-          'vital' => true
-      ],
-      'email' => [
-          'hint' => S . i('hello') . S . '@' . S . $url->host . S,
-          'title' => i('Email'),
-          'type' => 'email',
-          'vital' => true
-      ],
-      'link' => [
-          'hint' => S . $url->protocol . S . $url->host . S,
-          'title' => i('Link'),
-          'type' => 'url'
-      ]
+      'author' => ['text', i('Name'), i('Anonymous'), true],
+      'email' => ['email', i('Email'), S . i('hello') . S . '@' . S . $url->host . S, true],
+      'link' => ['url', i('Link'), S . $url->protocol . S . $url->host . S]
   ] as $k => $v) {
-      $id = 'f:' . crc32($k . $t);
+      $id = 'the:' . dechex(crc32($k . $t));
       $tasks[$k] = [
           0 => 'p',
           1 => (new HTML([
               0 => 'label',
-              1 => $v['title'] ?? "",
+              1 => $v[1] ?? "",
               2 => ['for' => $id]
           ])) . '<br><span>' . (new HTML([
               0 => 'input',
@@ -46,9 +32,9 @@ $author = $advance ? Is::user() : false;
                   'maxlength' => $guard->max->{$k} ?? null,
                   'minlength' => $guard->min->{$k} ?? null,
                   'name' => 'comment[' . $k . ']',
-                  'placeholder' => $v['hint'] ?? null,
-                  'required' => !empty($v['vital']),
-                  'type' => $v['type'] ?? 'text'
+                  'placeholder' => $v[2] ?? null,
+                  'required' => !empty($v[3]),
+                  'type' => $v[0] ?? 'text'
               ]
           ])) . '</span>',
           2 => []
@@ -60,7 +46,7 @@ $author = $advance ? Is::user() : false;
       1 => (new HTML([
           0 => 'label',
           1 => i('Message'),
-          2 => ['for' => $id = 'f:' . crc32('content' . $t)]
+          2 => ['for' => $id = 'the:' . dechex(crc32('content' . $t))]
       ])) . '<br><div>' . (new HTML([
           0 => 'textarea',
           1 => "",
@@ -82,13 +68,13 @@ $author = $advance ? Is::user() : false;
       1 => (new HTML([
           0 => 'label',
           1 => i('Tasks')
-      ])) . '<br><span>' . _\lot\x\comment\layout('comments:tasks.form', [[
-          'create' => [
+      ])) . '<br><span>' . x\comment\hook('comments-form-tasks', [[
+          'publish' => [
               0 => 'button',
               1 => i('Publish'),
               2 => [
                   'class' => 'button',
-                  'id' => $id = 'f:' . crc32('x' . $t),
+                  'id' => $id = 'the:' . dechex(crc32('x' . $t)),
                   'type' => 'submit',
                   'value' => 1
               ]
@@ -101,33 +87,12 @@ $author = $advance ? Is::user() : false;
                   'href' => $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][0]
               ]
           ] : false,
-          'enter' => $advance && !empty($c['guard']['user']) ? [
-              0 => 'span',
-              1 => (new HTML([
-                  0 => 'a',
-                  1 => $author ?: i('Log In'),
-                  2 => [
-                      'href' => $url . ($advance['guard']['path'] ?? $advance['path']) . $url->query('&amp;', ['kick' => trim($url->path, '/') . $url->query . '#' . $c['anchor'][0]])
-                  ]
-              ])),
-              2 => ['class' => 'button is:user']
-          ] : false
-      ], $page, $deep ?? null], $comment ?? null, ' ') . '</span>',
-      2 => []
+      ], $page, $deep ?? null], $comment ?? null, ' ') . '</span>'
   ];
 
   $tasks['parent'] = '<input name="comment[parent]" type="hidden" value="' . ($parent ? $parent->name : "") . '">';
   $tasks['token'] = '<input name="comment[token]" type="hidden" value="' . Guard::token('comment') . '">';
 
-  if ($author) {
-      unset($tasks['author'], $tasks['email'], $tasks['link']);
-      $tasks = ['title' => [
-          0 => 'h3',
-          1 => i('Commenting as %s', '<a href="' . $user->url . '" rel="nofollow">' . $user . '</a>')
-      ]] + $tasks;
-      $tasks['author'] = '<input name="comment[author]" type="hidden" value="' . $author . '">';
-  }
-
   ?>
-  <?= _\lot\x\comment\layout('comments:form', [$tasks, $page, $deep ?? null], $comment ?? null); ?>
+  <?= x\comment\hook('comments-form', [$tasks, $page, $deep ?? null], $comment ?? null); ?>
 </form>

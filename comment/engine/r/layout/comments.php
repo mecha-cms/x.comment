@@ -31,7 +31,7 @@ if (
         'c' => State::get('x.comment', true),
         'count' => $count,
         'parent' => $parent,
-        'type' => $type
+        'type' => $x === $type ? 1 : $type
     ];
 
     if (false === $type) {
@@ -46,7 +46,7 @@ if (
     echo self::get(__DIR__ . DS . 'comments.header.php', $lot);
     echo self::get(__DIR__ . DS . 'comments.body.php', $lot);
     echo self::get(__DIR__ . DS . 'comments.footer.php', $lot);
-    echo _\lot\x\comment\layout('comments:tasks', [[], $page, null]);
+    echo x\comment\hook('comments:tasks', [[], $page, null]);
     echo '</section>';
 }
 

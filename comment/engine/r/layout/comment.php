@@ -3,7 +3,7 @@
     <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(80), ['&' => '&amp;']); ?>" width="80" height="80">
   </figure>
   <header class="comment-header">
-    <?= _\lot\x\comment\layout('comment:header', [[
+    <?= x\comment\hook('comment-header', [[
         'author' => [
             0 => 'h4',
             1 => (string) new HTML([
@@ -26,7 +26,7 @@
     ], $page, $deep], $comment); ?>
   </header>
   <div class="comment-body">
-    <?= _\lot\x\comment\layout('comment:body', [[
+    <?= x\comment\hook('comment-body', [[
         'content' => [
             0 => 'div',
             1 => $comment->content,
@@ -38,13 +38,13 @@
     <?= self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
-    <?php $tasks = $type ? _\lot\x\comment\tasks(\Hook::fire('comment:tasks', [[], $page, $deep], $comment), [$page, $deep], $comment) : []; ?>
+    <?php $tasks = $type ? x\comment\tasks(\Hook::fire('comment-tasks', [[], $page, $deep], $comment), [$page, $deep], $comment) : []; ?>
     <?php $tasks = !empty($tasks) ? [
         0 => 'ul',
         1 => '<li>' . implode('</li><li>', $tasks) . '</li>',
         2 => ['class' => 'comment-tasks']
     ] : null; ?>
-    <?= _\lot\x\comment\layout('comment:footer', [[
+    <?= x\comment\hook('comment-footer', [[
         'tasks' => $tasks
     ], $page, $deep], $comment); ?>
   </footer>

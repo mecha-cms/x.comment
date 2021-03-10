@@ -1,15 +1,15 @@
-<?php namespace _\lot\x\comment;
+<?php namespace x\comment;
 
 // Set default avatar using Gravatar service
 function avatar($avatar, array $lot = []) {
-    if (!$avatar) {
+    $avatar = $avatar ?: \State::get('x.comment.page.avatar');
+    if ($avatar) {
         $w = $lot[0] ?? 72;
         $h = $lot[1] ?? $w;
-        $d = $lot[2] ?? 'mp';
-        $avatar = $GLOBALS['url']->protocol . 'www.gravatar.com/avatar/' . \md5($this->email) . '.jpg?s=' . $w . '&d=' . $d;
-    }
-    if ($avatar || 1 !== $this['status']) {
-        return $avatar;
+        $avatar = \sprintf($avatar, \md5($this->email), $w, $h);
+        if (1 !== $this['status']) {
+            return $avatar;
+        }
     }
     $user = $this['author'];
     if ($user && \is_string($user) && 0 === \strpos($user, '@') && null !== \State::get('x.user')) {
@@ -52,18 +52,3 @@ if (null !== \State::get('x.user')) {
     \Hook::set('comment.email', __NAMESPACE__ . "\\email", 0);
     \Hook::set('comment.link', __NAMESPACE__ . "\\link", 0);
 }
-
-// Loading asset(s)…
-\Hook::set('content', function() {
-    $state = \State::get(null, true);
-    if (!empty($state['is']['page']) && !empty($state['has']['page'])) {
-        $path = __DIR__ . \DS . '..' . \DS . '..' . \DS . 'lot' . \DS . 'asset' . \DS;
-        $z = \defined("\\DEBUG") && \DEBUG ? '.' : '.min.';
-        \Asset::set($path . 'css' . \DS . 'index' . $z . 'css', 10);
-        \Asset::set($path . 'js' . \DS . 'index' . $z . 'js', 10);
-        \State::set([
-            'can' => ['comment' => true],
-            'has' => ['comments' => !empty($GLOBALS['page']->comments->count())]
-        ]);
-    }
-}, -1); // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
