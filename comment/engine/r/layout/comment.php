@@ -35,7 +35,7 @@
     ], $page, $deep], $comment); ?>
   </div>
   <?php if ((1 === $type || true === $type) && $parent && $parent->name === $comment->name): ?>
-    <?= self::get(__DIR__ . DS . 'comments.form.php', $lot); ?>
+    <?= self::get(__DIR__ . DS . 'comment.form.php', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
     <?php $tasks = $type ? x\comment\tasks(\Hook::fire('comment-tasks', [[], $page, $deep], $comment), [$page, $deep], $comment) : []; ?>

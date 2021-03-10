@@ -158,7 +158,9 @@ function set($any) {
         \Hook::fire('on.comment.set', [$file]);
         \Session::set('comment', $data);
         if ('draft' !== $x) {
-            \Guard::kick($any . $url->query('&', ['parent' => false]) . '#' . \sprintf($anchor[2], \sprintf('%u', $t)));
+            \Guard::kick($any . $url->query('&', [
+                'parent' => false
+            ]) . '#' . \sprintf($anchor[2], \sprintf('%u', $t)));
         }
     }
     \Guard::kick($any . $url->query . '#' . $anchor[0]);

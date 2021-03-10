@@ -68,7 +68,7 @@ $author = $advance ? Is::user() : false;
       1 => (new HTML([
           0 => 'label',
           1 => i('Tasks')
-      ])) . '<br><span>' . x\comment\hook('comments-form-tasks', [[
+      ])) . '<br><span>' . x\comment\hook('comment-form-tasks', [[
           'publish' => [
               0 => 'button',
               1 => i('Publish'),
@@ -94,5 +94,5 @@ $author = $advance ? Is::user() : false;
   $tasks['token'] = '<input name="comment[token]" type="hidden" value="' . Guard::token('comment') . '">';
 
   ?>
-  <?= x\comment\hook('comments-form', [$tasks, $page, $deep ?? null], $comment ?? null); ?>
+  <?= x\comment\hook('comment-form', [$tasks, $page, $deep ?? null], $comment ?? null); ?>
 </form>
