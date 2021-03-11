@@ -88,7 +88,7 @@ $i = $i ? ($state->x->comment->path ?? '/comment') . $i : "";
               1 => i('Cancel'),
               2 => [
                   'class' => 'button js:cancel',
-                  'href' => $url->clean . $url->i . $url->query('&', [
+                  'href' => $url->clean . $i . $url->query('&', [
                       'parent' => false
                   ]) . '#' . $c['anchor'][0]
               ]
