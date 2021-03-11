@@ -1,12 +1,14 @@
 Comment Extension for Mecha
 ===========================
 
+![Comment](https://user-images.githubusercontent.com/1669261/110820519-c1ffd500-82c1-11eb-9d81-260e8ddb24ee.png)
+
 Release Notes
 -------------
 
 ### main
 
- - [@mecha-cms/mecha#96](https://github.com/mecha-cms/mecha/issues/96)
+ - [x] [@mecha-cms/mecha#96](https://github.com/mecha-cms/mecha/issues/96)
  - [x] Added `comment-body`, `comment-footer`, `comment-form`, `comment-form-tasks`, `comment-header`, `comment-tasks`, `comments-body`, `comments-footer`, `comments-header` and `comments-tasks` hooks.
  - [x] Improved comment pagination feature. If there isn&rsquo;t any comment pagination offset appear in the URL, by default, the current comments chunk in the comments section will be the last comments page.
  - [x] Improved comments markup. They are now uses combination of `<article>` and `<section>` tags.
