@@ -15,10 +15,11 @@ if (
     // Make sure comment feature is active
     ($x === $type || (false !== $type && 0 !== $type))
 ) {
-
     if ($parent = Get::get('parent')) {
         // Make sure parent comment exists
-        if (is_file($f = LOT . DS . 'comment' . $url->path(DS) . DS . $parent . '.page')) {
+        if (is_file($f = LOT . DS . 'comment' . DS . strtr($page->url, [
+            $url . '/' => ""
+        ]) . DS . $parent . '.page')) {
             $parent = new Comment($f);
         } else {
             // Otherwise, kick!
@@ -26,14 +27,12 @@ if (
             Guard::kick($page->url);
         }
     }
-
     $lot = [
         'c' => State::get('x.comment', true),
         'count' => $count,
         'parent' => $parent,
         'type' => $x === $type ? 1 : $type
     ];
-
     if (false === $type) {
         $k = 0;
     } else if (is_numeric($type)) {
@@ -41,12 +40,12 @@ if (
     } else /* if (true === $type) */ {
         $k = 1;
     }
-
     echo '<section class="comments comments:' . $k . '">';
-    echo self::get(__DIR__ . DS . 'comments.header.php', $lot);
-    echo self::get(__DIR__ . DS . 'comments.body.php', $lot);
-    echo self::get(__DIR__ . DS . 'comments.footer.php', $lot);
-    echo x\comment\hook('comments:tasks', [[], $page, null]);
+    echo x\comment\hook('comments-self', [[
+        'header' => self::get(__DIR__ . DS . 'comments.header.php', $lot),
+        'body' => self::get(__DIR__ . DS . 'comments.body.php', $lot),
+        'footer' => self::get(__DIR__ . DS . 'comments.footer.php', $lot)
+    ]], $page);
     echo '</section>';
 }
 

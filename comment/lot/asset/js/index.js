@@ -11,16 +11,18 @@
         x = form.getElementsByClassName('js:cancel')[0],
         content = form['comment[content]'],
         placeholder = content.placeholder,
-        test = /(\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g,
+        test = /(?:\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g,
         parent = form['comment[parent]'], i, j;
 
     q = !q || !q.match(test);
 
     function reply(a) {
         a.addEventListener('click', function(e) {
-            let s = this.parentNode.parentNode.parentNode, // `a < li < ul.comment-links < footer.comment-footer`
+            // `a < li < ul.comment-tasks < footer.comment-footer`
+            let s = this.parentNode.parentNode.parentNode,
                 a = form.getAttribute('action'),
-                i = this.getAttribute('data-parent');
+                i = test.exec(this.href);
+            i = i ? i[1] : "";
             s.parentNode.insertBefore(form, s);
             a = a.replace(test, "");
             a += (a.indexOf('?') > -1 ? '&' : '?') + 'parent=' + i;

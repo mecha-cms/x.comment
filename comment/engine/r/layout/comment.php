@@ -50,7 +50,7 @@
   </footer>
   <?php if ($deep < ($c['page']['deep'] ?? 0) && $comment->comments->count()): ++$deep; ?>
     <section class="comments" data-level="<?= $deep; ?>" id="<?= sprintf($c['anchor'][3], $comment->id); ?>">
-      <?php foreach ($comment->comments(9999) as $v): ?>
+      <?php foreach ($comment->comments($count) as $v): ?>
       <?= self::get(__FILE__, array_replace($lot, [
           'comment' => $v,
           'deep' => $deep

@@ -1,10 +1,14 @@
 <?php
 
-$advance = State::get('x.user', true);
-$author = $advance ? Is::user() : false;
+$i = $url->i;
+$i = $i ? ($state->x->comment->path ?? '/comment') . $i : "";
 
 ?>
-<form action="<?= $url . '/.comment' . substr($page->url, strlen($url . "")) . $url->query('&amp;'); ?>" class="comment-form<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
+<form action="<?= $url . '/.comment/' . strtr($page->url, [
+    $url . '/' => ""
+]) . $i . $url->query('&amp;', [
+    'parent' => false
+]); ?>" class="comment-form<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
   <?= $alert; ?>
   <?php
 
@@ -84,7 +88,9 @@ $author = $advance ? Is::user() : false;
               1 => i('Cancel'),
               2 => [
                   'class' => 'button js:cancel',
-                  'href' => $url->clean . $url->query('&amp;', ['parent' => false]) . '#' . $c['anchor'][0]
+                  'href' => $url->clean . $url->i . $url->query('&', [
+                      'parent' => false
+                  ]) . '#' . $c['anchor'][0]
               ]
           ] : false,
       ], $page, $deep ?? null], $comment ?? null, ' ') . '</span>'

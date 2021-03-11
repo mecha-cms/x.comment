@@ -11,9 +11,10 @@ namespace x\comment\tasks {
                 0 => 'a',
                 1 => \i('Reply'),
                 2 => [
-                    'class' => 'comment-link js:reply',
-                    'data-parent' => $id,
-                    'href' => $url->query('&', ['parent' => $id]) . '#' . $state->x->comment->anchor[0],
+                    'class' => 'js:reply',
+                    'href' => $url->query('&', [
+                        'parent' => $id
+                    ]) . '#' . $state->x->comment->anchor[0],
                     'rel' => 'nofollow',
                     'title' => \To::text(i('Reply to %s', (string) $this->author))
                 ]

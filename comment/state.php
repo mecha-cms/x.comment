@@ -4,7 +4,7 @@ return [
     'path' => '/comment',
     'page' => [
         // Default avatar image URL
-        'avatar' => 'https://gravatar.com/avatar/%1$s.jpg?s=%2$d&d=mp',
+        'avatar' => 'https://gravatar.com/avatar/%1$s?s=%2$d&d=mp',
         // Paginate comment(s) if total of comment(s) that has no `parent` property has reached this limit
         'chunk' => 50,
         // Set to `0` to disable comment thread, `1` or more to enable comment thread

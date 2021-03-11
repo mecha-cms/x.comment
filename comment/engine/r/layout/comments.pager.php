@@ -82,7 +82,9 @@ $i = $url['i'] ?? $max;
         }
         return $out;
     })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $path, $url) {
-        return $page->url . ($max === $i ? "" : $path . '/' . $i) . $url->query . '#' . $c['anchor'][1];
+        return $page->url . ($max === $i ? "" : $path . '/' . $i) . $url->query('&', [
+            'parent' => false
+        ]) . '#' . $c['anchor'][1];
     }, i('First'), i('Previous'), i('Next'), i('Last')); ?>
   </nav>
 <?php endif; ?>
