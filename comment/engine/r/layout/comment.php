@@ -1,6 +1,6 @@
 <article class="comment comment-status:<?= $comment->status; ?>" id="<?= sprintf($c['anchor'][2], $comment->id); ?>">
   <figure class="comment-figure">
-    <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(80), ['&' => '&amp;']); ?>" width="80" height="80">
+    <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(100), ['&' => '&amp;']); ?>" width="100" height="100">
   </figure>
   <header class="comment-header">
     <?= x\comment\hook('comment-header', [[
