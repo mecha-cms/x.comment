@@ -24,6 +24,9 @@
 .comment {
   position: relative;
 }
+.comment-status\:-1 {
+  opacity: .5;
+}
 .comment .comments,
 .comment + .comment {
   margin-top: 1rem;
