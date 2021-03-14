@@ -41,11 +41,10 @@ if (
         $k = 1;
     }
     echo '<section class="comments comments:' . $k . '">';
-    echo x\comment\hook('comments-self', [[
+    echo x\comment\hook('comments-content', [[
         'header' => self::get(__DIR__ . DS . 'comments.header.php', $lot),
         'body' => self::get(__DIR__ . DS . 'comments.body.php', $lot),
         'footer' => self::get(__DIR__ . DS . 'comments.footer.php', $lot)
     ]], $page);
     echo '</section>';
 }
-
