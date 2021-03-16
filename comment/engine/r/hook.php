@@ -2,7 +2,10 @@
 
 // Set default avatar using Gravatar service
 function avatar($avatar, array $lot = []) {
-    $avatar = $avatar ?: \State::get('x.comment.page.avatar');
+    extract($GLOBALS, \EXTR_SKIP);
+    $state_comment = $state->x->comment ?? null;
+    $state_user = $state->x->user ?? null;
+    $avatar = $avatar ?: $state_comment->page->avatar;
     if ($avatar) {
         $w = $lot[0] ?? 72;
         $h = $lot[1] ?? $w;
@@ -12,7 +15,7 @@ function avatar($avatar, array $lot = []) {
         }
     }
     $user = $this['author'];
-    if ($user && \is_string($user) && 0 === \strpos($user, '@') && null !== \State::get('x.user')) {
+    if ($user && \is_string($user) && 0 === \strpos($user, '@') && null !== $state_user) {
         if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
             return (new \User($user))->avatar(...$lot) ?? $avatar;
         }
@@ -23,7 +26,7 @@ function avatar($avatar, array $lot = []) {
 \Hook::set('comment.avatar', __NAMESPACE__ . "\\avatar", 0);
 
 // Extend user property to comment property
-if (null !== \State::get('x.user')) {
+if (isset($state->x->user)) {
     function email($email) {
         if ($email || 1 !== $this['status']) {
             return $email;
