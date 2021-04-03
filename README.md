@@ -14,7 +14,7 @@ Release Notes
  - [x] Added `comment-body`, `comment-footer`, `comment-form`, `comment-form-tasks`, `comment-header`, `comment-tasks`, `comments-body`, `comments-footer`, `comments-header` and `comments-tasks` hooks.
  - [x] Improved comment pagination feature. If there isn&rsquo;t any comment pagination offset appear in the URL, by default, the current comments chunk in the comments section will be the last comments page.
  - [x] Improved comments markup. They are now uses combination of `<article>` and `<section>` tags.
- - [x] Moved user-related features to a [separate extension](https://github.com/mecha-cms/user.comment).
+ - [x] Moved user-related features to a [separate extension](https://github.com/mecha-cms/x.user.comment).
  - [x] Removed `comment.footer` hook (has been replaced by `comment-tasks` hook).
 
 ### 1.19.2
