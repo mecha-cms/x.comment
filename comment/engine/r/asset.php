@@ -7,9 +7,10 @@ Hook::set('content', function() {
         $z = defined('DEBUG') && DEBUG ? '.' : '.min.';
         Asset::set($path . 'css' . \DS . 'index' . $z . 'css', 10);
         Asset::set($path . 'js' . \DS . 'index' . $z . 'js', 10);
+        $comments = $page->comments->count() ?? 0;
         State::set([
             'can' => ['comment' => true],
-            'has' => ['comments' => !empty($page->comments->count())]
+            'has' => ['comments' => !!$comments]
         ]);
     }
 }, -1); // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook

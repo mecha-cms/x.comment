@@ -180,7 +180,7 @@
 
 .comments-note {
   background: rgba(255, 255, 0, .25);
-  border: 1px solid;
+  border: 1px dashed;
   padding: 1em;
 }
 
