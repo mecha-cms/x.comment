@@ -2,7 +2,7 @@
 
 $x = P . __FILE__ . P; // Dummy value
 $type = $page->get('state.comment') ?? $lot[0] ?? $x;
-$count = $page->comments->count();
+$count = $page->comments ? $page->comments->count() : 0;
 
 // Comment form is disabled and no comment(s)
 if (!$page->comments || (0 === $count && 2 === $type)) {
