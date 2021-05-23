@@ -177,12 +177,6 @@
   text-align: center;
 }
 
-.comments-note {
-  background: rgba(255, 255, 0, .25);
-  border: 1px dashed;
-  padding: 1em;
-}
-
 @media (max-width: 600px) {
   .comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
     margin-left: 1rem;
