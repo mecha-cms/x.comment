@@ -139,7 +139,6 @@
 }
 .comment-form.is\:reply .js\:cancel {
   display: inline-block;
-  display: unset;
 }
 .comments-pager {
   display: flex;

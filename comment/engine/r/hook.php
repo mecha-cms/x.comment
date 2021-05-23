@@ -1,11 +1,8 @@
 <?php namespace x\comment;
 
-// Set default avatar using Gravatar service
 function avatar($avatar, array $lot = []) {
     extract($GLOBALS, \EXTR_SKIP);
-    $state_comment = $state->x->comment ?? null;
-    $state_user = $state->x->user ?? null;
-    $avatar = $avatar ?: $state_comment->page->avatar;
+    $avatar = $avatar ?? $state->x->comment->avatar ?? "";
     if ($avatar) {
         $w = $lot[0] ?? 72;
         $h = $lot[1] ?? $w;
@@ -15,7 +12,7 @@ function avatar($avatar, array $lot = []) {
         }
     }
     $user = $this['author'];
-    if ($user && \is_string($user) && 0 === \strpos($user, '@') && null !== $state_user) {
+    if ($user && \is_string($user) && 0 === \strpos($user, '@') && isset($state->x->user)) {
         if (\is_file($user = \LOT . \DS . 'user' . \DS . \substr($user, 1) . '.page')) {
             return (new \User($user))->avatar(...$lot) ?? $avatar;
         }
