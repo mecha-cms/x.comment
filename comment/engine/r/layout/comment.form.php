@@ -8,7 +8,7 @@ $i = $i ? ($state->x->comment->path ?? '/comment') . $i : "";
     $url . '/' => ""
 ]) . $i . $url->query('&amp;', [
     'parent' => false
-]); ?>" class="comment-form<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
+]); ?>" class="form-comment<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
   <?= $alert; ?>
   <?php
 

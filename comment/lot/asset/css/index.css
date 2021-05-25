@@ -4,7 +4,6 @@
 .comment-body,
 .comment-figure,
 .comment-footer,
-.comment-form,
 .comment-header,
 .comment-meta,
 .comment-tasks,
@@ -13,7 +12,8 @@
 .comments-body,
 .comments-footer,
 .comments-header,
-.comments-pager {
+.comments-pager,
+.form-comment {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -57,7 +57,7 @@
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
 .comment-figure + .comment-header + .comment-body + .comment-footer + .comments,
-.comment-figure + .comment-header + .comment-body + .comment-form + .comment-footer + .comments {
+.comment-figure + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
   margin-left: 6rem;
 }
 .comment-figure {
@@ -66,79 +66,6 @@
   bottom: 0;
   left: 0;
   width: 5rem;
-}
-.comment-form {
-  margin-top: 2rem;
-}
-.comment-form > p,
-.comment-form > .p {
-  display: flex;
-  gap: 0 1rem;
-}
-.comment-form > p > *,
-.comment-form > .p > * {
-  flex: 1;
-}
-.comment-form > p + p,
-.comment-form > p + .p,
-.comment-form > .p + p,
-.comment-form > .p + .p {
-  margin-top: 1rem;
-}
-.comment-form p > label,
-.comment-form .p > label {
-  max-width: 5rem;
-  text-align: right;
-}
-.comment-form p > label + br,
-.comment-form .p > label + br {
-  display: none;
-}
-.comment-form p > label:not([for]),
-.comment-form .p > label:not([for]) {
-  visibility: hidden;
-}
-.comment-form .alert,
-.comment-form .alert p,
-.comment-form .alert .p {
-  display: block;
-}
-.comment-form .button,
-.comment-form .input,
-.comment-form .select,
-.comment-form .textarea {
-  display: inline-block;
-  vertical-align: middle;
-  box-sizing: border-box;
-}
-.comment-form .width {
-  display: block;
-  width: 100%;
-}
-.comment-form .button + br,
-.comment-form .input + br,
-.comment-form .select + br,
-.comment-form .textarea + br {
-  display: none;
-}
-.comment-form .button + br + small,
-.comment-form .input + br + small,
-.comment-form .select + br + small,
-.comment-form .textarea + br + small {
-  display: block;
-  margin-top: .5rem;
-}
-.comment .comment-form {
-  margin-bottom: 2rem;
-}
-.comment .comment-form + .comment-footer {
-  display: none;
-}
-.comment-form .js\:cancel {
-  display: none;
-}
-.comment-form.is\:reply .js\:cancel {
-  display: inline-block;
 }
 .comments-pager {
   display: flex;
@@ -175,6 +102,79 @@
 .comments-footer > p:only-child,
 .comments-footer > .comments-pager + p {
   text-align: center;
+}
+.form-comment {
+  margin-top: 2rem;
+}
+.form-comment > p,
+.form-comment > .p {
+  display: flex;
+  gap: 0 1rem;
+}
+.form-comment > p > *,
+.form-comment > .p > * {
+  flex: 1;
+}
+.form-comment > p + p,
+.form-comment > p + .p,
+.form-comment > .p + p,
+.form-comment > .p + .p {
+  margin-top: 1rem;
+}
+.form-comment p > label,
+.form-comment .p > label {
+  max-width: 5rem;
+  text-align: right;
+}
+.form-comment p > label + br,
+.form-comment .p > label + br {
+  display: none;
+}
+.form-comment p > label:not([for]),
+.form-comment .p > label:not([for]) {
+  visibility: hidden;
+}
+.form-comment .alert,
+.form-comment .alert p,
+.form-comment .alert .p {
+  display: block;
+}
+.form-comment .button,
+.form-comment .input,
+.form-comment .select,
+.form-comment .textarea {
+  display: inline-block;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+.form-comment .width {
+  display: block;
+  width: 100%;
+}
+.form-comment .button + br,
+.form-comment .input + br,
+.form-comment .select + br,
+.form-comment .textarea + br {
+  display: none;
+}
+.form-comment .button + br + small,
+.form-comment .input + br + small,
+.form-comment .select + br + small,
+.form-comment .textarea + br + small {
+  display: block;
+  margin-top: .5rem;
+}
+.form-comment .js\:cancel {
+  display: none;
+}
+.comment .form-comment .js\:cancel {
+  display: inline-block;
+}
+.comment .form-comment {
+  margin-bottom: 2rem;
+}
+.comment .form-comment + .comment-footer {
+  display: none;
 }
 
 @media (max-width: 600px) {
