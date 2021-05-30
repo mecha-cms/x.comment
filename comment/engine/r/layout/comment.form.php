@@ -9,10 +9,9 @@ $i = $i ? ($state->x->comment->path ?? '/comment') . $i : "";
 ]) . $i . $url->query('&amp;', [
     'parent' => false
 ]); ?>" class="form-comment<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
-  <?= $alert; ?>
   <?php
 
-  $tasks = [];
+  $tasks = ['alert' => $alert];
   $t = microtime();
   $guard = $state->x->comment->guard ?? null;
   foreach ([
