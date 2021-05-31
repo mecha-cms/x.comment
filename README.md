@@ -1,5 +1,5 @@
-Comment Extension for Mecha
-===========================
+Comment Extension for [Mecha](https://github.com/mecha-cms/mecha)
+=================================================================
 
 > Built-in commenting system.
 
@@ -8,14 +8,14 @@ Comment Extension for Mecha
 Release Notes
 -------------
 
-### main
+### 1.20.0
 
- - [x] [@mecha-cms/mecha#96](https://github.com/mecha-cms/mecha/issues/96)
- - [x] Added `comment-body`, `comment-footer`, `comment-form`, `comment-form-tasks`, `comment-header`, `comment-tasks`, `comments-body`, `comments-footer`, `comments-header` and `comments-tasks` hooks.
- - [x] Improved comment pagination feature. If there isn&rsquo;t any comment pagination offset appear in the URL, by default, the current comments chunk in the comments section will be the last comments page.
- - [x] Improved comments markup. They are now uses combination of `<article>` and `<section>` tags.
- - [x] Moved user-related features to a [separate extension](https://github.com/mecha-cms/x.user.comment).
- - [x] Removed `comment.footer` hook (has been replaced by `comment-tasks` hook).
+ - Added `comment-body`, `comment-footer`, `comment-form`, `comment-form-tasks`, `comment-header`, `comment-tasks`, `comments-body`, `comments-footer`, `comments-header` and `comments-tasks` hooks.
+ - Improved comment pagination feature. If there isn&rsquo;t any comment pagination offset appear in the URL, by default, the current comments chunk in the comments section will be the last comments page.
+ - Improved comments markup. They are now uses combination of `<article>` and `<section>` tags.
+ - Moved user-related features to a [separate extension](https://github.com/mecha-cms/x.user.comment).
+ - Removed `comment.footer` hook (has been replaced by `comment-tasks` hook).
+ - [@mecha-cms/mecha#96](https://github.com/mecha-cms/mecha/issues/96)
 
 ### 1.19.2
 
@@ -23,8 +23,8 @@ Release Notes
 
 ### 1.19.1
 
- - Fixed bug of invalid `parent` query string value that generates a new empty comment (#3)
  - Fixed bug of default avatar not showing in comments due to the [user](https://github.com/mecha-cms/x.user) extension that does not exist.
+ - Fixed bug of invalid `parent` query string value that generates a new empty comment (#3)
  - Make sure to disable the comment form if comments are closed (#4)
 
 ### 1.19.0
@@ -45,8 +45,8 @@ Some examples of custom XSS filters already exist in [markdown.comment](https://
 
 ### 1.17.0
 
- - Simplified comment form markup.
  - Added posibility to insert hint message on every comment form field.
+ - Simplified comment form markup.
 
 ### 1.16.1
 
@@ -55,8 +55,8 @@ Some examples of custom XSS filters already exist in [markdown.comment](https://
 
 ### 1.16.0
 
- - Added comment pagination feature.
  - Added `target` attribute on every comment reply link (and comment cancel link as well).
+ - Added comment pagination feature.
 
 ### 1.15.4
 
