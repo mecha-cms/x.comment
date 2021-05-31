@@ -1,6 +1,12 @@
 <?php namespace x\comment\route;
 
 function get($any) {
+    if (\File::exist([
+        \LOT . \DS . 'page' . \DS . $any . \DS . 'comment.archive',
+        \LOT . \DS . 'page' . \DS . $any . \DS . 'comment.page'
+    ])) {
+        \Route::fire('*', [$any . '/comment']);
+    }
     extract($GLOBALS, \EXTR_SKIP);
     $count = \q(\g(\LOT . \DS . 'comment' . \DS . $any, 'page'));
     $chunk = $state->x->comment->page->chunk ?? $count;
