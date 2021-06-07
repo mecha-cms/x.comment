@@ -5,6 +5,7 @@ function get($any) {
         \LOT . \DS . 'page' . \DS . $any . \DS . 'comment.archive',
         \LOT . \DS . 'page' . \DS . $any . \DS . 'comment.page'
     ])) {
+        // Load native page if exists
         \Route::fire('*', [$any . '/comment']);
     }
     extract($GLOBALS, \EXTR_SKIP);
