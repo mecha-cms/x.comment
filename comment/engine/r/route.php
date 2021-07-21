@@ -16,7 +16,7 @@ function get($any) {
     // Check for invalid comment page offset
     if ($current < 1 || $current > $max) {
         // Redirect to the default comment page offset
-        \Guard::kick($any . $url->query);
+        \Guard::kick('/' . $any . $url->query);
     }
     \State::set([
         'is' => [
@@ -39,11 +39,11 @@ function set($any) {
     $anchor = $state->x->comment->anchor ?? [];
     if (\Request::is('Get')) {
         \Alert::error('Method not allowed.');
-        \Guard::kick($any . $i . $url->query . '#' . $anchor[0]);
+        \Guard::kick('/' . $any . $i . $url->query . '#' . $anchor[0]);
     }
     if (!\is_file(\LOT . \DS . 'page' . \DS . $any . '.page')) {
         \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
-        \Guard::kick($any . $i . $url->query . '#' . $anchor[0]);
+        \Guard::kick('/' . $any . $i . $url->query . '#' . $anchor[0]);
     }
     $error = 0;
     $data_default = \array_replace_recursive(
@@ -191,12 +191,12 @@ function set($any) {
         \Hook::fire('on.comment.set', [$file]);
         \Session::set('comment', $values);
         if ('draft' !== $x) {
-            \Guard::kick($any . $i . $url->query('&', [
+            \Guard::kick('/' . $any . $i . $url->query('&', [
                 'parent' => false
             ]) . '#' . \sprintf($anchor[2], \sprintf('%u', $t)));
         }
     }
-    \Guard::kick($any . $i . $url->query . '#' . $anchor[0]);
+    \Guard::kick('/' . $any . $i . $url->query . '#' . $anchor[0]);
 }
 
 \Route::set('.comment/*', 200, __NAMESPACE__ . "\\set", 10);
