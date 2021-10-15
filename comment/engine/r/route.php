@@ -169,7 +169,7 @@ function set($any) {
         ];
         foreach ($data as $k => $v) {
             if (isset($values[$k])) {
-                if (null === $v | false === $v) {
+                if (null === $v || false === $v) {
                     continue;
                 }
                 $values[$k] = $v ?? false;
