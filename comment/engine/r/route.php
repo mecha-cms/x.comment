@@ -159,19 +159,26 @@ function set($any) {
         \Session::set('form.comment', $data);
     } else {
         \Session::let('form.comment');
-        $values = \drop(\array_replace_recursive([
+        $values = [
             'author' => null,
             'email' => null,
             'link' => null,
             'status' => null,
             'type' => null,
             'content' => ""
-        ], $data));
+        ];
+        foreach ($data as $k => $v) {
+            if (null === $v || !\array_key_exists($k, $values)) {
+                continue;
+            }
+            $values[$k] = $v;
+        }
         foreach ($data_default as $k => $v) {
             if (isset($values[$k]) && $v === $values[$k]) {
                 unset($values[$k]);
             }
         }
+        $values = \drop($values);
         (new \File($file))->set(\To::page($values))->save(0600);
         if (isset($data['parent']) && !\Is::void($data['parent'])) {
             (new \File($folder . \DS . 'parent.data'))->set((new \Time($data['parent']))->name)->save(0600);
