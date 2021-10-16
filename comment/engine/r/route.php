@@ -159,22 +159,14 @@ function set($any) {
         \Session::set('form.comment', $data);
     } else {
         \Session::let('form.comment');
-        $values = [
-            'author' => false,
-            'email' => false,
-            'link' => false,
-            'status' => false,
-            'type' => false,
+        $values = \drop(\array_replace_recursive([
+            'author' => null,
+            'email' => null,
+            'link' => null,
+            'status' => null,
+            'type' => null,
             'content' => ""
-        ];
-        foreach ($data as $k => $v) {
-            if (isset($values[$k])) {
-                if (null === $v || false === $v) {
-                    continue;
-                }
-                $values[$k] = $v ?? false;
-            }
-        }
+        ], $data));
         foreach ($data_default as $k => $v) {
             if (isset($values[$k]) && $v === $values[$k]) {
                 unset($values[$k]);
