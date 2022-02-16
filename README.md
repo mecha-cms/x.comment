@@ -1,6 +1,8 @@
 Comment Extension for [Mecha](https://github.com/mecha-cms/mecha)
 =================================================================
 
+![Code Size](https://img.shields.io/github/languages/code-size/mecha-cms/x.comment?color=%23444&style=for-the-badge)
+
 ![Comment](https://user-images.githubusercontent.com/1669261/110820519-c1ffd500-82c1-11eb-9d81-260e8ddb24ee.png)
 
 ---
