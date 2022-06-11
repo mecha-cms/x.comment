@@ -1,26 +1,28 @@
 <article class="comment comment-status:<?= $comment->status; ?>" id="<?= sprintf($c['anchor'][2], $comment->id); ?>">
-  <figure class="comment-figure">
-    <img class="comment-avatar" alt="" src="<?= strtr($comment->avatar(100), ['&' => '&amp;']); ?>" width="100" height="100">
-  </figure>
+  <?php if ($avatar = $comment->avatar(100)): ?>
+    <figure class="comment-figure">
+      <img class="comment-avatar" alt="" src="<?= strtr($avatar, ['&' => '&amp;']); ?>" width="100" height="100">
+    </figure>
+  <?php endif; ?>
   <header class="comment-header">
     <?= x\comment\hook('comment-header', [[
         'author' => [
             0 => 'h4',
             1 => (string) new HTML([
-                0 => ($has_link = $comment->link) ? 'a' : 'span',
+                0 => ($link = $comment->link) ? 'a' : 'span',
                 1 => $comment->author,
                 2 => [
                     'class' => 'comment-link',
-                    'href' => $has_link,
-                    'rel' => $has_link ? 'nofollow' : null,
-                    'target' => $has_link ? '_blank' : null
+                    'href' => $link,
+                    'rel' => $link ? 'nofollow' : null,
+                    'target' => $link ? '_blank' : null
                 ]
             ]),
             2 => ['class' => 'comment-author']
         ],
         'meta' => [
             0 => 'p',
-            1 => '<time class="comment-time" datetime="' . $comment->time->ISO8601 . '">' . $comment->time->{strtr($state->language, '-', '_')} . ' ' . $comment->time('%I:%M %p') . '</time>&#x20;<a class="comment-url" href="#' . sprintf($c['anchor'][2], $comment->id) . '" rel="nofollow"></a>',
+            1 => '<time class="comment-time" datetime="' . $comment->time->ISO8601 . '">' . $comment->time('%A, %B %d, %Y %I:%M %p') . '</time>&#x20;<a class="comment-url" href="#' . sprintf($c['anchor'][2], $comment->id) . '" rel="nofollow"></a>',
             2 => ['class' => 'comment-meta']
         ]
     ], $page, $deep], $comment); ?>
@@ -35,7 +37,7 @@
     ], $page, $deep], $comment); ?>
   </div>
   <?php if ((1 === $type || true === $type) && $parent && $parent->name === $comment->name): ?>
-    <?= self::get(__DIR__ . DS . 'comment.form.php', $lot); ?>
+    <?= self::form('comment', $lot); ?>
   <?php endif; ?>
   <footer class="comment-footer">
     <?php $tasks = $type ? x\comment\tasks(\Hook::fire('comment-tasks', [[], $page, $deep], $comment), [$page, $deep], $comment) : []; ?>
@@ -48,13 +50,13 @@
         'tasks' => $tasks
     ], $page, $deep], $comment); ?>
   </footer>
-  <?php if ($deep < ($c['page']['deep'] ?? 0) && ($count = $comment->comments->count())): ++$deep; ?>
+  <?php if ($deep < ($c['page']['deep'] ?? 0) && ($count = $comment->comments->count() ?? 0)): ++$deep; ?>
     <section class="comments" data-level="<?= $deep; ?>" id="<?= sprintf($c['anchor'][3], $comment->id); ?>">
       <?php foreach ($comment->comments($count) as $v): ?>
-      <?= self::get(__FILE__, array_replace($lot, [
-          'comment' => $v,
-          'deep' => $deep
-      ])); ?>
+        <?= self::comment(array_replace($lot, [
+            'comment' => $v,
+            'deep' => $deep
+        ])); ?>
       <?php endforeach; ?>
     </section>
   <?php endif; ?>

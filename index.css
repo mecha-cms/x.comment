@@ -106,61 +106,52 @@
 .form-comment {
   margin-top: 2rem;
 }
-.form-comment > p,
-.form-comment > .p {
+.form-comment > p {
   display: flex;
   gap: 0 1rem;
 }
-.form-comment > p > *,
-.form-comment > .p > * {
+.form-comment > p > * {
   flex: 1;
 }
-.form-comment > p + p,
-.form-comment > p + .p,
-.form-comment > .p + p,
-.form-comment > .p + .p {
-  margin-top: 1rem;
-}
-.form-comment p > label,
-.form-comment .p > label {
+.form-comment p > label {
   max-width: 5rem;
   text-align: right;
 }
-.form-comment p > label + br,
-.form-comment .p > label + br {
+.form-comment p > label + br {
   display: none;
 }
-.form-comment p > label:not([for]),
-.form-comment .p > label:not([for]) {
+.form-comment p > label:not([for]) {
   visibility: hidden;
 }
-.form-comment .alert,
-.form-comment .alert p,
-.form-comment .alert .p {
+.form-comment [role='alert'] {
   display: block;
 }
-.form-comment .button,
-.form-comment .input,
-.form-comment .select,
-.form-comment .textarea {
+.form-comment [role='button'],
+.form-comment button,
+.form-comment input,
+.form-comment select,
+.form-comment textarea {
   display: inline-block;
   vertical-align: middle;
   box-sizing: border-box;
 }
-.form-comment .width {
+.form-comment p > label + br + span > input,
+.form-comment p > label + br + span > select,
+.form-comment p > label + br + span > textarea {
   display: block;
+  max-width: 100%;
   width: 100%;
 }
-.form-comment .button + br,
-.form-comment .input + br,
-.form-comment .select + br,
-.form-comment .textarea + br {
+.form-comment button + br,
+.form-comment input + br,
+.form-comment select + br,
+.form-comment textarea + br {
   display: none;
 }
-.form-comment .button + br + small,
-.form-comment .input + br + small,
-.form-comment .select + br + small,
-.form-comment .textarea + br + small {
+.form-comment button + br + small,
+.form-comment input + br + small,
+.form-comment select + br + small,
+.form-comment textarea + br + small {
   display: block;
   margin-top: .5rem;
 }

@@ -1,0 +1,3 @@
+<Files ~ '\.(css|js|png)$'>
+  Allow from all
+</Files>

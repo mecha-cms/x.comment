@@ -1,26 +1,6 @@
-<?php
-
-$path = $c['path'] ?? '/comment';
-$chunk = $c['page']['chunk'] ?? 9999;
-
-// Calculate last page offset
-$max = (int) ceil($count / $chunk);
-
-// Show last page by default if `$i` is `null`
-$i = $url['i'] ?? $max;
-
-?>
-<?php if ($count > $chunk): ?>
+<?php if ($chunk && $count > $chunk): ?>
   <nav class="comments-pager">
     <?php
-
-    // `/blog/foo-bar-baz`
-    if (null !== $url['i']) {
-        $current = $path === substr('/' . $url['path'], -strlen($path)) ? $i : 1;
-    // `/blog/foo-bar-baz/comment/1`
-    } else {
-        $current = $i;
-    }
 
     echo (static function($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
         $begin = 1;
@@ -40,7 +20,7 @@ $i = $url['i'] ?? $max;
             $max = $current + $peek;
         }
         if ($prev) {
-            $out = '<span>';
+            $out .= '<span>';
             if ($current === $begin) {
                 $out .= '<b title="' . $prev . '">' . $prev . '</b>';
             } else {
@@ -81,9 +61,9 @@ $i = $url['i'] ?? $max;
             $out .= '</span>';
         }
         return $out;
-    })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $path, $url) {
-        return $page->url . ($max === $i ? "" : $path . '/' . $i) . $url->query('&', [
-            'parent' => false
+    })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $route, $url) {
+        return $page->url . ($max === $i ? "" : '/' . $route . '/' . $i) . $url->query([
+            'parent' => null
         ]) . '#' . $c['anchor'][1];
     }, i('First'), i('Previous'), i('Next'), i('Last')); ?>
   </nav>
