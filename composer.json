@@ -1,0 +1,15 @@
+{
+  "description": "Built-in commenting system.",
+  "license": "GPL-3.0-or-later",
+  "name": "mecha-cms/x.comment",
+  "require": {
+    "mecha-cms/x.alert": "^2.0.0",
+    "mecha-cms/x.asset": "^2.0.0",
+    "mecha-cms/x.page": "^2.0.0"
+  },
+  "suggest": {
+    "mecha-cms/x.avatar": "Install this extension to enable comment profile photo.",
+    "mecha-cms/x.form": "Install this extension to retain form values when error occurs during submission.",
+    "mecha-cms/x.gravatar": "Install this extension to enable comment profile photo automatically based on the specified email address."
+  }
+}
