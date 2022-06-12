@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@taufik-nurrohman/document": "^0.3.1",
+    "@taufik-nurrohman/event": "^0.3.1"
+  },
+  "devDependencies": {
+    "@taufik-nurrohman/factory": "^1.1.1"
+  },
+  "private": true,
+  "scripts": {
+    "pack": "pack --clean=false --from=.factory --js-format=iife --js-name=_ --to=."
+  },
+  "type": "module"
+}

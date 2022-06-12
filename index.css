@@ -14,22 +14,16 @@
 .comments-header,
 .comments-pager,
 .form-comment {
-  margin: 0;
-  padding: 0;
-  list-style: none;
   background: none;
   border: 0;
+  list-style: none;
+  margin: 0;
   outline: 0;
+  padding: 0;
 }
+
 .comment {
   position: relative;
-}
-.comment-status\:-1 {
-  opacity: .5;
-}
-.comment .comments,
-.comment + .comment {
-  margin-top: 1rem;
 }
 .comment-author,
 .comment-meta {
@@ -38,55 +32,69 @@
 }
 .comment-avatar {
   display: block;
-  width: 100%;
   height: auto;
-  max-width: 100%;
   max-height: 100%;
-}
-.comment-header {
-  display: flex;
-  gap: 0 1rem;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  max-width: 100%;
+  width: 100%;
 }
 .comment-body,
 .comment-footer {
   margin-top: 1rem;
+}
+.comment-figure {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 5rem;
 }
 .comment-figure + .comment-header,
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
 .comment-figure + .comment-header + .comment-body + .comment-footer + .comments,
 .comment-figure + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
-  margin-left: 6rem;
+  margin-left: 6.5rem;
 }
-.comment-figure {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 5rem;
+.comment-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  justify-content: space-between;
 }
-.comments-pager {
+.comment-pager {
   display: flex;
   gap: 0 1rem;
   justify-content: center;
 }
-.comments-pager > span {
+.comment-pager > span {
   display: flex;
-  gap: 0 .5rem;
+  gap: 0 0.5rem;
 }
-.comments-pager > span b {
-  font: inherit;
+.comment-status\:-1 {
+  opacity: 0.5;
 }
 .comment-tasks {
+  align-content: center;
   display: flex;
   gap: 0 1rem;
-  align-content: center;
 }
 .comment-url::before {
-  content: '#';
+  content: "#";
 }
+.comment .comments,
+.comment + .comment {
+  margin-top: 1rem;
+}
+.comment .form-comment {
+  margin-bottom: 2rem;
+}
+.comment .form-comment + .comment-footer {
+  display: none;
+}
+.comment .form-comment .js\:cancel {
+  display: inline-block;
+}
+
 .comments,
 .comments-body,
 .comments-footer,
@@ -99,72 +107,67 @@
 .comments-footer:empty {
   display: none;
 }
-.comments-footer > p:only-child,
-.comments-footer > .comments-pager + p {
+.comments-footer > [role=status] {
   text-align: center;
 }
+
 .form-comment {
   margin-top: 2rem;
 }
-.form-comment > p {
+.form-comment > p:not([role=alert]):not([role=status]) {
   display: flex;
-  gap: 0 1rem;
+  gap: 0 1.5rem;
 }
 .form-comment > p > * {
   flex: 1;
 }
-.form-comment p > label {
+.form-comment > p > [role=group] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+.form-comment > p > label {
   max-width: 5rem;
   text-align: right;
 }
-.form-comment p > label + br {
-  display: none;
-}
-.form-comment p > label:not([for]) {
+.form-comment > p > label:not([for]) {
   visibility: hidden;
 }
-.form-comment [role='alert'] {
-  display: block;
+.form-comment > p > label + br {
+  display: none;
 }
-.form-comment [role='button'],
-.form-comment button,
-.form-comment input,
-.form-comment select,
-.form-comment textarea {
-  display: inline-block;
-  vertical-align: middle;
-  box-sizing: border-box;
-}
-.form-comment p > label + br + span > input,
-.form-comment p > label + br + span > select,
-.form-comment p > label + br + span > textarea {
+.form-comment > p > label + br + span > input,
+.form-comment > p > label + br + span > select,
+.form-comment > p > label + br + span > textarea {
   display: block;
   max-width: 100%;
   width: 100%;
 }
+.form-comment [role=button],
+.form-comment button,
+.form-comment input,
+.form-comment select,
+.form-comment textarea {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+}
+.form-comment [role=button] + br,
 .form-comment button + br,
 .form-comment input + br,
 .form-comment select + br,
 .form-comment textarea + br {
   display: none;
 }
+.form-comment [role=button] + br + small,
 .form-comment button + br + small,
 .form-comment input + br + small,
 .form-comment select + br + small,
 .form-comment textarea + br + small {
   display: block;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 .form-comment .js\:cancel {
-  display: none;
-}
-.comment .form-comment .js\:cancel {
-  display: inline-block;
-}
-.comment .form-comment {
-  margin-bottom: 2rem;
-}
-.comment .form-comment + .comment-footer {
   display: none;
 }
 

@@ -1,0 +1,182 @@
+.comment,
+.comment-author,
+.comment-avatar,
+.comment-body,
+.comment-figure,
+.comment-footer,
+.comment-header,
+.comment-meta,
+.comment-tasks,
+.comment-tasks li,
+.comments,
+.comments-body,
+.comments-footer,
+.comments-header,
+.comments-pager,
+.form-comment {
+  background: none;
+  border: 0;
+  list-style: none;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+}
+
+.comment {
+  position: relative;
+  &-author,
+  &-meta {
+    font: inherit;
+    text-shadow: inherit;
+  }
+  &-avatar {
+    display: block;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+  &-body,
+  &-footer {
+    margin-top: 1rem;
+  }
+  &-figure {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 5rem;
+    + .comment-header,
+    + .comment-header + .comment-body,
+    + .comment-header + .comment-body + .comment-footer,
+    + .comment-header + .comment-body + .comment-footer + .comments,
+    + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
+      margin-left: 6.5rem; // Add margin only when avatar is visible
+    }
+  }
+  &-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+    justify-content: space-between;
+  }
+  &-pager {
+    display: flex;
+    gap: 0 1rem;
+    justify-content: center;
+    > span {
+      display: flex;
+      gap: 0 .5rem;
+    }
+  }
+  &-status {
+    &\:-1 {
+      opacity: .5;
+    }
+  }
+  &-tasks {
+    align-content: center;
+    display: flex;
+    gap: 0 1rem;
+  }
+  &-url {
+    &::before {
+      content: '#';
+    }
+  }
+  .comments,
+  + .comment {
+    margin-top: 1rem;
+  }
+  .form-comment {
+    margin-bottom: 2rem;
+    + .comment-footer {
+      display: none;
+    }
+    .js\:cancel {
+      display: inline-block;
+    }
+  }
+}
+
+.comments {
+  &,
+  &-body,
+  &-footer,
+  &-pager,
+  &-pager + p {
+    margin-top: 2rem;
+  }
+  &:empty,
+  &-body:empty,
+  &-footer:empty {
+    display: none;
+  }
+  &-footer {
+    > [role='status'] {
+      text-align: center;
+    }
+  }
+}
+
+.form-comment {
+  margin-top: 2rem;
+  > p {
+    &:not([role='alert']):not([role='status']) {
+      display: flex;
+      gap: 0 1.5rem;
+    }
+    > * {
+      flex: 1;
+    }
+    > [role='group'] {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5em;
+    }
+    > label {
+      &:not([for]) {
+        visibility: hidden;
+      }
+      max-width: 5rem;
+      text-align: right;
+      + br {
+        display: none;
+        + span {
+          > input,
+          > select,
+          > textarea {
+            display: block;
+            max-width: 100%;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  [role='button'],
+  button,
+  input,
+  select,
+  textarea {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    + br {
+      display: none;
+      + small {
+        display: block;
+        margin-top: .5rem;
+      }
+    }
+  }
+  .js\:cancel {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
+    margin-left: 1rem;
+  }
+}
