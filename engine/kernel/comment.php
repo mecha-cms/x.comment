@@ -15,7 +15,7 @@ class Comment extends Page {
                 $folder . '.archive',
                 $folder . '.page'
             ], 1)) {
-                return new Page($path, $lot);
+                return ($this->page = new Page($path, $lot));
             }
             return null;
         }
@@ -45,7 +45,7 @@ class Comment extends Page {
                 $folder . D . $name . '.archive',
                 $folder . D . $name . '.page'
             ], 1) : false) {
-                return new static($path, $lot);
+                return ($this->parent = new static($path, $lot));
             }
             return null;
         }
@@ -69,7 +69,7 @@ class Comment extends Page {
         if ($path = $this->path) {
             foreach (g(dirname($path), 'page') as $k => $v) {
                 $comment = new static($k);
-                $parent = $comment->parent;
+                $parent = $comment->parent();
                 if ($parent && $path === $parent->path) {
                     $comments[] = $k;
                     ++$count; // Count comment(s), filter by `parent` property

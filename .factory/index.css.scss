@@ -24,6 +24,11 @@
 
 .comment {
   position: relative;
+  &::after {
+    clear: both;
+    content: "";
+    display: table;
+  }
   &-author,
   &-meta {
     font: inherit;
@@ -38,13 +43,10 @@
   }
   &-body,
   &-footer {
-    margin-top: 1rem;
+    margin-top: .5rem;
   }
   &-figure {
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    top: 0;
+    float: left;
     width: 5rem;
     + .comment-header,
     + .comment-header + .comment-body,
@@ -68,6 +70,10 @@
       display: flex;
       gap: 0 .5rem;
     }
+    [aria-current='page'],
+    [aria-disabled='true'] {
+      color: inherit;
+    }
   }
   &-status {
     &\:-1 {
@@ -86,10 +92,11 @@
   }
   .comments,
   + .comment {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
   .form-comment {
-    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    padding-top: 2rem;
     + .comment-footer {
       display: none;
     }
@@ -120,7 +127,7 @@
 }
 
 .form-comment {
-  margin-top: 2rem;
+  clear: both;
   > p {
     &:not([role='alert']):not([role='status']) {
       display: flex;

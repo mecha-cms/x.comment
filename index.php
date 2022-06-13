@@ -149,8 +149,8 @@ namespace x\comment\route {
             ]);
             // Temporarily disable the `[[e]]` block(s) written in the comment body
             if (isset($state->x->block) && false !== \strpos($data['content'], '[[/e]]')) {
-                $data['content'] = \preg_replace_callback('/\[\[e\]\][\s\S]*?\[\[\/e\]\]/', static function($m) {
-                    return '<!-- ' . $m[0] . ' -->';
+                $data['content'] = \preg_replace_callback('/\[\[e\]\]([\s\S]*?)\[\[\/e\]\]/', static function($m) {
+                    return '<pre><code>' . \htmlspecialchars($m[1]) . '</code></pre>';
                 }, $data['content']);
             }
             // Implement default XSS filter to the comment with type of `HTML` or `text/html`
