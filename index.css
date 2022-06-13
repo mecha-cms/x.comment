@@ -114,7 +114,7 @@
 .comments-footer:empty {
   display: none;
 }
-.comments-footer > [role=status] {
+.comments [role=status] {
   text-align: center;
 }
 

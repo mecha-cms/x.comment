@@ -119,10 +119,8 @@
   &-footer:empty {
     display: none;
   }
-  &-footer {
-    > [role='status'] {
-      text-align: center;
-    }
+  [role='status'] {
+    text-align: center;
   }
 }
 
