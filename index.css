@@ -178,6 +178,10 @@
   display: none;
 }
 
+[role=status] + .form-comment {
+  margin-top: 2rem;
+}
+
 @media (max-width: 600px) {
   .comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
     margin-left: 1rem;
