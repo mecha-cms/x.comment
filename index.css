@@ -184,6 +184,6 @@
 
 @media (max-width: 600px) {
   .comment-figure + .comment-header + .comment-body + .comment-footer + .comments {
-    margin-left: 1rem;
+    margin-left: 1.5rem;
   }
 }

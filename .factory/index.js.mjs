@@ -31,7 +31,7 @@ if (form) {
         placeholder = getAttribute(content, 'placeholder'),
         test = /(?:\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g;
     q = !q || !q.match(test);
-    function setCancel(a) {
+    function onEventCancel(a) {
         onEvent('click', a, function(e) {
             setChildLast(footer, form);
             setAttribute(form, 'action', getAttribute(form, 'action').replace(test, ""));
@@ -42,7 +42,7 @@ if (form) {
             offEventDefault(e);
         })
     }
-    function setReply(a) {
+    function onEventReply(a) {
         onEvent('click', a, function(e) {
             // `a < li < ul.comment-tasks < footer.comment-footer`
             let s = getParent(getParent(getParent(this))),
@@ -60,6 +60,6 @@ if (form) {
             offEventDefault(e);
         });
     }
-    q && getElements('.js\\:cancel', comments).forEach(setCancel);
-    q && getElements('.js\\:reply', comments).forEach(setReply);
+    q && getElements('.js\\:cancel', comments).forEach(onEventCancel);
+    q && getElements('.js\\:reply', comments).forEach(onEventReply);
 }
