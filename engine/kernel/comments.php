@@ -2,14 +2,8 @@
 
 class Comments extends Pages {
 
-    public $page = null;
-    public $parent = null;
-
     public function page(string $path = null, array $lot = []) {
-        $comment = new Comment($path, $lot);
-        $comment->page = $this->page;
-        $comment->parent = $this->parent;
-        return $comment;
+        return new Comment($path, $lot);
     }
 
     public static function from(...$lot) {

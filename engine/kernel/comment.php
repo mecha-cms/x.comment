@@ -2,65 +2,41 @@
 
 class Comment extends Page {
 
-    public $page = null;
-    public $parent = null;
-
     public function page(array $lot = []) {
         if (!$this->exist()) {
             return null;
         }
-        if (!$page = $this->page) {
-            $folder = dirname($this->path);
-            if ($path = exist([
+        $path = $this['page'] ?? null;
+        if (!is_string($path) || !is_file($path)) {
+            $folder = strtr(dirname($this->path), [LOT . D . 'comment' . D => LOT . D . 'page' . D]);
+            if (!$path = exist([
                 $folder . '.archive',
                 $folder . '.page'
             ], 1)) {
-                return ($this->page = new Page($path, $lot));
+                return null;
             }
-            return null;
         }
-        if (!$lot) {
-            return $page;
-        }
-        foreach ($lot as $k => $v) {
-            $page->{$k} = $v;
-        }
-        return $page;
+        return new Page($path, $lot);
     }
 
     public function parent(array $lot = []) {
         if (!$this->exist()) {
             return null;
         }
-        if (!$parent = $this->parent) {
-            $folder = dirname($this->path);
-            if (!is_file($file = $folder . D . pathinfo($this->path, PATHINFO_FILENAME) . D . 'parent.data')) {
+        $path = $this['parent'] ?? null;
+        if (!is_string($path) || !is_file($path)) {
+            if (!is_file($path = dirname($this->path) . D . $path . '.page')) {
                 return null;
             }
-            if (0 === filesize($file)) {
-                return null;
-            }
-            $name = trim((string) fgets(fopen($file, 'r'))); // <https://stackoverflow.com/a/4521969/1163000>
-            if ($path = "" !== $name ? exist([
-                $folder . D . $name . '.archive',
-                $folder . D . $name . '.page'
-            ], 1) : false) {
-                return ($this->parent = new static($path, $lot));
-            }
-            return null;
         }
-        if (!$lot) {
-            return $parent;
-        }
-        foreach ($lot as $k => $v) {
-            $parent->{$k} = $v;
-        }
-        return $parent;
+        return new static($path, $lot);
     }
 
     public function URL(...$lot) {
-        return parent::URL();
-        // return $GLOBALS['url'] . '/' . Path::R(dirname($this->path), LOT . DS . 'comment', '/');
+        if ($page = $this->page()) {
+            return $page->url . '#comment:' . $this->id;
+        }
+        return parent::URL(...$lot);
     }
 
     public function comments(int $chunk = 100, int $i = 0) {
