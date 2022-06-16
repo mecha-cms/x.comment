@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'anchor' => ['comment', 'comments', 'comment:%s', 'comments:%s'],
     'guard' => [
         'max' => [
             'author' => 100,

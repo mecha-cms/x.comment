@@ -64,7 +64,7 @@
     })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $route, $url) {
         return $page->url . ($max === $i ? "" : '/' . $route . '/' . $i) . $url->query([
             'parent' => null
-        ]) . '#' . $c['anchor'][1];
+        ]) . '#comments';
     }, i('First'), i('Previous'), i('Next'), i('Last')); ?>
   </nav>
   <?php elseif ($part > 1): ?>

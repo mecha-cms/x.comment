@@ -2,7 +2,7 @@
     $url . '/' => $url . '/' . trim($state->x->comment->route ?? 'comment', '/') . '/'
 ]) . $url->query([
     'parent' => null
-]); ?>" class="form-comment<?= $parent ? ' is:reply' : ""; ?>" id="<?= $c['anchor'][0]; ?>" method="post" name="comment">
+]); ?>" class="form-comment<?= $parent ? ' is:reply' : ""; ?>" id="comment" method="post" name="comment">
   <?php
 
   $tasks = ['alert' => self::alert()];
@@ -80,7 +80,7 @@
               1 => i('Cancel'),
               2 => [
                   'class' => 'js:cancel',
-                  'href' => $url->current(['parent' => null], $c['anchor'][0]),
+                  'href' => $url->current(['parent' => null], 'comment'),
                   'role' => 'button'
               ]
           ] : false,

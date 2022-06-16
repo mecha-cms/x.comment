@@ -1,4 +1,4 @@
-<article class="comment comment-status:<?= $comment->status; ?>" id="<?= sprintf($c['anchor'][2], $comment->id); ?>">
+<article class="comment comment-status:<?= $comment->status; ?>" id="comment:<?= $comment->id; ?>">
   <?php if ($avatar = $comment->avatar(100)): ?>
     <figure class="comment-figure">
       <img class="comment-avatar" alt="" src="<?= strtr($avatar, ['&' => '&amp;']); ?>" width="100" height="100">
@@ -22,7 +22,7 @@
         ],
         'meta' => [
             0 => 'p',
-            1 => '<time class="comment-time" datetime="' . $comment->time->ISO8601 . '">' . $comment->time('%A, %B %d, %Y %I:%M %p') . '</time>&#x20;<a class="comment-url" href="#' . sprintf($c['anchor'][2], $comment->id) . '" rel="nofollow"></a>',
+            1 => '<time class="comment-time" datetime="' . $comment->time->ISO8601 . '">' . $comment->time('%A, %B %d, %Y %I:%M %p') . '</time>&#x20;<a class="comment-url" href="#comment:' . $comment->id . '" rel="nofollow"></a>',
             2 => ['class' => 'comment-meta']
         ]
     ], $page, $deep], $comment); ?>
@@ -51,7 +51,7 @@
     ], $page, $deep], $comment); ?>
   </footer>
   <?php if ($deep < ($c['page']['deep'] ?? 0) && ($count = $comment->comments->count() ?? 0)): ++$deep; ?>
-    <section class="comments" data-level="<?= $deep; ?>" id="<?= sprintf($c['anchor'][3], $comment->id); ?>">
+    <section class="comments" data-level="<?= $deep; ?>" id="comments:<?= $comment->id; ?>">
       <?php foreach ($comment->comments($count) as $v): ?>
         <?= self::comment(array_replace($lot, [
             'comment' => $v,
