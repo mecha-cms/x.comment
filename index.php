@@ -54,31 +54,7 @@ namespace x\comment {
         \Hook::set('comment.link', __NAMESPACE__ . "\\link", 0);
     }
     if (\class_exists("\\Layout")) {
-        $r = __DIR__ . \D . 'engine' . \D . 'y' . \D;
-        !\Layout::path('comment') && \Layout::set('comment', $r . 'comment.php');
-        !\Layout::path('comments') && \Layout::set('comments', $r . 'comments.php');
-        !\Layout::path('form/comment') && \Layout::set('form/comment', $r . 'form' . \D . 'comment.php');
-    }
-    function hook($id, array $lot = [], $comment = null, $join = "") {
-        $tasks = \Hook::fire($id, $lot, $comment);
-        \array_shift($lot); // Remove the raw task(s)
-        return \implode($join, \x\comment\tasks($tasks, $lot, $comment));
-    }
-    function tasks(array $in, array $lot = [], $comment = null) {
-        $out = [];
-        foreach ($in as $k => $v) {
-            if (false === $v || null === $v) {
-                continue;
-            }
-            if (\is_array($v)) {
-                $out[$k] = new \HTML(\array_replace([false, "", []], $v));
-            } else if (\is_callable($v)) {
-                $out[$k] = \fire($v, $lot, $comment);
-            } else {
-                $out[$k] = $v;
-            }
-        }
-        return $out;
+        !\Layout::path('comments') && \Layout::set('comments', __DIR__ . \D . 'engine' . \D . 'y' . \D . 'comments.php');
     }
 }
 
@@ -87,14 +63,15 @@ namespace x\comment\route {
         \extract($GLOBALS, \EXTR_SKIP);
         $path = \trim($path ?? "", '/');
         $active = isset($state->x->user) && \Is::user();
+        $anchor = $state->x->comment->anchor ?? [];
         $guard = $state->x->comment->guard ?? [];
         if ('GET' === $_SERVER['REQUEST_METHOD']) {
             \class_exists("\\Alert") && \Alert::error('Method not allowed.');
-            \kick('/' . $path . $url->query . '#comment');
+            \kick('/' . $path . $url->query . '#' . $anchor[0]);
         }
         if (!\is_file(\LOT . \D . 'page' . \D . $path . '.page')) {
             \class_exists("\\Alert") && \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
-            \kick('/' . $path . $url->query . '#comment');
+            \kick('/' . $path . $url->query . '#' . $anchor[0]);
         }
         $error = 0;
         $data_default = \array_replace_recursive(
@@ -104,7 +81,7 @@ namespace x\comment\route {
         $data = \array_replace_recursive($data_default, (array) ($_POST['comment'] ?? []));
         if (empty($data['token']) || !\check($data['token'], 'comment')) {
             \class_exists("\\Alert") && \Alert::error('Invalid token.');
-            \kick('/' . $path . $url->query . '#comment');
+            \kick('/' . $path . $url->query . '#' . $anchor[0]);
         }
         $data['status'] = $active ? 1 : 2; // Status data is hard-coded for security
         foreach (['author', 'email', 'link', 'content'] as $key) {
@@ -246,10 +223,10 @@ namespace x\comment\route {
             $_SESSION['comment'] = $values;
             \Hook::fire('on.comment.set', [$file]);
             if ('draft' !== $x) {
-                \kick('/' . $path . $url->query(['parent' => null]) . '#comment:' . \sprintf('%u', $t));
+                \kick('/' . $path . $url->query(['parent' => null]) . '#' . \sprintf($anchor[2], \sprintf('%u', $t)));
             }
         }
-        \kick('/' . $path . $url->query . '#comment');
+        \kick('/' . $path . $url->query . '#' . $anchor[0]);
     }
     $path = \trim($url->path ?? "", '/');
     $route = \trim($state->x->comment->route ?? 'comment', '/');
@@ -273,27 +250,593 @@ namespace x\comment\route {
     }
 }
 
-namespace x\comment\tasks {
-    // Add comment reply link
-    function reply($tasks, $page, $deep) {
-        extract($GLOBALS, \EXTR_SKIP);
-        $k = $page->state['x']['comment'] ?? $state->x->comment->page->state->x->comment ?? 1;
-        if ($deep < ($state->x->comment->page->deep ?? 0) && (1 === $k || true === $k)) {
-            $id = $this->name;
-            $tasks['reply'] = [
-                0 => 'a',
-                1 => \i('Reply'),
+namespace x\comment\y {
+    function comment(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        $out = [
+            0 => 'article',
+            1 => [
+                'figure' => \x\comment\y\comment_figure($lot),
+                'header' => \x\comment\y\comment_header($lot),
+                'body' => \x\comment\y\comment_body($lot),
+                'form' => (1 === $type || true === $type) && $parent && $parent->name === $comment->name ? \x\comment\y\comments_form($lot) : null,
+                'footer' => \x\comment\y\comment_footer($lot),
+                'comments' => null
+            ],
+            2 => [
+                'class' => 'comment comment-status:' . $comment->status,
+                'id' => 'comment:' . $comment->id
+            ]
+        ];
+        if ($deep < ($c['page']['deep'] ?? 0) && ($count = $comment->comments->count() ?? 0)) {
+            $out[1]['comments'] = [
+                0 => 'section',
+                1 => [],
                 2 => [
-                    'class' => 'js:reply',
-                    'href' => $url->query([
-                        'parent' => $id
-                    ]) . '#comment',
-                    'rel' => 'nofollow',
-                    'title' => \To::text(i('Reply to %s', (string) $this->author))
+                    'class' => 'comments',
+                    'data-level' => $deep + 1,
+                    'id' => 'comments:' . $comment->id
+                ]
+            ];
+            foreach ($comment->comments($count) as $v) {
+                $out[1]['comments'][1][] = \x\comment\y\comment(\array_replace($lot, [
+                    'comment' => $v,
+                    'deep' => $deep + 1
+                ]));
+            }
+        }
+        return \Hook::fire('layout.comment', [$out, $lot]);
+    }
+    function comment_avatar(array $lot) {
+        return [
+            0 => 'img',
+            1 => false,
+            2 => [
+                'alt' => "",
+                'class' => 'comment-avatar',
+                'height' => 100,
+                'src' => $lot['avatar'],
+                'width' => 100
+            ]
+        ];
+    }
+    function comment_body(array $lot) {
+        return [
+            0 => 'div',
+            1 => [
+                'content' => \x\comment\y\comment_content($lot)
+            ],
+            2 => [
+                'class' => 'comment-body'
+            ]
+        ];
+    }
+    function comment_content(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        return [
+            0 => 'div',
+            1 => $comment->content,
+            2 => [
+                'class' => 'comment-content'
+            ]
+        ];
+    }
+    function comment_figure(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        if ($avatar = $comment->avatar(100)) {
+            return [
+                0 => 'figure',
+                1 => [
+                    'avatar' => \x\comment\y\comment_avatar(\array_replace($lot, [
+                        'avatar' => $avatar
+                    ]))
+                ],
+                2 => [
+                    'class' => 'comment-figure'
                 ]
             ];
         }
-        return $tasks;
+        return [];
     }
-    \Hook::set('comment-tasks', __NAMESPACE__ . "\\reply", 10);
+    function comment_footer(array $lot) {
+        return [
+            0 => 'footer',
+            1 => [
+                'tasks' => \x\comment\y\comment_tasks($lot)
+            ],
+            2 => [
+                'class' => 'comment-footer'
+            ]
+        ];
+    }
+    function comment_header(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        return [
+            0 => 'header',
+            1 => [
+                'author' => [
+                    0 => 'h4',
+                    1 => [
+                        'link' => [
+                            0 => ($link = $comment->link) ? 'a' : 'span',
+                            1 => $comment->author,
+                            2 => [
+                                'class' => 'comment-link',
+                                'href' => $link,
+                                'rel' => $link ? 'nofollow' : null,
+                                'target' => $link ? '_blank' : null
+                            ]
+                        ]
+                    ],
+                    2 => [
+                        'class' => 'comment-author'
+                    ]
+                ],
+                'meta' => [
+                    0 => 'p',
+                    1 => [
+                        'time' => [
+                            0 => 'time',
+                            1 => $comment->time('%A, %B %d, %Y %I:%M %p'),
+                            2 => [
+                                'class' => 'comment-time',
+                                'datetime' => $comment->time->ISO8601
+                            ]
+                        ],
+                        'space' => '&#x20;',
+                        'url' => [
+                            0 => 'a',
+                            1 => "",
+                            2 => [
+                                'class' => 'comment-url',
+                                'href' => '#comment:' . $comment->id,
+                                'rel' => 'nofollow'
+                            ]
+                        ]
+                    ],
+                    2 => [
+                        'class' => 'comment-meta'
+                    ]
+                ]
+            ],
+            2 => [
+                'class' => 'comment-header'
+            ]
+        ];
+    }
+    function comment_tasks(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        \extract($GLOBALS, \EXTR_SKIP);
+        $out = [
+            0 => 'ul',
+            1 => [
+                'reply' => null
+            ],
+            2 => [
+                'class' => 'comment-tasks'
+            ]
+        ];
+        $k = $page->state['x']['comment'] ?? $state->x->comment->page->state->x->comment ?? 1;
+        if ($deep < ($state->x->comment->page->deep ?? 0) && (1 === $k || true === $k)) {
+            $id = $comment->name;
+            $out[1]['reply'] = [
+                0 => 'li',
+                1 => [
+                    'link' => [
+                        0 => 'a',
+                        1 => \i('Reply'),
+                        2 => [
+                            'class' => 'js:reply',
+                            'href' => $url->query([
+                                'parent' => $id
+                            ]) . '#comment',
+                            'rel' => 'nofollow',
+                            'title' => \To::text(\i('Reply to %s', (string) $comment->author))
+                        ]
+                    ]
+                ]
+            ];
+        }
+        return $out;
+    }
+    function comments(array $lot) {
+        return \Hook::fire('layout.comments', [[
+            0 => 'section',
+            1 => [
+                'header' => \x\comment\y\comments_header($lot),
+                'body' => \x\comment\y\comments_body($lot),
+                'footer' => \x\comment\y\comments_footer($lot)
+            ],
+            2 => [
+                'class' => 'comments comments:' . $lot['k']
+            ]
+        ], $lot]);
+    }
+    function comments_body(array $lot) {
+        return [
+            0 => 'div',
+            1 => [
+                'content' => \x\comment\y\comments_content($lot)
+            ],
+            2 => [
+                'class' => 'comments-body'
+            ]
+        ];
+    }
+    function comments_content(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        $out = [
+            0 => 'section',
+            1 => [],
+            2 => [
+                'class' => 'comments',
+                'data-level' => 0,
+                'id' => 'comments'
+            ]
+        ];
+        if ($count > 0) {
+            foreach ($page->comments($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
+                $out[1][] = \x\comment\y\comment(\array_replace($lot, [
+                    'comment' => $comment,
+                    'deep' => 0
+                ]));
+            }
+        } else {
+            $out[1][] = [
+                0 => 'p',
+                1 => \i('No %s yet.', ['comments']),
+                2 => [
+                    'role' => 'status'
+                ]
+            ];
+        }
+        return $out;
+    }
+    function comments_footer(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        $pager = \x\comment\y\comments_pager($lot);
+        $tasks = \x\comment\y\comments_tasks($lot);
+        return [
+            0 => 'footer',
+            1 => [
+                'pager' => !empty($pager[1]) ? $pager : null,
+                'tasks' => !empty($tasks[1]) ? $tasks : null,
+                'form' => $type && 2 !== $type ? ($parent ? null : \x\comment\y\comments_form($lot)) : [
+                    0 => 'p',
+                    1 => \i('%s are closed.', ['Comments']),
+                    2 => [
+                        'role' => 'status'
+                    ]
+                ]
+            ],
+            2 => [
+                'class' => 'comments-footer'
+            ]
+        ];
+    }
+    function comments_form(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        \extract($GLOBALS, \EXTR_SKIP);
+        $guard = (object) ($state->x->comment->guard ?? []);
+        return [
+            0 => 'form',
+            1 => [
+                'alert' => \class_exists("\\Layout") ? \Layout::alert() : null,
+                'author' => [
+                    0 => 'p',
+                    1 => [
+                        0 => [
+                            0 => 'label',
+                            1 => \i('Name'),
+                            2 => [
+                                'for' => $id = 'f:' . \substr(\uniqid(), 6)
+                            ]
+                        ],
+                        1 => [
+                            0 => 'br',
+                            1 => false
+                        ],
+                        2 => [
+                            0 => 'span',
+                            1 => [
+                                0 => [
+                                    0 => 'input',
+                                    1 => false,
+                                    2 => [
+                                        'id' => $id,
+                                        'maxlength' => $guard->max->author ?? null,
+                                        'minlength' => $guard->min->author ?? null,
+                                        'name' => 'comment[author]',
+                                        'placeholder' => \i('Anonymous'),
+                                        'required' => true,
+                                        'type' => 'text'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'email' => [
+                    0 => 'p',
+                    1 => [
+                        0 => [
+                            0 => 'label',
+                            1 => \i('Email'),
+                            2 => [
+                                'for' => $id = 'f:' . \substr(\uniqid(), 6)
+                            ]
+                        ],
+                        1 => [
+                            0 => 'br',
+                            1 => false
+                        ],
+                        2 => [
+                            0 => 'span',
+                            1 => [
+                                0 => [
+                                    0 => 'input',
+                                    1 => false,
+                                    2 => [
+                                        'id' => $id,
+                                        'maxlength' => $guard->max->email ?? null,
+                                        'minlength' => $guard->min->email ?? null,
+                                        'name' => 'comment[email]',
+                                        'placeholder' => \S . \i('hello') . \S . '@' . \S . $url->host . \S,
+                                        'required' => true,
+                                        'type' => 'email'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'link' => [
+                    0 => 'p',
+                    1 => [
+                        0 => [
+                            0 => 'label',
+                            1 => \i('Link'),
+                            2 => [
+                                'for' => $id = 'f:' . \substr(\uniqid(), 6)
+                            ]
+                        ],
+                        1 => [
+                            0 => 'br',
+                            1 => false
+                        ],
+                        2 => [
+                            0 => 'span',
+                            1 => [
+                                0 => [
+                                    0 => 'input',
+                                    1 => false,
+                                    2 => [
+                                        'id' => $id,
+                                        'maxlength' => $guard->max->link ?? null,
+                                        'minlength' => $guard->min->link ?? null,
+                                        'name' => 'comment[link]',
+                                        'placeholder' => \S . $url->protocol . \S . $url->host . \S,
+                                        'type' => 'url'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'content' => [
+                    0 => 'p',
+                    1 => [
+                        0 => [
+                            0 => 'label',
+                            1 => \i('Message'),
+                            2 => [
+                                'for' => $id = 'f:' . \substr(\uniqid(), 6)
+                            ]
+                        ],
+                        1 => [
+                            0 => 'br',
+                            1 => false
+                        ],
+                        2 => [
+                            0 => 'span',
+                            1 => [
+                                0 => [
+                                    0 => 'textarea',
+                                    1 => "",
+                                    2 => [
+                                        'id' => $id,
+                                        'maxlength' => $guard->max->content ?? null,
+                                        'minlength' => $guard->min->content ?? null,
+                                        'name' => 'comment[content]',
+                                        'placeholder' => $parent ? \To::text(\i('Reply to %s', (string) $parent->author)) : \i('Message goes here...'),
+                                        'required' => true
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'tasks' => [
+                    0 => 'p',
+                    1 => [
+                        0 => [
+                            0 => 'label',
+                            1 => \i('Tasks')
+                        ],
+                        1 => [
+                            0 => 'br',
+                            1 => false
+                        ],
+                        2 => [
+                            0 => 'span',
+                            1 => [
+                                'publish' => [
+                                    0 => 'button',
+                                    1 => \i('Publish'),
+                                    2 => [
+                                        'id' => $id = 'f:' . \substr(\uniqid(), 6),
+                                        'type' => 'submit',
+                                        'value' => 1
+                                    ]
+                                ],
+                                'cancel' => isset($c['page']['deep']) && $c['page']['deep'] > 0 ? [
+                                    0 => 'a',
+                                    1 => \i('Cancel'),
+                                    2 => [
+                                        'class' => 'js:cancel',
+                                        'href' => $url->current([
+                                            'parent' => null
+                                        ], 'comment'),
+                                        'role' => 'button'
+                                    ]
+                                ] : null
+                            ],
+                            2 => [
+                                'role' => 'group'
+                            ]
+                        ]
+                    ]
+                ],
+                'parent' => [
+                    0 => 'input',
+                    1 => false,
+                    2 => [
+                        'name' => 'comment[parent]',
+                        'type' => 'hidden',
+                        'value' => $parent ? $parent->name : null
+                    ]
+                ],
+                'token' => [
+                    0 => 'input',
+                    1 => false,
+                    2 => [
+                        'name' => 'comment[token]',
+                        'type' => 'hidden',
+                        'value' => \token('comment')
+                    ]
+                ]
+            ],
+            2 => [
+                'action' => \strtr($page->url, [
+                    $url . '/' => $url . '/' . \trim($state->x->comment->route ?? 'comment', '/') . '/'
+                ]) . $url->query([
+                    'parent' => null
+                ]),
+                'class' => 'form-comment' . ($parent ? ' is:reply' : ""),
+                'id' => 'comment',
+                'method' => 'post',
+                'name' => 'comment'
+            ]
+        ];
+    }
+    function comments_header(array $lot) {
+        return [
+            0 => 'header',
+            1 => [
+                'title' => [
+                    0 => 'h3',
+                    1 => $lot['page']->comments->title ?? null
+                ]
+            ],
+            2 => [
+                'class' => 'comments-header'
+            ]
+        ];
+    }
+    function comments_pager(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        \extract($GLOBALS, \EXTR_SKIP);
+        if ($chunk && $count > $chunk) {
+            return [
+                0 => 'nav',
+                // TODO: Convert to array
+                1 => (static function($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
+                    $begin = 1;
+                    $end = (int) \ceil($count / $chunk);
+                    $out = "";
+                    if ($end <= 1) {
+                        return $out;
+                    }
+                    if ($current <= $peek + $peek) {
+                        $min = $begin;
+                        $max = \min($begin + $peek + $peek, $end);
+                    } else if ($current > $end - $peek - $peek) {
+                        $min = $end - $peek - $peek;
+                        $max = $end;
+                    } else {
+                        $min = $current - $peek;
+                        $max = $current + $peek;
+                    }
+                    if ($prev) {
+                        $out .= '<span>';
+                        if ($current === $begin) {
+                            $out .= '<a aria-disabled="true" title="' . \i('Go to the %s comments', [\l($prev)]) . '">' . $prev . '</a>';
+                        } else {
+                            $out .= '<a href="' . $fn($current - 1) . '" title="' . \i('Go to the %s comments', [\l($prev)]) . '" rel="prev">' . $prev . '</a>';
+                        }
+                        $out .= '</span> ';
+                    }
+                    if ($first && $last) {
+                        $out .= '<span>';
+                        if ($min > $begin) {
+                            $out .= '<a href="' . $fn($begin) . '" title="' . \i('Go to the %s comment', [\l($first)]) . '" rel="prev">' . $begin . '</a>';
+                            if ($min > $begin + 1) {
+                                $out .= ' <span aria-hidden="true">&#x2026;</span>';
+                            }
+                        }
+                        for ($i = $min; $i <= $max; ++$i) {
+                            if ($current === $i) {
+                                $out .= ' <a aria-current="page" title="' . \i('Go to comments %d (you are here)', [$i]) . '">' . $i . '</a>';
+                            } else {
+                                $out .= ' <a href="' . $fn($i) . '" title="' . \i('Go to comments %d', [$i]) . '" rel="' . ($current >= $i ? 'prev' : 'next') . '">' . $i . '</a>';
+                            }
+                        }
+                        if ($max < $end) {
+                            if ($max < $end - 1) {
+                                $out .= ' <span aria-hidden="true">&#x2026;</span>';
+                            }
+                            $out .= ' <a href="' . $fn($end) . '" title="' . \i('Go to the %s comments', [\l($last)]) . '" rel="next">' . $end . '</a>';
+                        }
+                        $out .= '</span>';
+                    }
+                    if ($next) {
+                        $out .= ' <span>';
+                        if ($current === $end) {
+                            $out .= '<a aria-disabled="true" title="' . \i('Go to the %s comments', [\l($next)]) . '">' . $next . '</a>';
+                        } else {
+                            $out .= '<a href="' . $fn($current + 1) . '" title="' . \i('Go to the %s comments', [\l($next)]) . '" rel="next">' . $next . '</a>';
+                        }
+                        $out .= '</span>';
+                    }
+                    return $out;
+                })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $route, $url) {
+                    return $page->url . ($max === $i ? "" : '/' . $route . '/' . $i) . $url->query([
+                        'parent' => null
+                    ]) . '#comments';
+                }, \i('First'), \i('Previous'), \i('Next'), \i('Last')),
+                2 => [
+                    'class' => 'comments-pager'
+                ]
+            ];
+        }
+        if ($part > 1) {
+            return [
+                0 => 'p',
+                1 => \i('No more %s to load.', ['comments']),
+                2 => [
+                    'role' => 'status'
+                ]
+            ];
+        }
+        return [];
+    }
+    function comments_tasks(array $lot) {
+        return [
+            0 => 'ul',
+            1 => [],
+            2 => [
+                'class' => 'comments-tasks'
+            ]
+        ];
+    }
 }

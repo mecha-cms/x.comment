@@ -13,6 +13,8 @@
 .comments-footer,
 .comments-header,
 .comments-pager,
+.comments-tasks,
+.comments-tasks li,
 .form-comment {
   background: none;
   border: 0;
@@ -92,6 +94,7 @@
   margin-top: 1.5rem;
 }
 .comment .form-comment {
+  margin-top: 0;
   padding-bottom: 2rem;
   padding-top: 2rem;
 }
@@ -109,6 +112,11 @@
 .comments-pager + p {
   margin-top: 2rem;
 }
+.comments-tasks {
+  align-content: center;
+  display: flex;
+  gap: 0 1rem;
+}
 .comments:empty,
 .comments-body:empty,
 .comments-footer:empty {
@@ -120,6 +128,7 @@
 
 .form-comment {
   clear: both;
+  margin-top: 2rem;
 }
 .form-comment > p:not([role=alert]):not([role=status]) {
   display: flex;
@@ -176,10 +185,6 @@
 }
 .form-comment .js\:cancel {
   display: none;
-}
-
-[role=status] + .form-comment {
-  margin-top: 2rem;
 }
 
 @media (max-width: 600px) {

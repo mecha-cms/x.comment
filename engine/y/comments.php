@@ -41,15 +41,6 @@ if (
             kick($page->url);
         }
     }
-    $lot = [
-        'c' => $c,
-        'chunk' => $chunk,
-        'count' => $count,
-        'max' => $max,
-        'parent' => $parent,
-        'part' => $part,
-        'type' => $dummy === $type ? 1 : $type
-    ];
     if (false === $type) {
         $k = 0;
     } else if (is_numeric($type)) {
@@ -57,11 +48,16 @@ if (
     } else /* if (true === $type) */ {
         $k = 1;
     }
-    echo '<section class="comments comments:' . $k . '">';
-    echo x\comment\hook('comments-content', [[
-        'header' => self::get(__DIR__ . D . 'comments.header.php', $lot),
-        'body' => self::get(__DIR__ . D . 'comments.body.php', $lot),
-        'footer' => self::get(__DIR__ . D . 'comments.footer.php', $lot)
-    ]], $page);
-    echo '</section>';
+    $lot = [
+        'c' => $c,
+        'chunk' => $chunk,
+        'count' => $count,
+        'k' => $k,
+        'max' => $max,
+        'page' => $page,
+        'parent' => $parent,
+        'part' => $part,
+        'type' => $dummy === $type ? 1 : $type
+    ];
+    echo new HTML(x\comment\y\comments($lot), true);
 }
