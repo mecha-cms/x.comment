@@ -64,19 +64,6 @@
     gap: 0 1rem;
     justify-content: space-between;
   }
-  &-pager {
-    display: flex;
-    gap: 0 1rem;
-    justify-content: center;
-    > span {
-      display: flex;
-      gap: 0 .5rem;
-    }
-    [aria-current='page'],
-    [aria-disabled='true'] {
-      color: inherit;
-    }
-  }
   &-status {
     &\:-1 {
       opacity: .5;
@@ -97,7 +84,6 @@
     margin-top: 1.5rem;
   }
   .form-comment {
-    margin-top: 0;
     padding-bottom: 2rem;
     padding-top: 2rem;
     + .comment-footer {
@@ -116,6 +102,19 @@
   &-pager,
   &-pager + p {
     margin-top: 2rem;
+  }
+  &-pager {
+    display: flex;
+    gap: 0 1rem;
+    justify-content: center;
+    > span {
+      display: flex;
+      gap: 0 .5rem;
+    }
+    [aria-current='page'],
+    [aria-disabled='true'] {
+      color: inherit;
+    }
   }
   &-tasks {
     align-content: center;

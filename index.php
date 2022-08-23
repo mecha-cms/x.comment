@@ -251,16 +251,17 @@ namespace x\comment\route {
 }
 
 namespace x\comment\y {
-    function comment(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comment(array $data) {
+        \extract($data, \EXTR_SKIP);
+        \extract($GLOBALS, \EXTR_SKIP);
         $out = [
             0 => 'article',
             1 => [
-                'figure' => \x\comment\y\comment_figure($lot),
-                'header' => \x\comment\y\comment_header($lot),
-                'body' => \x\comment\y\comment_body($lot),
-                'form' => (1 === $type || true === $type) && $parent && $parent->name === $comment->name ? \x\comment\y\comments_form($lot) : null,
-                'footer' => \x\comment\y\comment_footer($lot),
+                'figure' => \x\comment\y\comment_figure($data),
+                'header' => \x\comment\y\comment_header($data),
+                'body' => \x\comment\y\comment_body($data),
+                'form' => (1 === $type || true === $type) && $parent && $parent->name === $comment->name ? \x\comment\y\form($data) : null,
+                'footer' => \x\comment\y\comment_footer($data),
                 'comments' => null
             ],
             2 => [
@@ -279,15 +280,15 @@ namespace x\comment\y {
                 ]
             ];
             foreach ($comment->comments($count) as $v) {
-                $out[1]['comments'][1][] = \x\comment\y\comment(\array_replace($lot, [
+                $out[1]['comments'][1][] = \x\comment\y\comment(\array_replace($data, [
                     'comment' => $v,
                     'deep' => $deep + 1
                 ]));
             }
         }
-        return \Hook::fire('layout.comment', [$out, $lot]);
+        return \Hook::fire('layout.comment', [$out, $data], $comment);
     }
-    function comment_avatar(array $lot) {
+    function comment_avatar(array $data) {
         return [
             0 => 'img',
             1 => false,
@@ -295,24 +296,24 @@ namespace x\comment\y {
                 'alt' => "",
                 'class' => 'comment-avatar',
                 'height' => 100,
-                'src' => $lot['avatar'],
+                'src' => $data['avatar'],
                 'width' => 100
             ]
         ];
     }
-    function comment_body(array $lot) {
+    function comment_body(array $data) {
         return [
             0 => 'div',
             1 => [
-                'content' => \x\comment\y\comment_content($lot)
+                'content' => \x\comment\y\comment_content($data)
             ],
             2 => [
                 'class' => 'comment-body'
             ]
         ];
     }
-    function comment_content(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comment_content(array $data) {
+        \extract($data, \EXTR_SKIP);
         return [
             0 => 'div',
             1 => $comment->content,
@@ -321,13 +322,13 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comment_figure(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comment_figure(array $data) {
+        \extract($data, \EXTR_SKIP);
         if ($avatar = $comment->avatar(100)) {
             return [
                 0 => 'figure',
                 1 => [
-                    'avatar' => \x\comment\y\comment_avatar(\array_replace($lot, [
+                    'avatar' => \x\comment\y\comment_avatar(\array_replace($data, [
                         'avatar' => $avatar
                     ]))
                 ],
@@ -338,19 +339,19 @@ namespace x\comment\y {
         }
         return [];
     }
-    function comment_footer(array $lot) {
+    function comment_footer(array $data) {
         return [
             0 => 'footer',
             1 => [
-                'tasks' => \x\comment\y\comment_tasks($lot)
+                'tasks' => \x\comment\y\comment_tasks($data)
             ],
             2 => [
                 'class' => 'comment-footer'
             ]
         ];
     }
-    function comment_header(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comment_header(array $data) {
+        \extract($data, \EXTR_SKIP);
         return [
             0 => 'header',
             1 => [
@@ -404,8 +405,8 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comment_tasks(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comment_tasks(array $data) {
+        \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         $out = [
             0 => 'ul',
@@ -439,32 +440,34 @@ namespace x\comment\y {
         }
         return $out;
     }
-    function comments(array $lot) {
+    function comments(array $data) {
+        \extract($data, \EXTR_SKIP);
+        \extract($GLOBALS, \EXTR_SKIP);
         return \Hook::fire('layout.comments', [[
             0 => 'section',
             1 => [
-                'header' => \x\comment\y\comments_header($lot),
-                'body' => \x\comment\y\comments_body($lot),
-                'footer' => \x\comment\y\comments_footer($lot)
+                'header' => \x\comment\y\comments_header($data),
+                'body' => \x\comment\y\comments_body($data),
+                'footer' => \x\comment\y\comments_footer($data)
             ],
             2 => [
-                'class' => 'comments comments:' . $lot['k']
+                'class' => 'comments comments:' . $k
             ]
-        ], $lot]);
+        ], $data], $page);
     }
-    function comments_body(array $lot) {
+    function comments_body(array $data) {
         return [
             0 => 'div',
             1 => [
-                'content' => \x\comment\y\comments_content($lot)
+                'content' => \x\comment\y\comments_content($data)
             ],
             2 => [
                 'class' => 'comments-body'
             ]
         ];
     }
-    function comments_content(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comments_content(array $data) {
+        \extract($data, \EXTR_SKIP);
         $out = [
             0 => 'section',
             1 => [],
@@ -476,7 +479,7 @@ namespace x\comment\y {
         ];
         if ($count > 0) {
             foreach ($page->comments($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
-                $out[1][] = \x\comment\y\comment(\array_replace($lot, [
+                $out[1][] = \x\comment\y\comment(\array_replace($data, [
                     'comment' => $comment,
                     'deep' => 0
                 ]));
@@ -492,16 +495,16 @@ namespace x\comment\y {
         }
         return $out;
     }
-    function comments_footer(array $lot) {
-        \extract($lot, \EXTR_SKIP);
-        $pager = \x\comment\y\comments_pager($lot);
-        $tasks = \x\comment\y\comments_tasks($lot);
+    function comments_footer(array $data) {
+        \extract($data, \EXTR_SKIP);
+        $pager = \x\comment\y\comments_pager($data);
+        $tasks = \x\comment\y\comments_tasks($data);
         return [
             0 => 'footer',
             1 => [
                 'pager' => !empty($pager[1]) ? $pager : null,
                 'tasks' => !empty($tasks[1]) ? $tasks : null,
-                'form' => $type && 2 !== $type ? ($parent ? null : \x\comment\y\comments_form($lot)) : [
+                'form' => $type && 2 !== $type ? ($parent ? null : \x\comment\y\form($data)) : [
                     0 => 'p',
                     1 => \i('%s are closed.', ['Comments']),
                     2 => [
@@ -514,8 +517,175 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comments_form(array $lot) {
-        \extract($lot, \EXTR_SKIP);
+    function comments_header(array $data) {
+        \extract($data, \EXTR_SKIP);
+        return [
+            0 => 'header',
+            1 => [
+                'title' => [
+                    0 => 'h3',
+                    1 => $page->comments->title ?? null
+                ]
+            ],
+            2 => [
+                'class' => 'comments-header'
+            ]
+        ];
+    }
+    function comments_pager(array $data) {
+        \extract($data, \EXTR_SKIP);
+        \extract($GLOBALS, \EXTR_SKIP);
+        if ($chunk && $count > $chunk) {
+            return [
+                0 => 'nav',
+                1 => (static function($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
+                    $begin = 1;
+                    $end = (int) \ceil($count / $chunk);
+                    $out = [];
+                    if ($end <= 1) {
+                        return $out;
+                    }
+                    if ($current <= $peek + $peek) {
+                        $min = $begin;
+                        $max = \min($begin + $peek + $peek, $end);
+                    } else if ($current > $end - $peek - $peek) {
+                        $min = $end - $peek - $peek;
+                        $max = $end;
+                    } else {
+                        $min = $current - $peek;
+                        $max = $current + $peek;
+                    }
+                    if ($prev) {
+                        $out['prev'] = [
+                            0 => 'span',
+                            1 => [
+                                0 => [
+                                    0 => 'a',
+                                    1 => $prev,
+                                    2 => [
+                                        'aria-disabled' => $current === $begin ? 'true' : null,
+                                        'href' => $current === $begin ? null : $fn($current - 1),
+                                        'rel' => $current === $begin ? null : 'prev',
+                                        'title' => \i('Go to the %s comments', [\l($prev)])
+                                    ]
+                                ]
+                            ]
+                        ];
+                        $out[] = ' ';
+                    }
+                    if ($first && $last) {
+                        $out['steps'] = [
+                            0 => 'span',
+                            1 => []
+                        ];
+                        if ($min > $begin) {
+                            $out['steps'][1][] = [
+                                0 => 'a',
+                                1 => (string) $begin,
+                                2 => [
+                                    'href' => $fn($begin),
+                                    'rel' => 'prev',
+                                    'title' => \i('Go to the %s comment', [\l($first)])
+                                ]
+                            ];
+                            if ($min > $begin + 1) {
+                                $out['steps'][1][] = ' ';
+                                $out['steps'][1][] = [
+                                    0 => 'span',
+                                    1 => '&#x2026;',
+                                    2 => [
+                                        'aria-hidden' => 'true'
+                                    ]
+                                ];
+                            }
+                        }
+                        for ($i = $min; $i <= $max; ++$i) {
+                            $out['steps'][1][] = ' ';
+                            $out['steps'][1][] = [
+                                0 => 'a',
+                                1 => (string) $i,
+                                2 => [
+                                    'aria-current' => $current === $i ? 'page' : null,
+                                    'href' => $current === $i ? null : $fn($i),
+                                    'rel' => $current >= $i ? 'prev' : 'next',
+                                    'title' => \i('Go to comments %d' . ($current === $i ? ' (you are here)' : ""), [$i])
+                                ]
+                            ];
+                        }
+                        if ($max < $end) {
+                            if ($max < $end - 1) {
+                                $out['steps'][1][] = ' ';
+                                $out['steps'][1][] = [
+                                    0 => 'span',
+                                    1 => '&#x2026;',
+                                    2 => [
+                                        'aria-hidden' => 'true'
+                                    ]
+                                ];
+                            }
+                            $out['steps'][1][] = ' ';
+                            $out['steps'][1][] = [
+                                0 => 'a',
+                                1 => (string) $end,
+                                2 => [
+                                    'href' => $fn($end),
+                                    'rel' => 'next',
+                                    'title' => \i('Go to the %s comments', [\l($last)])
+                                ]
+                            ];
+                        }
+                    }
+                    if ($next) {
+                        $out[] = ' ';
+                        $out['next'] = [
+                            0 => 'span',
+                            1 => [
+                                0 => [
+                                    0 => 'a',
+                                    1 => $next,
+                                    2 => [
+                                        'aria-disabled' => $current === $end ? 'true' : null,
+                                        'href' => $current === $end ? null : $fn($current + 1),
+                                        'rel' => $current === $end ? null : 'next',
+                                        'title' => \i('Go to the %s comments', [\l($next)])
+                                    ]
+                                ]
+                            ]
+                        ];
+                    }
+                    return $out;
+                })($part, $count, $chunk, 2, static function($i) use($c, $max, $page, $url) {
+                    return $page->url . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . $url->query([
+                        'parent' => null
+                    ]) . '#comments';
+                }, \i('First'), \i('Previous'), \i('Next'), \i('Last')),
+                2 => [
+                    'class' => 'comments-pager'
+                ]
+            ];
+        }
+        if ($part > 1) {
+            return [
+                0 => 'p',
+                1 => \i('No more %s to load.', ['comments']),
+                2 => [
+                    'role' => 'status'
+                ]
+            ];
+        }
+        return [];
+    }
+    function comments_tasks(array $data) {
+        return [
+            0 => 'ul',
+            1 => [],
+            2 => [
+                'class' => 'comments-tasks'
+            ]
+        ];
+    }
+    function form(array $data) {
+        \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
         return [
@@ -726,116 +896,6 @@ namespace x\comment\y {
                 'id' => 'comment',
                 'method' => 'post',
                 'name' => 'comment'
-            ]
-        ];
-    }
-    function comments_header(array $lot) {
-        return [
-            0 => 'header',
-            1 => [
-                'title' => [
-                    0 => 'h3',
-                    1 => $lot['page']->comments->title ?? null
-                ]
-            ],
-            2 => [
-                'class' => 'comments-header'
-            ]
-        ];
-    }
-    function comments_pager(array $lot) {
-        \extract($lot, \EXTR_SKIP);
-        \extract($GLOBALS, \EXTR_SKIP);
-        if ($chunk && $count > $chunk) {
-            return [
-                0 => 'nav',
-                // TODO: Convert to array
-                1 => (static function($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
-                    $begin = 1;
-                    $end = (int) \ceil($count / $chunk);
-                    $out = "";
-                    if ($end <= 1) {
-                        return $out;
-                    }
-                    if ($current <= $peek + $peek) {
-                        $min = $begin;
-                        $max = \min($begin + $peek + $peek, $end);
-                    } else if ($current > $end - $peek - $peek) {
-                        $min = $end - $peek - $peek;
-                        $max = $end;
-                    } else {
-                        $min = $current - $peek;
-                        $max = $current + $peek;
-                    }
-                    if ($prev) {
-                        $out .= '<span>';
-                        if ($current === $begin) {
-                            $out .= '<a aria-disabled="true" title="' . \i('Go to the %s comments', [\l($prev)]) . '">' . $prev . '</a>';
-                        } else {
-                            $out .= '<a href="' . $fn($current - 1) . '" title="' . \i('Go to the %s comments', [\l($prev)]) . '" rel="prev">' . $prev . '</a>';
-                        }
-                        $out .= '</span> ';
-                    }
-                    if ($first && $last) {
-                        $out .= '<span>';
-                        if ($min > $begin) {
-                            $out .= '<a href="' . $fn($begin) . '" title="' . \i('Go to the %s comment', [\l($first)]) . '" rel="prev">' . $begin . '</a>';
-                            if ($min > $begin + 1) {
-                                $out .= ' <span aria-hidden="true">&#x2026;</span>';
-                            }
-                        }
-                        for ($i = $min; $i <= $max; ++$i) {
-                            if ($current === $i) {
-                                $out .= ' <a aria-current="page" title="' . \i('Go to comments %d (you are here)', [$i]) . '">' . $i . '</a>';
-                            } else {
-                                $out .= ' <a href="' . $fn($i) . '" title="' . \i('Go to comments %d', [$i]) . '" rel="' . ($current >= $i ? 'prev' : 'next') . '">' . $i . '</a>';
-                            }
-                        }
-                        if ($max < $end) {
-                            if ($max < $end - 1) {
-                                $out .= ' <span aria-hidden="true">&#x2026;</span>';
-                            }
-                            $out .= ' <a href="' . $fn($end) . '" title="' . \i('Go to the %s comments', [\l($last)]) . '" rel="next">' . $end . '</a>';
-                        }
-                        $out .= '</span>';
-                    }
-                    if ($next) {
-                        $out .= ' <span>';
-                        if ($current === $end) {
-                            $out .= '<a aria-disabled="true" title="' . \i('Go to the %s comments', [\l($next)]) . '">' . $next . '</a>';
-                        } else {
-                            $out .= '<a href="' . $fn($current + 1) . '" title="' . \i('Go to the %s comments', [\l($next)]) . '" rel="next">' . $next . '</a>';
-                        }
-                        $out .= '</span>';
-                    }
-                    return $out;
-                })($current, $count, $chunk, 2, static function($i) use($c, $max, $page, $route, $url) {
-                    return $page->url . ($max === $i ? "" : '/' . $route . '/' . $i) . $url->query([
-                        'parent' => null
-                    ]) . '#comments';
-                }, \i('First'), \i('Previous'), \i('Next'), \i('Last')),
-                2 => [
-                    'class' => 'comments-pager'
-                ]
-            ];
-        }
-        if ($part > 1) {
-            return [
-                0 => 'p',
-                1 => \i('No more %s to load.', ['comments']),
-                2 => [
-                    'role' => 'status'
-                ]
-            ];
-        }
-        return [];
-    }
-    function comments_tasks(array $lot) {
-        return [
-            0 => 'ul',
-            1 => [],
-            2 => [
-                'class' => 'comments-tasks'
             ]
         ];
     }
