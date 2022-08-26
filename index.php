@@ -285,7 +285,7 @@ namespace x\comment\y {
                 ]));
             }
         }
-        return \Hook::fire('layout.comment', [$out, $data], $comment);
+        return \Hook::fire('y.comment', [$out, $data], $comment);
     }
     function comment_avatar(array $data) {
         return [
@@ -442,7 +442,7 @@ namespace x\comment\y {
     function comments(array $data) {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
-        return \Hook::fire('layout.comments', [[
+        return \Hook::fire('y.comments', [[
             0 => 'section',
             1 => [
                 'header' => \x\comment\y\comments_header($data),
@@ -587,8 +587,8 @@ namespace x\comment\y {
                                     'title' => \i('Go to the %s comment', [\l($first)])
                                 ]
                             ];
+                            $out['steps'][1][] = ' ';
                             if ($min > $begin + 1) {
-                                $out['steps'][1][] = ' ';
                                 $out['steps'][1][] = [
                                     0 => 'span',
                                     1 => '&#x2026;',
@@ -596,10 +596,13 @@ namespace x\comment\y {
                                         'aria-hidden' => 'true'
                                     ]
                                 ];
+                                $out['steps'][1][] = ' ';
                             }
                         }
                         for ($i = $min; $i <= $max; ++$i) {
-                            $out['steps'][1][] = ' ';
+                            if ($i !== $min) {
+                                $out['steps'][1][] = ' ';
+                            }
                             $out['steps'][1][] = [
                                 0 => 'a',
                                 1 => (string) $i,
@@ -657,7 +660,7 @@ namespace x\comment\y {
                     return $page->url . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . $url->query([
                         'parent' => null
                     ]) . '#comments';
-                }, \i('First'), \i('Previous'), \i('Next'), \i('Last')),
+                }, 'First', 'Previous', 'Next', 'Last'),
                 2 => [
                     'class' => 'comments-pager'
                 ]
