@@ -63,15 +63,14 @@ namespace x\comment\route {
         \extract($GLOBALS, \EXTR_SKIP);
         $path = \trim($path ?? "", '/');
         $active = isset($state->x->user) && \Is::user();
-        $anchor = $state->x->comment->anchor ?? [];
         $guard = $state->x->comment->guard ?? [];
         if ('GET' === $_SERVER['REQUEST_METHOD']) {
             \class_exists("\\Alert") && \Alert::error('Method not allowed.');
-            \kick('/' . $path . $url->query . '#' . $anchor[0]);
+            \kick('/' . $path . $url->query . '#comment');
         }
         if (!\is_file(\LOT . \D . 'page' . \D . $path . '.page')) {
             \class_exists("\\Alert") && \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
-            \kick('/' . $path . $url->query . '#' . $anchor[0]);
+            \kick('/' . $path . $url->query . '#comment');
         }
         $error = 0;
         $data_default = \array_replace_recursive(
@@ -81,7 +80,7 @@ namespace x\comment\route {
         $data = \array_replace_recursive($data_default, (array) ($_POST['comment'] ?? []));
         if (empty($data['token']) || !\check($data['token'], 'comment')) {
             \class_exists("\\Alert") && \Alert::error('Invalid token.');
-            \kick('/' . $path . $url->query . '#' . $anchor[0]);
+            \kick('/' . $path . $url->query . '#comment');
         }
         $data['status'] = $active ? 1 : 2; // Status data is hard-coded for security
         foreach (['author', 'email', 'link', 'content'] as $key) {
@@ -223,10 +222,10 @@ namespace x\comment\route {
             $_SESSION['comment'] = $values;
             \Hook::fire('on.comment.set', [$file]);
             if ('draft' !== $x) {
-                \kick('/' . $path . $url->query(['parent' => null]) . '#' . \sprintf($anchor[2], \sprintf('%u', $t)));
+                \kick('/' . $path . $url->query(['parent' => null]) . '#comment:' . \sprintf('%u', $t));
             }
         }
-        \kick('/' . $path . $url->query . '#' . $anchor[0]);
+        \kick('/' . $path . $url->query . '#comment');
     }
     $path = \trim($url->path ?? "", '/');
     $route = \trim($state->x->comment->route ?? 'comment', '/');
