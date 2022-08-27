@@ -690,7 +690,7 @@ namespace x\comment\y {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
-        return [
+        return \Hook::fire('y.form.comment', [[
             0 => 'form',
             1 => [
                 'alert' => \class_exists("\\Layout") ? \Layout::alert() : null,
@@ -899,6 +899,6 @@ namespace x\comment\y {
                 'method' => 'post',
                 'name' => 'comment'
             ]
-        ];
+        ]], $page);
     }
 }
