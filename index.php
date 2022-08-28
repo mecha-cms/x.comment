@@ -279,7 +279,7 @@ namespace x\comment\y {
                 ]
             ];
             foreach ($comment->comments($count) as $v) {
-                $out[1]['comments'][1][] = \x\comment\y\comment(\array_replace($data, [
+                $out[1]['comments'][1][$v->path] = \x\comment\y\comment(\array_replace_recursive($data, [
                     'comment' => $v,
                     'deep' => $deep + 1
                 ]));
@@ -327,7 +327,7 @@ namespace x\comment\y {
             return [
                 0 => 'figure',
                 1 => [
-                    'avatar' => \x\comment\y\comment_avatar(\array_replace($data, [
+                    'avatar' => \x\comment\y\comment_avatar(\array_replace_recursive($data, [
                         'avatar' => $avatar
                     ]))
                 ],
@@ -478,7 +478,7 @@ namespace x\comment\y {
         ];
         if ($count > 0) {
             foreach ($page->comments($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
-                $out[1][] = \x\comment\y\comment(\array_replace($data, [
+                $out[1][$comment->path] = \x\comment\y\comment(\array_replace_recursive($data, [
                     'comment' => $comment,
                     'deep' => 0
                 ]));
