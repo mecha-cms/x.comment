@@ -12,7 +12,7 @@ namespace x\comment {
             $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
             \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
             \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
-            $comments = $page->comments->count() ?? 0;
+            $comments = $page->comments ? $page->comments->count() : 0;
             $open = $page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1;
             \State::set([
                 'can' => ['comment' => 1 === $open || true === $open],

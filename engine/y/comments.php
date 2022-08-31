@@ -2,7 +2,7 @@
 
 $c = State::get('x.comment', true);
 $chunk = $c['page']['chunk'] ?? null;
-$count = $page->comments->count() ?? 0;
+$count = $page->comments ? $page->comments->count() : 0;
 $dummy = P . __FILE__ . P; // Dummy value
 $parent = $_GET['parent'] ?? null;
 $type = $page->state['x']['comment'] ?? $lot[0] ?? $dummy;
