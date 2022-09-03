@@ -52,12 +52,19 @@
   float: left;
   width: 5rem;
 }
+.comment-header + .comment-body + .comment-footer + .comments,
+.comment-header + .comment-body + .form-comment + .comment-footer + .comments {
+  margin-left: 1.5rem; /* Default comment indent without avatar-related extension */
+}
 .comment-figure + .comment-header,
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
 .comment-figure + .comment-header + .comment-body + .comment-footer + .comments,
 .comment-figure + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
-  margin-left: 6.5rem;
+  margin-left: 6.5rem; /* Default comment indent with avatar-related extension */
+}
+.comment-header + .comment-body + .comment-footer + .comments,
+.comment-header + .comment-body + .form-comment + .comment-footer + .comments {
 }
 .comment-header {
   display: flex;
