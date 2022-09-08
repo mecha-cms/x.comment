@@ -124,7 +124,7 @@ namespace x\comment\route {
             ]);
             // Temporarily disable the `[[e]]` block(s) written in the comment body
             if (isset($state->x->block) && false !== \strpos($data['content'], '[[/e]]')) {
-                $data['content'] = \preg_replace_callback('/\[\[e\]\]([\s\S]*?)\[\[\/e\]\]/', static function($m) {
+                $data['content'] = \preg_replace_callback('/\[\[e\]\]([\s\S]*?)\[\[\/e\]\]/', static function ($m) {
                     return '<pre><code>' . \htmlspecialchars($m[1]) . '</code></pre>';
                 }, $data['content']);
             }
@@ -133,7 +133,7 @@ namespace x\comment\route {
                 $tags = 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var';
                 $data['content'] = \strip_tags($data['content'], '<' . \strtr($tags, [',' => '><']) . '>');
                 // Replace potential XSS via HTML attribute(s) into a `data-*` attribute(s)
-                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:[\p{L}\p{N}_:-]+=(?:"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\')|[^\/>])*?)?>/', function($m) {
+                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:[\p{L}\p{N}_:-]+=(?:"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\')|[^\/>])*?)?>/', function ($m) {
                     if ('img' === $m[1]) {
                         // Temporarily disallow image(s) in comment to prevent XSS
                         return '&lt;' . $m[1] . $m[2] . '&gt;';
@@ -231,7 +231,7 @@ namespace x\comment\route {
     $route = \trim($state->x->comment->route ?? 'comment', '/');
     // `/comment/article/lorem-ipsum`
     if (0 === \strpos($path, $route . '/')) {
-        \Hook::set('route.page', function($content, $path, $query, $hash) use($route) {
+        \Hook::set('route.page', function ($content, $path, $query, $hash) use ($route) {
             if ($path && \preg_match('/^\/' . \x($route) . '(\/.*)$/', $path, $m)) {
                 return \Hook::fire('route.comment', [$content, $m[1], $query, $hash]);
             }
@@ -240,7 +240,7 @@ namespace x\comment\route {
         \Hook::set('route.comment', __NAMESPACE__ . "\\set", 100);
     // `/article/lorem-ipsum/comment/1`
     } else if (false !== \strpos($path . '/', '/' . $route . '/') && \preg_match('/\/' . \x($route) . '(?:\/[1-9]\d*)?$/', $path)) {
-        \Hook::set('route.page', function($content, $path, $query, $hash) use($route) {
+        \Hook::set('route.page', function ($content, $path, $query, $hash) use ($route) {
             // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
             // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
             // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
@@ -543,7 +543,7 @@ namespace x\comment\y {
         if ($chunk && $count > $chunk) {
             return [
                 0 => 'nav',
-                1 => (static function($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
+                1 => (static function ($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
                     $begin = 1;
                     $end = (int) \ceil($count / $chunk);
                     $out = [];
@@ -662,7 +662,7 @@ namespace x\comment\y {
                         ];
                     }
                     return $out;
-                })($part, $count, $chunk, 2, static function($i) use($c, $max, $page, $url) {
+                })($part, $count, $chunk, 2, static function ($i) use ($c, $max, $page, $url) {
                     return $page->url . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . $url->query([
                         'parent' => null
                     ]) . '#comments';
