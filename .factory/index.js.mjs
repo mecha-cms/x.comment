@@ -32,7 +32,7 @@ if (form) {
         test = /(?:\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g;
     q = !q || !q.match(test);
     function onEventCancel(a) {
-        onEvent('click', a, function(e) {
+        onEvent('click', a, function (e) {
             setChildLast(footer, form);
             setAttribute(form, 'action', getAttribute(form, 'action').replace(test, ""));
             letClass(form, 'is:reply');
@@ -43,7 +43,7 @@ if (form) {
         })
     }
     function onEventReply(a) {
-        onEvent('click', a, function(e) {
+        onEvent('click', a, function (e) {
             // `a < li < ul.comment-tasks < footer.comment-footer`
             let s = getParent(getParent(getParent(this))),
                 a = getAttribute(form, 'action'),

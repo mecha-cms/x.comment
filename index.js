@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
     var isArray = function isArray(x) {
         return Array.isArray(x);
@@ -35,7 +35,7 @@
     };
     var toValue = function toValue(x) {
         if (isArray(x)) {
-            return x.map(function(v) {
+            return x.map(function (v) {
                 return toValue(v);
             });
         }
@@ -61,7 +61,7 @@
     };
     var fromValue = function fromValue(x) {
         if (isArray(x)) {
-            return x.map(function(v) {
+            return x.map(function (v) {
                 return fromValue(x);
             });
         }
@@ -152,7 +152,7 @@
         q = !q || !q.match(test);
 
         function onEventCancel(a) {
-            onEvent('click', a, function(e) {
+            onEvent('click', a, function (e) {
                 setChildLast(footer, form);
                 setAttribute(form, 'action', getAttribute(form, 'action').replace(test, ""));
                 letClass(form, 'is:reply');
@@ -164,7 +164,7 @@
         }
 
         function onEventReply(a) {
-            onEvent('click', a, function(e) {
+            onEvent('click', a, function (e) {
                 // `a < li < ul.comment-tasks < footer.comment-footer`
                 let s = getParent(getParent(getParent(this))),
                     a = getAttribute(form, 'action'),

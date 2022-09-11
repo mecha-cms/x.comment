@@ -47,6 +47,12 @@
   &-footer {
     margin-top: .5rem;
   }
+  &-header {
+    + .comment-body + .comment-footer + .comments,
+    + .comment-body + .form-comment + .comment-footer + .comments {
+      margin-left: 1.5rem; // Default comment indent without avatar-related extension
+    }
+  }
   &-figure {
     float: left;
     width: 5rem;
@@ -55,7 +61,7 @@
     + .comment-header + .comment-body + .comment-footer,
     + .comment-header + .comment-body + .comment-footer + .comments,
     + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
-      margin-left: 6.5rem; // Add margin only when avatar is visible
+      margin-left: 6.5rem; // Default comment indent with avatar-related extension
     }
   }
   &-header {
@@ -84,8 +90,6 @@
     margin-top: 1.5rem;
   }
   .form-comment {
-    padding-bottom: 2rem;
-    padding-top: 2rem;
     + .comment-footer {
       display: none;
     }
