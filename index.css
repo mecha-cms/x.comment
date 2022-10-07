@@ -137,6 +137,7 @@
   flex: 1;
 }
 .form-comment > p > [role=group] {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em;

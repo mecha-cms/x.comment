@@ -2,6 +2,7 @@
 
 namespace x\comment {
     // require __DIR__ . \D . 'engine' . \D . 'plug' . \D . 'comment.php'; (auto-loaded)
+    // require __DIR__ . \D . 'engine' . \D . 'plug' . \D . 'comments.php'; (auto-loaded)
     require __DIR__ . \D . 'engine' . \D . 'plug' . \D . 'page.php';
     function asset($content) {
         if (!\class_exists("\\Asset")) {
@@ -133,7 +134,7 @@ namespace x\comment\route {
                 $tags = 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var';
                 $data['content'] = \strip_tags($data['content'], '<' . \strtr($tags, [',' => '><']) . '>');
                 // Replace potential XSS via HTML attribute(s) into a `data-*` attribute(s)
-                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:[\p{L}\p{N}_:-]+=(?:"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\')|[^\/>])*?)?>/', function ($m) {
+                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:[\p{L}\p{N}_:-]+=(?:"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\')|[^\/>])*?)?>/', static function ($m) {
                     if ('img' === $m[1]) {
                         // Temporarily disallow image(s) in comment to prevent XSS
                         return '&lt;' . $m[1] . $m[2] . '&gt;';
@@ -365,7 +366,7 @@ namespace x\comment\y {
                     1 => [
                         'link' => [
                             0 => ($link = $comment->link) ? 'a' : 'span',
-                            1 => $comment->author,
+                            1 => (string) $comment->author,
                             2 => [
                                 'class' => 'comment-link',
                                 'href' => $link,

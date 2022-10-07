@@ -147,6 +147,7 @@
       flex: 1;
     }
     > [role='group'] {
+      align-items: center;
       display: flex;
       flex-wrap: wrap;
       gap: .5em;
