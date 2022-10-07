@@ -273,7 +273,12 @@ namespace x\comment\y {
             2 => [
                 'class' => 'comment comment-status:' . $comment->status,
                 'id' => 'comment:' . $comment->id
-            ]
+            ],
+            // These key(s) will be ignored by `HTML` class but can be used by other hook(s) as a reference.
+            'level' => $deep + 1,
+            'parent' => $parent ? $parent->name : null,
+            'self' => $comment->name,
+            'status' => $comment->status
         ];
         if ($deep < ($c['page']['deep'] ?? 0) && ($count = $comment->comments->count() ?? 0)) {
             $out[1]['comments'] = [
