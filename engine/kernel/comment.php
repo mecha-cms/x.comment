@@ -3,7 +3,7 @@
 class Comment extends Page {
 
     public function page(array $lot = []) {
-        if (!$this->exist()) {
+        if (!$this->_exist()) {
             return null;
         }
         $path = $this['page'] ?? null;
@@ -20,7 +20,7 @@ class Comment extends Page {
     }
 
     public function parent(array $lot = []) {
-        if (!$this->exist()) {
+        if (!$this->_exist()) {
             return null;
         }
         $path = $this['parent'] ?? null;
