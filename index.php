@@ -240,14 +240,14 @@ namespace x\comment\route {
         }, 90);
         \Hook::set('route.comment', __NAMESPACE__ . "\\set", 100);
     // `/article/lorem-ipsum/comment/1`
-    } else if (false !== \strpos($path . '/', '/' . $route . '/') && \preg_match('/\/' . \x($route) . '(?:\/[1-9]\d*)?$/', $path)) {
+    } else if (false !== \strpos($path . '/', '/' . $route . '/') && \preg_match('/\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path)) {
         \Hook::set('route.page', function ($content, $path, $query, $hash) use ($route) {
             // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
             // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
             // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
             // going to page `123` which is not what we meant. The comment pagination offset will be taken care of
             // elsewhere using the current route value which now contains `/comment/123`.
-            if ($path && \preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)?$/', $path, $m)) {
+            if ($path && \preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path, $m)) {
                 [$any, $path] = $m;
                 return \Hook::fire('route.page', [$content, $path, $query, $hash]);
             }
