@@ -16,7 +16,7 @@ use:
 
 ### Installation
 
-The comment system will be activated automatically, but you need to manually install the comment area in the layout file. Edit `.\lot\layout\page.php` file then put this snippet just after the `</article>` tag:
+The comment system will be activated automatically, but you need to manually install the comment area in the layout file. Edit `.\lot\y\*\page.php` file then put this snippet just after the `</article>` tag:
 
 ~~~ .php
 <?= self::comments(); ?>
