@@ -132,9 +132,9 @@ namespace x\comment\route {
             // Implement default XSS filter to the comment with type of `HTML` or `text/html`
             if (!isset($data['type']) || 'HTML' === $data['type'] || 'text/html' === $data['type']) {
                 $tags = 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var';
-                $data['content'] = \strip_tags($data['content'], '<' . \strtr($tags, [',' => '><']) . '>');
+                $data['content'] = \strip_tags($data['content'], \explode(',', $tags));
                 // Replace potential XSS via HTML attribute(s) into a `data-*` attribute(s)
-                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:[\p{L}\p{N}_:-]+=(?:"(?:[^"\\\]|\\\.)*"|\'(?:[^\'\\\]|\\\.)*\')|[^\/>])*?)?>/', static function ($m) {
+                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:"[^"]*"|\'[^\']*\'|[^>])*)?>/', static function ($m) {
                     if ('img' === $m[1]) {
                         // Temporarily disallow image(s) in comment to prevent XSS
                         return '&lt;' . $m[1] . $m[2] . '&gt;';
