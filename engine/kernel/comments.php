@@ -2,8 +2,8 @@
 
 class Comments extends Pages {
 
-    public function page(string $path = null, array $lot = []) {
-        return new Comment($path, $lot);
+    public function page(...$lot) {
+        return new Comment(...$lot);
     }
 
     public static function from(...$lot) {
