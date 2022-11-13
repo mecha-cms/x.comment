@@ -3,7 +3,7 @@
 class Comments extends Pages {
 
     public function page(...$lot) {
-        return new Comment(...$lot);
+        return Comment::from(...$lot);
     }
 
     public static function from(...$lot) {
