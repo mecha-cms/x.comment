@@ -45,7 +45,7 @@
   }
   &-body,
   &-footer {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
   &-header {
     + .comment-body + .comment-footer + .comments,
@@ -72,7 +72,7 @@
   }
   &-status {
     &\:-1 {
-      opacity: .5;
+      opacity: 0.5;
     }
   }
   &-tasks {
@@ -113,7 +113,7 @@
     justify-content: center;
     > span {
       display: flex;
-      gap: 0 .5rem;
+      gap: 0 0.5rem;
     }
     [aria-current='page'],
     [aria-disabled='true'] {
@@ -150,7 +150,7 @@
       align-items: center;
       display: flex;
       flex-wrap: wrap;
-      gap: .5em;
+      gap: 0.5em;
     }
     > label {
       &:not([for]) {
@@ -184,7 +184,7 @@
       display: none;
       + small {
         display: block;
-        margin-top: .5rem;
+        margin-top: 0.5rem;
       }
     }
   }
