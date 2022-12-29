@@ -1,5 +1,6 @@
 <?php
 
+#[AllowDynamicProperties]
 class Comments extends Pages {
 
     public function page(...$lot) {
