@@ -1,9 +1,15 @@
 <?php
 
+namespace {
+    function comment(...$lot) {
+        return \Comment::from(...$lot);
+    }
+    function comments(...$lot) {
+        return \Comments::from(...$lot);
+    }
+}
+
 namespace x\comment {
-    // require __DIR__ . \D . 'engine' . \D . 'plug' . \D . 'comment.php'; (auto-loaded)
-    // require __DIR__ . \D . 'engine' . \D . 'plug' . \D . 'comments.php'; (auto-loaded)
-    require __DIR__ . \D . 'engine' . \D . 'plug' . \D . 'page.php';
     function asset($content) {
         if (!\class_exists("\\Asset")) {
             return $content;
