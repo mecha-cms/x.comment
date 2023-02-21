@@ -26,8 +26,8 @@ file. Edit `.\lot\y\*\page.php` file then put this snippet just after the `</art
 
 ### Visibility
 
-Set comment visibility on specific pages via page properties. Add a `comment` property within your page’s `state`
-property with one of these values:
+Set comment visibility on specific pages via page properties. Add this property to your page’s `state` property with one
+of these values:
 
 Value | Description
 ----- | -----------
@@ -46,7 +46,8 @@ description: Page description.
 author: Taufik Nurrohman
 type: Markdown
 state:
-  comment: false
+  x:
+    comment: false
 ...
 
 Page content.

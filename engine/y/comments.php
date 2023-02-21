@@ -1,11 +1,11 @@
 <?php
 
+$any = P . uniqid() . P; // Dummy value
 $c = State::get('x.comment', true);
 $chunk = $c['page']['chunk'] ?? null;
 $count = $page->comments ? $page->comments->count() : 0;
-$dummy = P . __FILE__ . P; // Dummy value
 $parent = $_GET['parent'] ?? null;
-$type = $page->state['x']['comment'] ?? $lot[0] ?? $dummy;
+$status = $page->state['x']['comment'] ?? $c['status'] ?? $lot[0] ?? $any;
 
 $path = trim($url->path ?? "", '/');
 $route = trim($c['route'] ?? 'comment', '/');
@@ -20,16 +20,16 @@ if (false !== strpos($path . '/', '/' . $route . '/') && preg_match('/\/' . x($r
     $part = $max;
 }
 
-// Comment form is disabled and no comment(s)
-if (!$page->comments || (0 === $count && 2 === $type)) {
-    $type = 0; // Is the same as disabled comment(s)
+// Comment form is disabled and there are no comment(s)
+if (!$page->comments || (0 === $count && 2 === $status)) {
+    $status = 0; // Is the same as disabled comment(s)
 }
 
 if (
     // Make sure current page is active
     'page' === $page->x &&
     // Make sure comment feature is active
-    ($dummy === $type || (false !== $type && 0 !== $type))
+    ($any === $status || (false !== $status && 0 !== $status))
 ) {
     if ($parent) {
         // Make sure parent comment exists
@@ -41,11 +41,11 @@ if (
             kick($page->url);
         }
     }
-    if (false === $type) {
+    if (false === $status) {
         $k = 0;
-    } else if (is_numeric($type)) {
-        $k = $type;
-    } else /* if (true === $type) */ {
+    } else if (is_numeric($status)) {
+        $k = $status;
+    } else /* if (true === $status) */ {
         $k = 1;
     }
     $lot = [
@@ -57,7 +57,7 @@ if (
         'page' => $page,
         'parent' => $parent,
         'part' => $part,
-        'type' => $dummy === $type ? 1 : $type
+        'status' => $any === $status ? 1 : $status
     ];
     echo new HTML(x\comment\y\comments($lot), true);
 }

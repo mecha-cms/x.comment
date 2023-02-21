@@ -25,5 +25,6 @@ return [
         // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
         'x' => 'page'
     ],
-    'route' => '/comment'
+    'route' => '/comment',
+    'status' => 1 // The comment(s)’ visibility (`0` or `false` means “disable comment(s)”, `1` or `true` means “enable comment(s)”, `2` means “close comment(s)”)
 ];

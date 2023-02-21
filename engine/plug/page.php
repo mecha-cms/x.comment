@@ -14,6 +14,7 @@ Page::_('comments', function (int $chunk = 100, int $i = 0) {
         sort($comments);
     }
     $comments = (new Comments($comments))->chunk($chunk, $i);
+    $comments->status = (int) ($this->state['x']['comment'] ?? 1);
     $comments->title = i(0 === $count ? '0 Comments' : (1 === $count ? '1 Comment' : '%d Comments'), [$count]);
     return $comments;
 });

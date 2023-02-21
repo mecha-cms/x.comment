@@ -272,7 +272,7 @@ namespace x\comment\y {
                 'figure' => \x\comment\y\comment_figure($data),
                 'header' => \x\comment\y\comment_header($data),
                 'body' => \x\comment\y\comment_body($data),
-                'form' => (1 === $type || true === $type) && $parent && $parent->name === $comment->name ? \x\comment\y\form($data) : null,
+                'form' => (1 === $status || true === $status) && $parent && $parent->name === $comment->name ? \x\comment\y\form($data) : null,
                 'footer' => \x\comment\y\comment_footer($data),
                 'comments' => null
             ],
@@ -468,7 +468,8 @@ namespace x\comment\y {
                 'footer' => \x\comment\y\comments_footer($data)
             ],
             2 => [
-                'class' => 'comments comments:' . $k
+                'class' => 'comments status:' . $k,
+                'id' => 'comments'
             ]
         ], $data], $page);
     }
@@ -491,7 +492,7 @@ namespace x\comment\y {
             2 => [
                 'class' => 'comments',
                 'data-level' => 0,
-                'id' => 'comments'
+                'id' => 'comments:' . $page->id
             ]
         ];
         if ($count > 0) {
@@ -521,7 +522,7 @@ namespace x\comment\y {
             1 => [
                 'pager' => !empty($pager[1]) ? $pager : null,
                 'tasks' => !empty($tasks[1]) ? $tasks : null,
-                'form' => $type && 2 !== $type ? ($parent ? null : \x\comment\y\form($data)) : [
+                'form' => $status && 2 !== $status ? ($parent ? null : \x\comment\y\form($data)) : [
                     0 => 'p',
                     1 => \i('%s are closed.', ['Comments']),
                     2 => [
