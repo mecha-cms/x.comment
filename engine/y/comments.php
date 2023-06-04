@@ -59,5 +59,5 @@ if (
         'part' => $part,
         'status' => $any === $status ? 1 : $status
     ];
-    echo new HTML(x\comment\y\comments($lot), true);
+    echo new HTML(x\comment\y__comments($lot), true);
 }

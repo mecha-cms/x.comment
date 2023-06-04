@@ -1,9 +1,29 @@
 <?php
 
-namespace x\comment\comment {
+namespace x\comment {
+    function asset($content) {
+        if (!\class_exists("\\Asset")) {
+            return $content;
+        }
+        \extract($GLOBALS, \EXTR_SKIP);
+        if ($state->is('page')) {
+            $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
+            \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
+            \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
+            $comments = $page->comments ? $page->comments->count() : 0;
+            $open = $page->state['comment'] ?? $state->x->comment->page->x->state->comment ?? 1;
+            \State::set([
+                'can' => ['comment' => 1 === $open || true === $open],
+                'has' => ['comments' => !!$comments]
+            ]);
+        }
+        return $content;
+    }
+    // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
+    \Hook::set('content', __NAMESPACE__ . "\\asset", -1);
     // Extend user property to comment property
     if (isset($state->x->user)) {
-        function email($email) {
+        function comment__email($email) {
             if ($email || 1 !== $this['status']) {
                 return $email;
             }
@@ -15,7 +35,7 @@ namespace x\comment\comment {
             }
             return $email;
         }
-        function link($link) {
+        function comment__link($link) {
             if ($link || 1 !== $this['status']) {
                 return $link;
             }
@@ -28,13 +48,10 @@ namespace x\comment\comment {
             }
             return $link;
         }
-        \Hook::set('comment.email', __NAMESPACE__ . "\\email", 0);
-        \Hook::set('comment.link', __NAMESPACE__ . "\\link", 0);
+        \Hook::set('comment.email', __NAMESPACE__ . "\\comment__email", 0);
+        \Hook::set('comment.link', __NAMESPACE__ . "\\comment__link", 0);
     }
-}
-
-namespace x\comment\route {
-    function set($content, $path, $query) {
+    function route__comment($content, $path, $query) {
         \extract($GLOBALS, \EXTR_SKIP);
         $path = \trim($path ?? "", '/');
         $active = isset($state->x->user) && \Is::user();
@@ -202,20 +219,19 @@ namespace x\comment\route {
         }
         \kick('/' . $path . $query . '#comment');
     }
-    $path = \trim($url->path ?? "", '/');
-    $route = \trim($state->x->comment->route ?? 'comment', '/');
-    // `/comment/article/lorem-ipsum`
-    if (0 === \strpos($path, $route . '/')) {
-        \Hook::set('route.page', function ($content, $path, $query, $hash) use ($route) {
+    function route__page($content, $path, $query, $hash) {
+        \extract($GLOBALS, \EXTR_SKIP);
+        $path = \trim($path ?? $state->route ?? 'index', '/');
+        $route = \trim($state->x->comment->route ?? 'comment', '/');
+        // `/comment/article/lorem-ipsum`
+        if (0 === \strpos($path, $route . '/')) {
             if ($path && \preg_match('/^\/' . \x($route) . '(\/.*)$/', $path, $m)) {
                 return \Hook::fire('route.comment', [$content, $m[1], $query, $hash]);
             }
             return $content;
-        }, 90);
-        \Hook::set('route.comment', __NAMESPACE__ . "\\set", 100);
-    // `/article/lorem-ipsum/comment/1`
-    } else if (false !== \strpos($path . '/', '/' . $route . '/') && \preg_match('/\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path)) {
-        \Hook::set('route.page', function ($content, $path, $query, $hash) use ($route) {
+        }
+        // `/article/lorem-ipsum/comment/1`
+        if (false !== \strpos($path . '/', '/' . $route . '/') && \preg_match('/\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path)) {
             // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
             // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
             // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
@@ -223,36 +239,41 @@ namespace x\comment\route {
             // elsewhere using the current route value which now contains `/comment/123`.
             if ($path && \preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path, $m)) {
                 [$any, $path] = $m;
+                $folder = \LOT . \D . 'page' . \D . \strtr($path, ['/' => \D]);
+                $file = \exist([
+                    $folder . '.archive',
+                    $folder . '.page'
+                ], 1);
                 \State::set([
                     'is' => [
-                        'error' => false,
-                        'page' => true,
+                        'error' => $file ? false : 404,
+                        'page' => !!$file,
                         'pages' => false
                     ],
                     'has' => [
-                        'page' => true,
+                        'page' => !!$file,
                         'pages' => false
                     ]
                 ]);
                 return \Hook::fire('route.page', [$content, $path, $query, $hash]);
             }
             return $content;
-        }, 90);
+        }
+        return $content;
     }
-}
-
-namespace x\comment\y {
-    function comment(array $data) {
+    \Hook::set('route.comment', __NAMESPACE__ . "\\route__comment", 100);
+    \Hook::set('route.page', __NAMESPACE__ . "\\route__page", 90);
+    function y__comment(array $data) {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         $out = [
             0 => 'article',
             1 => [
-                'figure' => \x\comment\y\comment_figure($data),
-                'header' => \x\comment\y\comment_header($data),
-                'body' => \x\comment\y\comment_body($data),
-                'form' => (1 === $status || true === $status) && $parent && $parent->name === $comment->name ? \x\comment\y\form($data) : null,
-                'footer' => \x\comment\y\comment_footer($data),
+                'figure' => \x\comment\y__comment_figure($data),
+                'header' => \x\comment\y__comment_header($data),
+                'body' => \x\comment\y__comment_body($data),
+                'form' => (1 === $status || true === $status) && $parent && $parent->name === $comment->name ? \x\comment\y__form__comment($data) : null,
+                'footer' => \x\comment\y__comment_footer($data),
                 'comments' => null
             ],
             2 => [
@@ -276,7 +297,7 @@ namespace x\comment\y {
                 ]
             ];
             foreach ($comment->comments($count) as $v) {
-                $out[1]['comments'][1][$v->path] = \x\comment\y\comment(\array_replace_recursive($data, [
+                $out[1]['comments'][1][$v->path] = \x\comment\y__comment(\array_replace_recursive($data, [
                     'comment' => $v,
                     'deep' => $deep + 1
                 ]));
@@ -284,7 +305,7 @@ namespace x\comment\y {
         }
         return \Hook::fire('y.comment', [$out, $data], $comment);
     }
-    function comment_avatar(array $data) {
+    function y__comment_avatar(array $data) {
         return [
             0 => 'img',
             1 => false,
@@ -297,18 +318,18 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comment_body(array $data) {
+    function y__comment_body(array $data) {
         return [
             0 => 'div',
             1 => [
-                'content' => \x\comment\y\comment_content($data)
+                'content' => \x\comment\y__comment_content($data)
             ],
             2 => [
                 'class' => 'comment-body'
             ]
         ];
     }
-    function comment_content(array $data) {
+    function y__comment_content(array $data) {
         \extract($data, \EXTR_SKIP);
         return [
             0 => 'div',
@@ -318,13 +339,13 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comment_figure(array $data) {
+    function y__comment_figure(array $data) {
         \extract($data, \EXTR_SKIP);
-        if ($avatar = $comment->avatar(100)) {
+        if ($avatar = $comment->avatar(100, 100, 100)) {
             return [
                 0 => 'figure',
                 1 => [
-                    'avatar' => \x\comment\y\comment_avatar(\array_replace_recursive($data, [
+                    'avatar' => \x\comment\y__comment_avatar(\array_replace_recursive($data, [
                         'avatar' => $avatar
                     ]))
                 ],
@@ -335,18 +356,18 @@ namespace x\comment\y {
         }
         return null;
     }
-    function comment_footer(array $data) {
+    function y__comment_footer(array $data) {
         return [
             0 => 'footer',
             1 => [
-                'tasks' => \x\comment\y\comment_tasks($data)
+                'tasks' => \x\comment\y__comment_tasks($data)
             ],
             2 => [
                 'class' => 'comment-footer'
             ]
         ];
     }
-    function comment_header(array $data) {
+    function y__comment_header(array $data) {
         \extract($data, \EXTR_SKIP);
         return [
             0 => 'header',
@@ -377,7 +398,7 @@ namespace x\comment\y {
                             1 => $comment->time('%A, %B %d, %Y %I:%M %p'),
                             2 => [
                                 'class' => 'comment-time',
-                                'datetime' => $comment->time->ISO8601
+                                'datetime' => $comment->time->format('c')
                             ]
                         ],
                         'space' => '&#x20;',
@@ -401,7 +422,7 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comment_tasks(array $data) {
+    function y__comment_tasks(array $data) {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         $out = [
@@ -436,15 +457,15 @@ namespace x\comment\y {
         }
         return $out;
     }
-    function comments(array $data) {
+    function y__comments(array $data) {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         return \Hook::fire('y.comments', [[
             0 => 'section',
             1 => [
-                'header' => \x\comment\y\comments_header($data),
-                'body' => \x\comment\y\comments_body($data),
-                'footer' => \x\comment\y\comments_footer($data)
+                'header' => \x\comment\y__comments_header($data),
+                'body' => \x\comment\y__comments_body($data),
+                'footer' => \x\comment\y__comments_footer($data)
             ],
             2 => [
                 'class' => 'comments status:' . $k,
@@ -452,18 +473,18 @@ namespace x\comment\y {
             ]
         ], $data], $page);
     }
-    function comments_body(array $data) {
+    function y__comments_body(array $data) {
         return [
             0 => 'div',
             1 => [
-                'content' => \x\comment\y\comments_content($data)
+                'content' => \x\comment\y__comments_content($data)
             ],
             2 => [
                 'class' => 'comments-body'
             ]
         ];
     }
-    function comments_content(array $data) {
+    function y__comments_content(array $data) {
         \extract($data, \EXTR_SKIP);
         $out = [
             0 => 'section',
@@ -476,7 +497,7 @@ namespace x\comment\y {
         ];
         if ($count > 0) {
             foreach ($page->comments($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
-                $out[1][$comment->path] = \x\comment\y\comment(\array_replace_recursive($data, [
+                $out[1][$comment->path] = \x\comment\y__comment(\array_replace_recursive($data, [
                     'comment' => $comment,
                     'deep' => 0
                 ]));
@@ -492,16 +513,16 @@ namespace x\comment\y {
         }
         return $out;
     }
-    function comments_footer(array $data) {
+    function y__comments_footer(array $data) {
         \extract($data, \EXTR_SKIP);
-        $pager = \x\comment\y\comments_pager($data);
-        $tasks = \x\comment\y\comments_tasks($data);
+        $pager = \x\comment\y__comments_pager($data);
+        $tasks = \x\comment\y__comments_tasks($data);
         return [
             0 => 'footer',
             1 => [
                 'pager' => !empty($pager[1]) ? $pager : null,
                 'tasks' => !empty($tasks[1]) ? $tasks : null,
-                'form' => $status && 2 !== $status ? ($parent ? null : \x\comment\y\form($data)) : [
+                'form' => $status && 2 !== $status ? ($parent ? null : \x\comment\y__form__comment($data)) : [
                     0 => 'p',
                     1 => \i('%s are closed.', ['Comments']),
                     2 => [
@@ -514,7 +535,7 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comments_header(array $data) {
+    function y__comments_header(array $data) {
         \extract($data, \EXTR_SKIP);
         return [
             0 => 'header',
@@ -529,7 +550,7 @@ namespace x\comment\y {
             ]
         ];
     }
-    function comments_pager(array $data) {
+    function y__comments_pager(array $data) {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         if ($chunk && $count > $chunk) {
@@ -666,7 +687,7 @@ namespace x\comment\y {
         }
         return null;
     }
-    function comments_tasks(array $data) {
+    function y__comments_tasks(array $data) {
         return [
             0 => 'ul',
             1 => [],
@@ -675,7 +696,7 @@ namespace x\comment\y {
             ]
         ];
     }
-    function form(array $data) {
+    function y__form__comment(array $data) {
         \extract($data, \EXTR_SKIP);
         \extract($GLOBALS, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
@@ -890,29 +911,6 @@ namespace x\comment\y {
             ]
         ]], $page);
     }
-}
-
-namespace x\comment {
-    function asset($content) {
-        if (!\class_exists("\\Asset")) {
-            return $content;
-        }
-        \extract($GLOBALS, \EXTR_SKIP);
-        if ($state->is('page')) {
-            $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
-            \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
-            \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
-            $comments = $page->comments ? $page->comments->count() : 0;
-            $open = $page->state['comment'] ?? $state->x->comment->page->x->state->comment ?? 1;
-            \State::set([
-                'can' => ['comment' => 1 === $open || true === $open],
-                'has' => ['comments' => !!$comments]
-            ]);
-        }
-        return $content;
-    }
-    // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
-    \Hook::set('content', __NAMESPACE__ . "\\asset", -1);
     if (\class_exists("\\Layout")) {
         !\Layout::path('comments') && \Layout::set('comments', __DIR__ . \D . 'engine' . \D . 'y' . \D . 'comments.php');
     }
