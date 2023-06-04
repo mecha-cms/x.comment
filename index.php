@@ -225,19 +225,19 @@ namespace x\comment {
         $route = \trim($state->x->comment->route ?? 'comment', '/');
         // `/comment/article/lorem-ipsum`
         if (0 === \strpos($path, $route . '/')) {
-            if ($path && \preg_match('/^\/' . \x($route) . '(\/.*)$/', $path, $m)) {
+            if (\preg_match('/^' . \x($route) . '(\/.*)$/', $path, $m)) {
                 return \Hook::fire('route.comment', [$content, $m[1], $query, $hash]);
             }
             return $content;
         }
         // `/article/lorem-ipsum/comment/1`
-        if (false !== \strpos($path . '/', '/' . $route . '/') && \preg_match('/\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path)) {
-            // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
-            // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
-            // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
-            // going to page `123` which is not what we meant. The comment pagination offset will be taken care of
-            // elsewhere using the current route value which now contains `/comment/123`.
-            if ($path && \preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path, $m)) {
+        if (false !== \strpos($path . '/', '/' . $route . '/')) {
+            if (\preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path, $m)) {
+                // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
+                // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
+                // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
+                // going to page `123` which is not what we meant. The comment pagination offset will be taken care of
+                // else-where using the current route value which now contains `/comment/123`.
                 [$any, $path] = $m;
                 $folder = \LOT . \D . 'page' . \D . \strtr($path, ['/' => \D]);
                 $file = \exist([
@@ -255,7 +255,7 @@ namespace x\comment {
                         'pages' => false
                     ]
                 ]);
-                return \Hook::fire('route.page', [$content, $path, $query, $hash]);
+                return \Hook::fire('route.page', [$content, '/' . $path, $query, $hash]);
             }
             return $content;
         }
