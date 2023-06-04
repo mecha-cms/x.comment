@@ -223,6 +223,17 @@ namespace x\comment\route {
             // elsewhere using the current route value which now contains `/comment/123`.
             if ($path && \preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path, $m)) {
                 [$any, $path] = $m;
+                \State::set([
+                    'is' => [
+                        'error' => false,
+                        'page' => true,
+                        'pages' => false
+                    ],
+                    'has' => [
+                        'page' => true,
+                        'pages' => false
+                    ]
+                ]);
                 return \Hook::fire('route.page', [$content, $path, $query, $hash]);
             }
             return $content;
@@ -525,15 +536,15 @@ namespace x\comment\y {
             return [
                 0 => 'nav',
                 1 => (static function ($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
-                    $begin = 1;
+                    $start = 1;
                     $end = (int) \ceil($count / $chunk);
                     $out = [];
                     if ($end <= 1) {
                         return $out;
                     }
                     if ($current <= $peek + $peek) {
-                        $min = $begin;
-                        $max = \min($begin + $peek + $peek, $end);
+                        $min = $start;
+                        $max = \min($start + $peek + $peek, $end);
                     } else if ($current > $end - $peek - $peek) {
                         $min = $end - $peek - $peek;
                         $max = $end;
@@ -549,62 +560,55 @@ namespace x\comment\y {
                                     0 => 'a',
                                     1 => $prev,
                                     2 => [
-                                        'aria-disabled' => $current === $begin ? 'true' : null,
-                                        'href' => $current === $begin ? null : $fn($current - 1),
-                                        'rel' => $current === $begin ? null : 'prev',
-                                        'title' => \i('Go to the %s comments', [\l($prev)])
+                                        'aria-disabled' => $current === $start ? 'true' : null,
+                                        'href' => $current === $start ? null : $fn($current - 1),
+                                        'rel' => $current === $start ? null : 'prev',
+                                        'title' => \i('Go to the %s comments.', [\l($prev)])
                                     ]
                                 ]
                             ]
                         ];
-                        $out[] = ' ';
                     }
                     if ($first && $last) {
-                        $out['part'] = [
+                        $out['data'] = [
                             0 => 'span',
                             1 => []
                         ];
-                        if ($min > $begin) {
-                            $out['part'][1][] = [
+                        if ($min > $start) {
+                            $out['data'][1][$start] = [
                                 0 => 'a',
-                                1 => (string) $begin,
+                                1 => (string) $start,
                                 2 => [
-                                    'href' => $fn($begin),
+                                    'href' => $fn($start),
                                     'rel' => 'prev',
-                                    'title' => \i('Go to the %s comment', [\l($first)])
+                                    'title' => \i('Go to the %s comments.', [\l($first)])
                                 ]
                             ];
-                            $out['part'][1][] = ' ';
-                            if ($min > $begin + 1) {
-                                $out['part'][1][] = [
+                            if ($min > $start + 1) {
+                                $out['data'][1]['<'] = [
                                     0 => 'span',
                                     1 => '&#x2026;',
                                     2 => [
                                         'aria-hidden' => 'true'
                                     ]
                                 ];
-                                $out['part'][1][] = ' ';
                             }
                         }
                         for ($i = $min; $i <= $max; ++$i) {
-                            if ($i !== $min) {
-                                $out['part'][1][] = ' ';
-                            }
-                            $out['part'][1][] = [
+                            $out['data'][1][$i] = [
                                 0 => 'a',
                                 1 => (string) $i,
                                 2 => [
                                     'aria-current' => $current === $i ? 'page' : null,
                                     'href' => $current === $i ? null : $fn($i),
                                     'rel' => $current >= $i ? 'prev' : 'next',
-                                    'title' => \i('Go to comments %d' . ($current === $i ? ' (you are here)' : ""), [$i])
+                                    'title' => \i('Go to comments %d.' . ($current === $i ? ' (you are here)' : ""), [$i])
                                 ]
                             ];
                         }
                         if ($max < $end) {
                             if ($max < $end - 1) {
-                                $out['part'][1][] = ' ';
-                                $out['part'][1][] = [
+                                $out['data'][1]['>'] = [
                                     0 => 'span',
                                     1 => '&#x2026;',
                                     2 => [
@@ -612,20 +616,18 @@ namespace x\comment\y {
                                     ]
                                 ];
                             }
-                            $out['part'][1][] = ' ';
-                            $out['part'][1][] = [
+                            $out['data'][1][$end] = [
                                 0 => 'a',
                                 1 => (string) $end,
                                 2 => [
                                     'href' => $fn($end),
                                     'rel' => 'next',
-                                    'title' => \i('Go to the %s comments', [\l($last)])
+                                    'title' => \i('Go to the %s comments.', [\l($last)])
                                 ]
                             ];
                         }
                     }
                     if ($next) {
-                        $out[] = ' ';
                         $out['next'] = [
                             0 => 'span',
                             1 => [
@@ -636,7 +638,7 @@ namespace x\comment\y {
                                         'aria-disabled' => $current === $end ? 'true' : null,
                                         'href' => $current === $end ? null : $fn($current + 1),
                                         'rel' => $current === $end ? null : 'next',
-                                        'title' => \i('Go to the %s comments', [\l($next)])
+                                        'title' => \i('Go to the %s comments.', [\l($next)])
                                     ]
                                 ]
                             ]

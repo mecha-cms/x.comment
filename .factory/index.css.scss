@@ -118,6 +118,7 @@
     [aria-current='page'],
     [aria-disabled='true'] {
       color: inherit;
+      text-decoration: none;
     }
   }
   &-tasks {

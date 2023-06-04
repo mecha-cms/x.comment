@@ -110,6 +110,7 @@
 .comments-pager [aria-current=page],
 .comments-pager [aria-disabled=true] {
   color: inherit;
+  text-decoration: none;
 }
 .comments-tasks {
   align-content: center;
