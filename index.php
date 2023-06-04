@@ -1,35 +1,6 @@
 <?php
 
-namespace {
-    function comment(...$lot) {
-        return \Comment::from(...$lot);
-    }
-    function comments(...$lot) {
-        return \Comments::from(...$lot);
-    }
-}
-
-namespace x\comment {
-    function asset($content) {
-        if (!\class_exists("\\Asset")) {
-            return $content;
-        }
-        \extract($GLOBALS, \EXTR_SKIP);
-        if ($state->is('page')) {
-            $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
-            \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
-            \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
-            $comments = $page->comments ? $page->comments->count() : 0;
-            $open = $page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1;
-            \State::set([
-                'can' => ['comment' => 1 === $open || true === $open],
-                'has' => ['comments' => !!$comments]
-            ]);
-        }
-        return $content;
-    }
-    // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
-    \Hook::set('content', __NAMESPACE__ . "\\asset", -1);
+namespace x\comment\comment {
     // Extend user property to comment property
     if (isset($state->x->user)) {
         function email($email) {
@@ -59,9 +30,6 @@ namespace x\comment {
         }
         \Hook::set('comment.email', __NAMESPACE__ . "\\email", 0);
         \Hook::set('comment.link', __NAMESPACE__ . "\\link", 0);
-    }
-    if (\class_exists("\\Layout")) {
-        !\Layout::path('comments') && \Layout::set('comments', __DIR__ . \D . 'engine' . \D . 'y' . \D . 'comments.php');
     }
 }
 
@@ -592,12 +560,12 @@ namespace x\comment\y {
                         $out[] = ' ';
                     }
                     if ($first && $last) {
-                        $out['steps'] = [
+                        $out['part'] = [
                             0 => 'span',
                             1 => []
                         ];
                         if ($min > $begin) {
-                            $out['steps'][1][] = [
+                            $out['part'][1][] = [
                                 0 => 'a',
                                 1 => (string) $begin,
                                 2 => [
@@ -606,23 +574,23 @@ namespace x\comment\y {
                                     'title' => \i('Go to the %s comment', [\l($first)])
                                 ]
                             ];
-                            $out['steps'][1][] = ' ';
+                            $out['part'][1][] = ' ';
                             if ($min > $begin + 1) {
-                                $out['steps'][1][] = [
+                                $out['part'][1][] = [
                                     0 => 'span',
                                     1 => '&#x2026;',
                                     2 => [
                                         'aria-hidden' => 'true'
                                     ]
                                 ];
-                                $out['steps'][1][] = ' ';
+                                $out['part'][1][] = ' ';
                             }
                         }
                         for ($i = $min; $i <= $max; ++$i) {
                             if ($i !== $min) {
-                                $out['steps'][1][] = ' ';
+                                $out['part'][1][] = ' ';
                             }
-                            $out['steps'][1][] = [
+                            $out['part'][1][] = [
                                 0 => 'a',
                                 1 => (string) $i,
                                 2 => [
@@ -635,8 +603,8 @@ namespace x\comment\y {
                         }
                         if ($max < $end) {
                             if ($max < $end - 1) {
-                                $out['steps'][1][] = ' ';
-                                $out['steps'][1][] = [
+                                $out['part'][1][] = ' ';
+                                $out['part'][1][] = [
                                     0 => 'span',
                                     1 => '&#x2026;',
                                     2 => [
@@ -644,8 +612,8 @@ namespace x\comment\y {
                                     ]
                                 ];
                             }
-                            $out['steps'][1][] = ' ';
-                            $out['steps'][1][] = [
+                            $out['part'][1][] = ' ';
+                            $out['part'][1][] = [
                                 0 => 'a',
                                 1 => (string) $end,
                                 2 => [
@@ -919,5 +887,40 @@ namespace x\comment\y {
                 'name' => 'comment'
             ]
         ]], $page);
+    }
+}
+
+namespace x\comment {
+    function asset($content) {
+        if (!\class_exists("\\Asset")) {
+            return $content;
+        }
+        \extract($GLOBALS, \EXTR_SKIP);
+        if ($state->is('page')) {
+            $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
+            \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
+            \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
+            $comments = $page->comments ? $page->comments->count() : 0;
+            $open = $page->state['comment'] ?? $state->x->comment->page->x->state->comment ?? 1;
+            \State::set([
+                'can' => ['comment' => 1 === $open || true === $open],
+                'has' => ['comments' => !!$comments]
+            ]);
+        }
+        return $content;
+    }
+    // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
+    \Hook::set('content', __NAMESPACE__ . "\\asset", -1);
+    if (\class_exists("\\Layout")) {
+        !\Layout::path('comments') && \Layout::set('comments', __DIR__ . \D . 'engine' . \D . 'y' . \D . 'comments.php');
+    }
+}
+
+namespace {
+    function comment(...$lot) {
+        return \Comment::from(...$lot);
+    }
+    function comments(...$lot) {
+        return \Comments::from(...$lot);
     }
 }
