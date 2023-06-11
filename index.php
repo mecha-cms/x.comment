@@ -10,24 +10,6 @@ namespace {
 }
 
 namespace x\comment {
-    function get() {
-        if (!\class_exists("\\Asset")) {
-            return;
-        }
-        \extract($GLOBALS, \EXTR_SKIP);
-        if ($state->is('page')) {
-            $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
-            \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
-            \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
-            $comments = $page->comments ? $page->comments->count() : 0;
-            $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
-            \State::set([
-                'can' => ['comment' => 1 === $open],
-                'has' => ['comments' => !!$comments]
-            ]);
-        }
-    }
-    \Hook::set('get', __NAMESPACE__ . "\\get", -1);
     // Extend user property to comment property
     if (isset($state->x->user)) {
         function comment__email($email) {
@@ -58,6 +40,27 @@ namespace x\comment {
         \Hook::set('comment.email', __NAMESPACE__ . "\\comment__email", 0);
         \Hook::set('comment.link', __NAMESPACE__ . "\\comment__link", 0);
     }
+    function content($content) {
+        if (!\class_exists("\\Asset")) {
+            return $content;
+        }
+        \extract($GLOBALS, \EXTR_SKIP);
+        if (!$state->is('page')) {
+            return $content;
+        }
+        $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
+        \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
+        \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
+        $comments = $page->comments ? $page->comments->count() : 0;
+        $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
+        \State::set([
+            'can' => ['comment' => 1 === $open],
+            'has' => ['comments' => !!$comments]
+        ]);
+        return $content;
+    }
+    // Set the comment state as quickly as possible, but as close as possible to the response body
+    \Hook::set('content', __NAMESPACE__ . "\\content", -1);
     function route__comment($content, $path, $query) {
         \extract($GLOBALS, \EXTR_SKIP);
         $can_alert = \class_exists("\\Alert");
