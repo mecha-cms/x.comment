@@ -57,6 +57,7 @@ if (
         'page' => $page,
         'parent' => $parent,
         'part' => $part,
+        'state' => $state,
         'status' => $any === $status ? 1 : $status
     ];
     echo new HTML(x\comment\y__comments($lot), true);

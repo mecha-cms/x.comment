@@ -1,9 +1,18 @@
 <?php
 
+namespace {
+    function comment(...$lot) {
+        return \Comment::from(...$lot);
+    }
+    function comments(...$lot) {
+        return \Comments::from(...$lot);
+    }
+}
+
 namespace x\comment {
-    function asset($content) {
+    function get() {
         if (!\class_exists("\\Asset")) {
-            return $content;
+            return;
         }
         \extract($GLOBALS, \EXTR_SKIP);
         if ($state->is('page')) {
@@ -11,16 +20,14 @@ namespace x\comment {
             \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
             \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
             $comments = $page->comments ? $page->comments->count() : 0;
-            $open = $page->state['comment'] ?? $state->x->comment->page->x->state->comment ?? 1;
+            $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
             \State::set([
-                'can' => ['comment' => 1 === $open || true === $open],
+                'can' => ['comment' => 1 === $open],
                 'has' => ['comments' => !!$comments]
             ]);
         }
-        return $content;
     }
-    // Need to set a priority before any asset(s) insertion task(s) because we use the `content` hook
-    \Hook::set('content', __NAMESPACE__ . "\\asset", -1);
+    \Hook::set('get', __NAMESPACE__ . "\\get", -1);
     // Extend user property to comment property
     if (isset($state->x->user)) {
         function comment__email($email) {
@@ -53,15 +60,16 @@ namespace x\comment {
     }
     function route__comment($content, $path, $query) {
         \extract($GLOBALS, \EXTR_SKIP);
+        $can_alert = \class_exists("\\Alert");
         $path = \trim($path ?? "", '/');
         $active = isset($state->x->user) && \Is::user();
         $guard = $state->x->comment->guard ?? [];
         if ('GET' === $_SERVER['REQUEST_METHOD']) {
-            \class_exists("\\Alert") && \Alert::error('Method not allowed.');
+            $can_alert && \Alert::error('Method not allowed.');
             \kick('/' . $path . $query . '#comment');
         }
         if (!\is_file(\LOT . \D . 'page' . \D . $path . '.page')) {
-            \class_exists("\\Alert") && \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
+            $can_alert && \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
             \kick('/' . $path . $query . '#comment');
         }
         $error = 0;
@@ -71,7 +79,7 @@ namespace x\comment {
         );
         $data = \array_replace_recursive($data_default, (array) ($_POST['comment'] ?? []));
         if (empty($data['token']) || !\check($data['token'], 'comment')) {
-            \class_exists("\\Alert") && \Alert::error('Invalid token.');
+            $can_alert && \Alert::error('Invalid token.');
             \kick('/' . $path . $query . '#comment');
         }
         $data['status'] = $active ? 1 : 2; // Status data is hard-coded for security
@@ -83,17 +91,17 @@ namespace x\comment {
             // Check for empty field(s)
             if (\Is::void($data[$key])) {
                 if ('link' !== $key) { // `link` field is optional
-                    \class_exists("\\Alert") && \Alert::error('Please fill out the %s field.', [$title]);
+                    $can_alert && \Alert::error('Please fill out the %s field.', [$title]);
                     ++$error;
                 }
             }
             // Check for field(s) value length
             if (isset($guard->max->{$key}) && \gt($data[$key], $guard->max->{$key})) {
-                \class_exists("\\Alert") && \Alert::error('%s too long.', [$title]);
+                $can_alert && \Alert::error('%s too long.', [$title]);
                 ++$error;
             } else if (isset($guard->min->{$key}) && \lt($data[$key], $guard->min->{$key})) {
                 if ('link' !== $key) { // `link` field is optional
-                    \class_exists("\\Alert") && \Alert::error('%s too short.', [$title]);
+                    $can_alert && \Alert::error('%s too short.', [$title]);
                     ++$error;
                 }
             }
@@ -153,18 +161,18 @@ namespace x\comment {
         if (0 === $error && !$active) {
             // Check for email format
             if (!empty($data['email']) && !\Is::email($data['email'])) {
-                \class_exists("\\Alert") && \Alert::error('Invalid %s format.', 'Email');
+                $can_alert && \Alert::error('Invalid %s format.', 'Email');
                 ++$error;
             }
             // Check for link format
             if (!empty($data['link']) && !\Is::URL($data['link'])) {
-                \class_exists("\\Alert") && \Alert::error('Invalid %s format.', 'Link');
+                $can_alert && \Alert::error('Invalid %s format.', 'Link');
                 ++$error;
             }
         }
         // Check for duplicate comment
         if (isset($_SESSION['comment']['content']) && $data['content'] === $_SESSION['comment']['content']) {
-            \class_exists("\\Alert") && \Alert::error('You have sent that comment already.');
+            $can_alert && \Alert::error('You have sent that comment already.');
             ++$error;
         }
         if ($error > 0) {
@@ -207,9 +215,9 @@ namespace x\comment {
                 \file_put_contents($parent = $folder . \D . 'parent.data', (new \Time($data['parent']))->name);
                 \chmod($parent, 0600);
             }
-            \class_exists("\\Alert") && \Alert::success('Comment created.');
+            $can_alert && \Alert::success('Comment created.');
             if ('draft' === $x) {
-                \class_exists("\\Alert") && \Alert::info('Your comment will be visible once approved by the author.');
+                $can_alert && \Alert::info('Your comment will be visible once approved by the author.');
             }
             $_SESSION['comment'] = $values;
             \Hook::fire('on.comment.set', [$file]);
@@ -265,7 +273,6 @@ namespace x\comment {
     \Hook::set('route.page', __NAMESPACE__ . "\\route__page", 90);
     function y__comment(array $data) {
         \extract($data, \EXTR_SKIP);
-        \extract($GLOBALS, \EXTR_SKIP);
         $out = [
             0 => 'article',
             1 => [
@@ -306,7 +313,8 @@ namespace x\comment {
         return \Hook::fire('y.comment', [$out, $data], $comment);
     }
     function y__comment_avatar(array $data) {
-        return [
+        \extract($data, \EXTR_SKIP);
+        return \Hook::fire('y.comment-avatar', [[
             0 => 'img',
             1 => false,
             2 => [
@@ -316,10 +324,11 @@ namespace x\comment {
                 'src' => $data['avatar'],
                 'width' => 100
             ]
-        ];
+        ], $data], $comment);
     }
     function y__comment_body(array $data) {
-        return [
+        \extract($data, \EXTR_SKIP);
+        return \Hook::fire('y.comment-body', [[
             0 => 'div',
             1 => [
                 'content' => \x\comment\y__comment_content($data)
@@ -327,37 +336,36 @@ namespace x\comment {
             2 => [
                 'class' => 'comment-body'
             ]
-        ];
+        ], $data], $comment);
     }
     function y__comment_content(array $data) {
         \extract($data, \EXTR_SKIP);
-        return [
+        return \Hook::fire('y.comment-content', [[
             0 => 'div',
             1 => $comment->content,
             2 => [
                 'class' => 'comment-content'
             ]
-        ];
+        ], $data], $comment);
     }
     function y__comment_figure(array $data) {
         \extract($data, \EXTR_SKIP);
-        if ($avatar = $comment->avatar(100, 100, 100)) {
-            return [
-                0 => 'figure',
-                1 => [
-                    'avatar' => \x\comment\y__comment_avatar(\array_replace_recursive($data, [
-                        'avatar' => $avatar
-                    ]))
-                ],
-                2 => [
-                    'class' => 'comment-figure'
-                ]
-            ];
-        }
-        return null;
+        $avatar = $comment->avatar(100, 100, 100);
+        return \Hook::fire('y.comment-figure', [$avatar ? [
+            0 => 'figure',
+            1 => [
+                'avatar' => \x\comment\y__comment_avatar(\array_replace_recursive($data, [
+                    'avatar' => $avatar
+                ]))
+            ],
+            2 => [
+                'class' => 'comment-figure'
+            ]
+        ] : [], $data], $comment);
     }
     function y__comment_footer(array $data) {
-        return [
+        \extract($data, \EXTR_SKIP);
+        return \Hook::fire('y.comment-footer', [[
             0 => 'footer',
             1 => [
                 'tasks' => \x\comment\y__comment_tasks($data)
@@ -365,11 +373,11 @@ namespace x\comment {
             2 => [
                 'class' => 'comment-footer'
             ]
-        ];
+        ], $data], $comment);
     }
     function y__comment_header(array $data) {
         \extract($data, \EXTR_SKIP);
-        return [
+        return \Hook::fire('y.comment-header', [[
             0 => 'header',
             1 => [
                 'author' => [
@@ -420,11 +428,10 @@ namespace x\comment {
             2 => [
                 'class' => 'comment-header'
             ]
-        ];
+        ], $data], $comment);
     }
     function y__comment_tasks(array $data) {
         \extract($data, \EXTR_SKIP);
-        \extract($GLOBALS, \EXTR_SKIP);
         $out = [
             0 => 'ul',
             1 => [
@@ -434,8 +441,7 @@ namespace x\comment {
                 'class' => 'comment-tasks'
             ]
         ];
-        $k = $page->state['x']['comment'] ?? $state->x->comment->page->state->x->comment ?? 1;
-        if ($deep < ($state->x->comment->page->deep ?? 0) && (1 === $k || true === $k)) {
+        if ($deep < ($state->x->comment->page->deep ?? 0) && (1 === $status || true === $status)) {
             $id = $comment->name;
             $out[1]['reply'] = [
                 0 => 'li',
@@ -445,9 +451,9 @@ namespace x\comment {
                         1 => \i('Reply'),
                         2 => [
                             'class' => 'js:reply',
-                            'href' => $url->query([
+                            'href' => \To::query(\array_replace($_GET, [
                                 'parent' => $id
-                            ]) . '#comment',
+                            ])) . '#comment',
                             'rel' => 'nofollow',
                             'title' => \To::text(\i('Reply to %s', (string) $comment->author))
                         ]
@@ -455,11 +461,10 @@ namespace x\comment {
                 ]
             ];
         }
-        return $out;
+        return \Hook::fire('y.comment-tasks', [$out, $data], $comment);
     }
     function y__comments(array $data) {
         \extract($data, \EXTR_SKIP);
-        \extract($GLOBALS, \EXTR_SKIP);
         return \Hook::fire('y.comments', [[
             0 => 'section',
             1 => [
@@ -474,7 +479,8 @@ namespace x\comment {
         ], $data], $page);
     }
     function y__comments_body(array $data) {
-        return [
+        \extract($data, \EXTR_SKIP);
+        return \Hook::fire('y.comments-body', [[
             0 => 'div',
             1 => [
                 'content' => \x\comment\y__comments_content($data)
@@ -482,7 +488,7 @@ namespace x\comment {
             2 => [
                 'class' => 'comments-body'
             ]
-        ];
+        ], $data], $page);
     }
     function y__comments_content(array $data) {
         \extract($data, \EXTR_SKIP);
@@ -511,13 +517,13 @@ namespace x\comment {
                 ]
             ];
         }
-        return $out;
+        return \Hook::fire('y.comments-content', [$out, $data], $page);
     }
     function y__comments_footer(array $data) {
         \extract($data, \EXTR_SKIP);
         $pager = \x\comment\y__comments_pager($data);
         $tasks = \x\comment\y__comments_tasks($data);
-        return [
+        return \Hook::fire('y.comments-footer', [[
             0 => 'footer',
             1 => [
                 'pager' => !empty($pager[1]) ? $pager : null,
@@ -533,11 +539,11 @@ namespace x\comment {
             2 => [
                 'class' => 'comments-footer'
             ]
-        ];
+        ], $data], $page);
     }
     function y__comments_header(array $data) {
         \extract($data, \EXTR_SKIP);
-        return [
+        return \Hook::fire('y.comments-header', [[
             0 => 'header',
             1 => [
                 'title' => [
@@ -548,13 +554,13 @@ namespace x\comment {
             2 => [
                 'class' => 'comments-header'
             ]
-        ];
+        ], $data], $page);
     }
     function y__comments_pager(array $data) {
         \extract($data, \EXTR_SKIP);
-        \extract($GLOBALS, \EXTR_SKIP);
+        $out = [];
         if ($chunk && $count > $chunk) {
-            return [
+            $out = [
                 0 => 'nav',
                 1 => (static function ($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
                     $start = 1;
@@ -666,10 +672,10 @@ namespace x\comment {
                         ];
                     }
                     return $out;
-                })($part, $count, $chunk, 2, static function ($i) use ($c, $max, $page, $url) {
-                    return $page->url . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . $url->query([
+                })($part, $count, $chunk, 2, static function ($i) use ($c, $max, $page) {
+                    return $page->url . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . \To::query(\array_replace($_GET, [
                         'parent' => null
-                    ]) . '#comments';
+                    ])) . '#comments';
                 }, 'First', 'Previous', 'Next', 'Last'),
                 2 => [
                     'class' => 'comments-pager'
@@ -677,7 +683,7 @@ namespace x\comment {
             ];
         }
         if ($part > 1) {
-            return [
+            $out = [
                 0 => 'p',
                 1 => \i('No more %s to load.', ['comments']),
                 2 => [
@@ -685,21 +691,23 @@ namespace x\comment {
                 ]
             ];
         }
-        return null;
+        return \Hook::fire('y.comments-pager', [$out, $data], $page);
     }
     function y__comments_tasks(array $data) {
-        return [
+        \extract($data, \EXTR_SKIP);
+        return \Hook::fire('y.comments-tasks', [[
             0 => 'ul',
             1 => [],
             2 => [
                 'class' => 'comments-tasks'
             ]
-        ];
+        ], $data], $page);
     }
     function y__form__comment(array $data) {
         \extract($data, \EXTR_SKIP);
-        \extract($GLOBALS, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
+        $host = $_SERVER['HTTP_HOST'];
+        $protocol = 'http' . (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || 443 === ((int) $_SERVER['SERVER_PORT']) ? 's' : "") . '://';
         return \Hook::fire('y.form.comment', [[
             0 => 'form',
             1 => [
@@ -763,7 +771,7 @@ namespace x\comment {
                                         'maxlength' => $guard->max->email ?? null,
                                         'minlength' => $guard->min->email ?? null,
                                         'name' => 'comment[email]',
-                                        'placeholder' => \S . \i('hello') . \S . '@' . \S . $url->host . \S,
+                                        'placeholder' => \S . \i('hello') . \S . '@' . \S . $host . \S,
                                         'required' => true,
                                         'type' => 'email'
                                     ]
@@ -797,7 +805,7 @@ namespace x\comment {
                                         'maxlength' => $guard->max->link ?? null,
                                         'minlength' => $guard->min->link ?? null,
                                         'name' => 'comment[link]',
-                                        'placeholder' => \S . $url->protocol . \S . $url->host . \S,
+                                        'placeholder' => \S . $protocol . \S . $host . \S,
                                         'type' => 'url'
                                     ]
                                 ]
@@ -866,9 +874,9 @@ namespace x\comment {
                                     1 => \i('Cancel'),
                                     2 => [
                                         'class' => 'js:cancel',
-                                        'href' => $url->current([
+                                        'href' => \To::query(\array_replace($_GET, [
                                             'parent' => null
-                                        ], 'comment'),
+                                        ])) . '#comment',
                                         'role' => 'button'
                                     ]
                                 ] : null
@@ -900,8 +908,8 @@ namespace x\comment {
             ],
             2 => [
                 'action' => \strtr($page->url, [
-                    $url . '/' => $url . '/' . \trim($state->x->comment->route ?? 'comment', '/') . '/'
-                ]) . $url->query([
+                    '://' . $host . '/' => '://' . $host . '/' . \trim($state->x->comment->route ?? 'comment', '/') . '/'
+                ]) . \To::query($_GET, [
                     'parent' => null
                 ]),
                 'class' => 'form-comment' . ($parent ? ' is:reply' : ""),
@@ -913,14 +921,5 @@ namespace x\comment {
     }
     if (\class_exists("\\Layout")) {
         !\Layout::path('comments') && \Layout::set('comments', __DIR__ . \D . 'engine' . \D . 'y' . \D . 'comments.php');
-    }
-}
-
-namespace {
-    function comment(...$lot) {
-        return \Comment::from(...$lot);
-    }
-    function comments(...$lot) {
-        return \Comments::from(...$lot);
     }
 }
