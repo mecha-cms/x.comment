@@ -271,16 +271,16 @@ namespace x\comment {
     }
     \Hook::set('route.comment', __NAMESPACE__ . "\\route__comment", 100);
     \Hook::set('route.page', __NAMESPACE__ . "\\route__page", 90);
-    function y__comment(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comment(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         $out = [
             0 => 'article',
             1 => [
-                'figure' => \x\comment\y__comment_figure($data),
-                'header' => \x\comment\y__comment_header($data),
-                'body' => \x\comment\y__comment_body($data),
-                'form' => (1 === $status || true === $status) && $parent && $parent->name === $comment->name ? \x\comment\y__form__comment($data) : null,
-                'footer' => \x\comment\y__comment_footer($data),
+                'figure' => \x\comment\y__comment_figure($lot) ?: null,
+                'header' => \x\comment\y__comment_header($lot) ?: null,
+                'body' => \x\comment\y__comment_body($lot) ?: null,
+                'form' => (1 === $status || true === $status) && $parent && $parent->name === $comment->name ? \x\comment\y__form__comment($lot) : null,
+                'footer' => \x\comment\y__comment_footer($lot) ?: null,
                 'comments' => null
             ],
             2 => [
@@ -304,134 +304,141 @@ namespace x\comment {
                 ]
             ];
             foreach ($comment->comments($count) as $v) {
-                $out[1]['comments'][1][$v->path] = \x\comment\y__comment(\array_replace_recursive($data, [
+                $out[1]['comments'][1][$v->path] = \x\comment\y__comment(\array_replace_recursive($lot, [
                     'comment' => $v,
                     'deep' => $deep + 1
-                ]));
+                ])) ?: null;
             }
         }
-        return \Hook::fire('y.comment', [$out, $data], $comment);
+        return \Hook::fire('y.comment', [$out, $lot], $comment);
     }
-    function y__comment_avatar(array $data) {
-        \extract($data, \EXTR_SKIP);
-        return \Hook::fire('y.comment-avatar', [[
+    function y__comment_author(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        return \Hook::fire('y.comment-author', [[
+            0 => 'h4',
+            1 => [
+                'link' => [
+                    0 => ($link = $comment->link) ? 'a' : 'span',
+                    1 => (string) $comment->author,
+                    2 => [
+                        'class' => 'comment-link',
+                        'href' => $link,
+                        'rel' => $link ? 'nofollow' : null,
+                        'target' => $link ? '_blank' : null
+                    ]
+                ]
+            ],
+            2 => [
+                'class' => 'comment-author'
+            ]
+        ], $lot], $comment);
+    }
+    function y__comment_avatar(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        $avatar = $comment->avatar(100, 100, 100);
+        return \Hook::fire('y.comment-avatar', [$avatar ? [
             0 => 'img',
             1 => false,
             2 => [
                 'alt' => "",
                 'class' => 'comment-avatar',
                 'height' => 100,
-                'src' => $data['avatar'],
+                'src' => $avatar,
                 'width' => 100
             ]
-        ], $data], $comment);
+        ] : [], $lot], $comment);
     }
-    function y__comment_body(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comment_body(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comment-body', [[
             0 => 'div',
             1 => [
-                'content' => \x\comment\y__comment_content($data)
+                'content' => \x\comment\y__comment_content($lot) ?: null
             ],
             2 => [
                 'class' => 'comment-body'
             ]
-        ], $data], $comment);
+        ], $lot], $comment);
     }
-    function y__comment_content(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comment_content(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comment-content', [[
             0 => 'div',
             1 => $comment->content,
             2 => [
                 'class' => 'comment-content'
             ]
-        ], $data], $comment);
+        ], $lot], $comment);
     }
-    function y__comment_figure(array $data) {
-        \extract($data, \EXTR_SKIP);
-        $avatar = $comment->avatar(100, 100, 100);
+    function y__comment_figure(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        $avatar = \x\comment\y__comment_avatar($lot) ?: null;
         return \Hook::fire('y.comment-figure', [$avatar ? [
             0 => 'figure',
             1 => [
-                'avatar' => \x\comment\y__comment_avatar(\array_replace_recursive($data, [
-                    'avatar' => $avatar
-                ]))
+                'avatar' => $avatar
             ],
             2 => [
                 'class' => 'comment-figure'
             ]
-        ] : [], $data], $comment);
+        ] : [], $lot], $comment);
     }
-    function y__comment_footer(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comment_footer(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comment-footer', [[
             0 => 'footer',
             1 => [
-                'tasks' => \x\comment\y__comment_tasks($data)
+                'tasks' => \x\comment\y__comment_tasks($lot) ?: null
             ],
             2 => [
                 'class' => 'comment-footer'
             ]
-        ], $data], $comment);
+        ], $lot], $comment);
     }
-    function y__comment_header(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comment_header(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comment-header', [[
             0 => 'header',
             1 => [
-                'author' => [
-                    0 => 'h4',
-                    1 => [
-                        'link' => [
-                            0 => ($link = $comment->link) ? 'a' : 'span',
-                            1 => (string) $comment->author,
-                            2 => [
-                                'class' => 'comment-link',
-                                'href' => $link,
-                                'rel' => $link ? 'nofollow' : null,
-                                'target' => $link ? '_blank' : null
-                            ]
-                        ]
-                    ],
-                    2 => [
-                        'class' => 'comment-author'
-                    ]
-                ],
-                'meta' => [
-                    0 => 'p',
-                    1 => [
-                        'time' => [
-                            0 => 'time',
-                            1 => $comment->time('%A, %B %d, %Y %I:%M %p'),
-                            2 => [
-                                'class' => 'comment-time',
-                                'datetime' => $comment->time->format('c')
-                            ]
-                        ],
-                        'space' => '&#x20;',
-                        'url' => [
-                            0 => 'a',
-                            1 => "",
-                            2 => [
-                                'class' => 'comment-url',
-                                'href' => '#comment:' . $comment->id,
-                                'rel' => 'nofollow'
-                            ]
-                        ]
-                    ],
-                    2 => [
-                        'class' => 'comment-meta'
-                    ]
-                ]
+                'author' => \x\comment\y__comment_author($lot) ?: null,
+                'meta' => \x\comment\y__comment_meta($lot) ?: null
             ],
             2 => [
                 'class' => 'comment-header'
             ]
-        ], $data], $comment);
+        ], $lot], $comment);
     }
-    function y__comment_tasks(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comment_meta(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        return \Hook::fire('y.comment-meta', [[
+            0 => 'p',
+            1 => [
+                'time' => [
+                    0 => 'time',
+                    1 => $comment->time('%A, %B %d, %Y %I:%M %p'),
+                    2 => [
+                        'class' => 'comment-time',
+                        'datetime' => $comment->time->format('c')
+                    ]
+                ],
+                'space' => '&#x20;',
+                'url' => [
+                    0 => 'a',
+                    1 => "",
+                    2 => [
+                        'class' => 'comment-url',
+                        'href' => '#comment:' . $comment->id,
+                        'rel' => 'nofollow'
+                    ]
+                ]
+            ],
+            2 => [
+                'class' => 'comment-meta'
+            ]
+        ], $lot], $comment);
+    }
+    function y__comment_tasks(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         $out = [
             0 => 'ul',
             1 => [
@@ -461,37 +468,37 @@ namespace x\comment {
                 ]
             ];
         }
-        return \Hook::fire('y.comment-tasks', [$out, $data], $comment);
+        return \Hook::fire('y.comment-tasks', [$out, $lot], $comment);
     }
-    function y__comments(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comments(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comments', [[
             0 => 'section',
             1 => [
-                'header' => \x\comment\y__comments_header($data),
-                'body' => \x\comment\y__comments_body($data),
-                'footer' => \x\comment\y__comments_footer($data)
+                'header' => \x\comment\y__comments_header($lot) ?: null,
+                'body' => \x\comment\y__comments_body($lot) ?: null,
+                'footer' => \x\comment\y__comments_footer($lot) ?: null
             ],
             2 => [
                 'class' => 'comments status:' . $k,
                 'id' => 'comments'
             ]
-        ], $data], $page);
+        ], $lot], $page);
     }
-    function y__comments_body(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comments_body(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comments-body', [[
             0 => 'div',
             1 => [
-                'content' => \x\comment\y__comments_content($data)
+                'content' => \x\comment\y__comments_content($lot) ?: null
             ],
             2 => [
                 'class' => 'comments-body'
             ]
-        ], $data], $page);
+        ], $lot], $page);
     }
-    function y__comments_content(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comments_content(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         $out = [
             0 => 'section',
             1 => [],
@@ -503,10 +510,10 @@ namespace x\comment {
         ];
         if ($count > 0) {
             foreach ($page->comments($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
-                $out[1][$comment->path] = \x\comment\y__comment(\array_replace_recursive($data, [
+                $out[1][$comment->path] = \x\comment\y__comment(\array_replace_recursive($lot, [
                     'comment' => $comment,
                     'deep' => 0
-                ]));
+                ])) ?: null;
             }
         } else {
             $out[1][] = [
@@ -517,18 +524,18 @@ namespace x\comment {
                 ]
             ];
         }
-        return \Hook::fire('y.comments-content', [$out, $data], $page);
+        return \Hook::fire('y.comments-content', [$out, $lot], $page);
     }
-    function y__comments_footer(array $data) {
-        \extract($data, \EXTR_SKIP);
-        $pager = \x\comment\y__comments_pager($data);
-        $tasks = \x\comment\y__comments_tasks($data);
+    function y__comments_footer(array $lot) {
+        \extract($lot, \EXTR_SKIP);
+        $pager = \x\comment\y__comments_pager($lot) ?: null;
+        $tasks = \x\comment\y__comments_tasks($lot) ?: null;
         return \Hook::fire('y.comments-footer', [[
             0 => 'footer',
             1 => [
                 'pager' => !empty($pager[1]) ? $pager : null,
                 'tasks' => !empty($tasks[1]) ? $tasks : null,
-                'form' => $status && 2 !== $status ? ($parent ? null : \x\comment\y__form__comment($data)) : [
+                'form' => $status && 2 !== $status ? ($parent ? null : (\x\comment\y__form__comment($lot) ?: null)) : [
                     0 => 'p',
                     1 => \i('%s are closed.', ['Comments']),
                     2 => [
@@ -539,10 +546,10 @@ namespace x\comment {
             2 => [
                 'class' => 'comments-footer'
             ]
-        ], $data], $page);
+        ], $lot], $page);
     }
-    function y__comments_header(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comments_header(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comments-header', [[
             0 => 'header',
             1 => [
@@ -554,10 +561,10 @@ namespace x\comment {
             2 => [
                 'class' => 'comments-header'
             ]
-        ], $data], $page);
+        ], $lot], $page);
     }
-    function y__comments_pager(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comments_pager(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         $out = [];
         if ($chunk && $count > $chunk) {
             $out = [
@@ -691,20 +698,20 @@ namespace x\comment {
                 ]
             ];
         }
-        return \Hook::fire('y.comments-pager', [$out, $data], $page);
+        return \Hook::fire('y.comments-pager', [$out, $lot], $page);
     }
-    function y__comments_tasks(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__comments_tasks(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         return \Hook::fire('y.comments-tasks', [[
             0 => 'ul',
             1 => [],
             2 => [
                 'class' => 'comments-tasks'
             ]
-        ], $data], $page);
+        ], $lot], $page);
     }
-    function y__form__comment(array $data) {
-        \extract($data, \EXTR_SKIP);
+    function y__form__comment(array $lot) {
+        \extract($lot, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
         $host = $_SERVER['HTTP_HOST'];
         $protocol = 'http' . (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || 443 === ((int) $_SERVER['SERVER_PORT']) ? 's' : "") . '://';
@@ -917,7 +924,7 @@ namespace x\comment {
                 'method' => 'post',
                 'name' => 'comment'
             ]
-        ]], $page);
+        ], $lot], $page);
     }
     if (\class_exists("\\Layout")) {
         !\Layout::path('comments') && \Layout::set('comments', __DIR__ . \D . 'engine' . \D . 'y' . \D . 'comments.php');
