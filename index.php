@@ -636,7 +636,7 @@ namespace x\comment {
                                 0 => 'a',
                                 1 => (string) $i,
                                 2 => [
-                                    'aria-current' => $current === $i ? 'page' : null,
+                                    'aria-current' => $current === $i ? 'step' : null,
                                     'href' => $current === $i ? null : $fn($i),
                                     'rel' => $current >= $i ? 'prev' : 'next',
                                     'title' => \i('Go to comments %d.' . ($current === $i ? ' (you are here)' : ""), [$i])
