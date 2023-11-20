@@ -600,7 +600,7 @@ namespace x\comment {
                                         'aria-disabled' => $current === $start ? 'true' : null,
                                         'href' => $current === $start ? null : $fn($current - 1),
                                         'rel' => $current === $start ? null : 'prev',
-                                        'title' => \i('Go to the %s comments.', [\l($prev)])
+                                        'title' => \i('Go to the %s comments', [\l($prev)])
                                     ]
                                 ]
                             ]
@@ -618,7 +618,7 @@ namespace x\comment {
                                 2 => [
                                     'href' => $fn($start),
                                     'rel' => 'prev',
-                                    'title' => \i('Go to the %s comments.', [\l($first)])
+                                    'title' => \i('Go to the %s comments', [\l($first)])
                                 ]
                             ];
                             if ($min > $start + 1) {
@@ -639,7 +639,7 @@ namespace x\comment {
                                     'aria-current' => $current === $i ? 'step' : null,
                                     'href' => $current === $i ? null : $fn($i),
                                     'rel' => $current >= $i ? 'prev' : 'next',
-                                    'title' => \i('Go to comments %d.' . ($current === $i ? ' (you are here)' : ""), [$i])
+                                    'title' => \i('Go to comments %d' . ($current === $i ? ' (you are here)' : ""), [$i])
                                 ]
                             ];
                         }
@@ -659,7 +659,7 @@ namespace x\comment {
                                 2 => [
                                     'href' => $fn($end),
                                     'rel' => 'next',
-                                    'title' => \i('Go to the %s comments.', [\l($last)])
+                                    'title' => \i('Go to the %s comments', [\l($last)])
                                 ]
                             ];
                         }
@@ -675,7 +675,7 @@ namespace x\comment {
                                         'aria-disabled' => $current === $end ? 'true' : null,
                                         'href' => $current === $end ? null : $fn($current + 1),
                                         'rel' => $current === $end ? null : 'next',
-                                        'title' => \i('Go to the %s comments.', [\l($next)])
+                                        'title' => \i('Go to the %s comments', [\l($next)])
                                     ]
                                 ]
                             ]
