@@ -3,7 +3,7 @@
   "license": "GPL-3.0-or-later",
   "name": "mecha-cms/x.comment",
   "require": {
-    "mecha-cms/x.alert": "^2.0.0",
+    "mecha-cms/x.alert": "^3.0.0",
     "mecha-cms/x.asset": "^2.0.0",
     "mecha-cms/x.page": "^3.0.0"
   },
