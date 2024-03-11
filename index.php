@@ -9,6 +9,7 @@ namespace {
     }
     if (\class_exists("\\Layout") && !\Layout::of('comments')) {
         \Layout::set('comments', static function ($key, array $lot = []) {
+            \extract($lot, \EXTR_SKIP);
             \extract($GLOBALS, \EXTR_SKIP);
             $any = \P . \uniqid() . \P; // Dummy value
             $c = \State::get('x.comment', true);
