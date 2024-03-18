@@ -9,8 +9,7 @@ namespace {
     }
     if (\class_exists("\\Layout") && !\Layout::of('comments')) {
         \Layout::set('comments', static function ($key, array $lot = []) {
-            \extract($lot, \EXTR_SKIP);
-            \extract($GLOBALS, \EXTR_SKIP);
+            \extract(\lot($lot), \EXTR_SKIP);
             $any = \P . \uniqid() . \P; // Dummy value
             $c = \State::get('x.comment', true);
             $chunk = $c['page']['chunk'] ?? null;
@@ -104,7 +103,7 @@ namespace x\comment {
         if (!\class_exists("\\Asset")) {
             return $content;
         }
-        \extract($GLOBALS, \EXTR_SKIP);
+        \extract(\lot(), \EXTR_SKIP);
         if (!$state->is('page')) {
             return $content;
         }
@@ -122,7 +121,7 @@ namespace x\comment {
     // Set the comment state as quickly as possible, but as close as possible to the response body
     \Hook::set('content', __NAMESPACE__ . "\\content", -1);
     function route__comment($content, $path, $query) {
-        \extract($GLOBALS, \EXTR_SKIP);
+        \extract(\lot(), \EXTR_SKIP);
         $can_alert = \class_exists("\\Alert");
         $path = \trim($path ?? "", '/');
         $active = isset($state->x->user) && \Is::user();
@@ -291,7 +290,7 @@ namespace x\comment {
         \kick('/' . $path . $query . '#comment');
     }
     function route__page($content, $path, $query, $hash) {
-        \extract($GLOBALS, \EXTR_SKIP);
+        \extract(\lot(), \EXTR_SKIP);
         $path = \trim($path ?? $state->route ?? 'index', '/');
         $route = \trim($state->x->comment->route ?? 'comment', '/');
         // `/comment/article/lorem-ipsum`
