@@ -751,7 +751,7 @@ namespace x\comment {
                 ]
             ];
         }
-        if ($part > 1) {
+        if ($part > $max) {
             $out = [
                 0 => 'p',
                 1 => \i('No more %s to load.', ['comments']),
