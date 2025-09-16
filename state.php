@@ -20,11 +20,14 @@ return [
         'chunk' => 50,
         // Set to `0` to disable comment thread, `1` or more to enable comment thread
         'deep' => 2,
+        // Sort comment(s) by the `time` data in ascending order
+        'sort' => [1, 'time'],
         // Default comment type
         'type' => 'HTML',
         // Default file extension for new comment (`draft` to save/moderate the comment and `page` to publish the comment immediately)
         'x' => 'page'
     ],
     'route' => '/comment',
-    'status' => 1 // The comment(s)’ visibility (`0` or `false` means “disable comment(s)”, `1` or `true` means “enable comment(s)”, `2` means “close comment(s)”)
+    // The comment(s)’ visibility (`0` or `false` means “disable comment(s)”, `1` or `true` means “enable comment(s)”, `2` means “close comment(s)”)
+    'status' => 1
 ];

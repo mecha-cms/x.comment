@@ -40,22 +40,15 @@ class Comment extends Page {
     }
 
     public function comments(int $chunk = 100, int $i = 0) {
-        $comments = [];
-        $count = 0;
         if ($path = $this->path) {
-            foreach (g(dirname($path), 'page') as $k => $v) {
-                $comment = new static($k);
-                $parent = $comment->parent();
-                if ($parent && $path === $parent->path) {
-                    $comments[] = $k;
-                    ++$count; // Count comment(s), filter by `parent` property
-                }
-                unset($comment);
-            }
-            sort($comments);
+            $comments = Comments::from(dirname($path), 'page')->is(function ($v) use ($path) {
+                return ($parent = $v->parent()) && $path === $parent->path;
+            })->sort($this->sort)->chunk($chunk, $i);
+            $comments->title = i(0 === ($count = $comments->count) ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);
+            return $comments;
         }
-        $comments = (new Comments($comments))->chunk($chunk, $i);
-        $comments->title = i(0 === $count ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);
+        $comments = new Comments;
+        $comments->title = i('0 Replies');
         return $comments;
     }
 

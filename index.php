@@ -631,7 +631,7 @@ namespace x\comment {
         if ($chunk && $count > $chunk) {
             $out = [
                 0 => 'nav',
-                1 => (static function ($current, $count, $chunk, $peek, $fn, $first, $prev, $next, $last) {
+                1 => (static function ($current, $count, $chunk, $peek, $to, $first, $prev, $next, $last) {
                     $start = 1;
                     $end = (int) \ceil($count / $chunk);
                     $out = [];
@@ -657,7 +657,7 @@ namespace x\comment {
                                     1 => $prev,
                                     2 => [
                                         'aria-disabled' => $current === $start ? 'true' : null,
-                                        'href' => $current === $start ? null : $fn($current - 1),
+                                        'href' => $current === $start ? null : $to($current - 1),
                                         'rel' => $current === $start ? null : 'prev',
                                         'title' => \i('Go to the %s comments', [\l($prev)])
                                     ]
@@ -675,7 +675,7 @@ namespace x\comment {
                                 0 => 'a',
                                 1 => (string) $start,
                                 2 => [
-                                    'href' => $fn($start),
+                                    'href' => $to($start),
                                     'rel' => 'prev',
                                     'title' => \i('Go to the %s comments', [\l($first)])
                                 ]
@@ -696,7 +696,7 @@ namespace x\comment {
                                 1 => (string) $i,
                                 2 => [
                                     'aria-current' => $current === $i ? 'step' : null,
-                                    'href' => $current === $i ? null : $fn($i),
+                                    'href' => $current === $i ? null : $to($i),
                                     'rel' => $current >= $i ? 'prev' : 'next',
                                     'title' => \i('Go to comments %d' . ($current === $i ? ' (you are here)' : ""), [$i])
                                 ]
@@ -716,7 +716,7 @@ namespace x\comment {
                                 0 => 'a',
                                 1 => (string) $end,
                                 2 => [
-                                    'href' => $fn($end),
+                                    'href' => $to($end),
                                     'rel' => 'next',
                                     'title' => \i('Go to the %s comments', [\l($last)])
                                 ]
@@ -732,7 +732,7 @@ namespace x\comment {
                                     1 => $next,
                                     2 => [
                                         'aria-disabled' => $current === $end ? 'true' : null,
-                                        'href' => $current === $end ? null : $fn($current + 1),
+                                        'href' => $current === $end ? null : $to($current + 1),
                                         'rel' => $current === $end ? null : 'next',
                                         'title' => \i('Go to the %s comments', [\l($next)])
                                     ]
