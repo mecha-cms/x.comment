@@ -39,11 +39,11 @@ class Comment extends Page {
         return parent::URL(...$lot);
     }
 
-    public function comments(int $chunk = 100, int $i = 0) {
+    public function comments() {
         if ($path = $this->path) {
             $comments = Comments::from(dirname($path), 'page')->is(function ($v) use ($path) {
                 return ($parent = $v->parent()) && $path === $parent->path;
-            })->sort($this->sort)->chunk($chunk, $i);
+            });
             $comments->title = i(0 === ($count = $comments->count) ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);
             return $comments;
         }

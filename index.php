@@ -13,11 +13,12 @@ namespace {
             $any = \P . \uniqid() . \P; // Dummy value
             $c = \State::get('x.comment', true);
             $chunk = $c['page']['chunk'] ?? null;
-            $count = $page->comments ? $page->comments->count() : 0;
+            $count = $page->comments->count();
             $parent = $_GET['parent'] ?? null;
-            $status = $page->state['x']['comment'] ?? $c['status'] ?? $lot[0] ?? $any;
             $path = \trim($url->path ?? "", '/');
             $route = \trim($c['route'] ?? 'comment', '/');
+            $sort = \array_replace([1, 'path'], (array) ($c['page']['sort'] ?? []));
+            $status = $page->state['x']['comment'] ?? $c['status'] ?? $lot[0] ?? $any;
             // Calculate last page offset
             $max = (int) \ceil($count / ($chunk ?? $count));
             // Show last page by default if page offset is not available in URL
@@ -60,6 +61,7 @@ namespace {
                     'page' => $page,
                     'parent' => $parent,
                     'part' => $part,
+                    'sort' => $sort,
                     'state' => $state,
                     'status' => $any === $status ? 1 : $status
                 ]), true);
@@ -110,11 +112,10 @@ namespace x\comment {
         $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
         \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
         \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
-        $comments = $page->comments ? $page->comments->count() : 0;
         $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
         \State::set([
             'can' => ['comment' => 1 === $open],
-            'has' => ['comments' => !!$comments]
+            'has' => ['comments' => !!$page->comments->count()]
         ]);
         return $content;
     }
@@ -355,7 +356,7 @@ namespace x\comment {
             'self' => $comment->name,
             'status' => $comment->status
         ];
-        if ($deep < ($c['page']['deep'] ?? 0) && ($count = $comment->comments->count() ?? 0)) {
+        if ($deep < ($c['page']['deep'] ?? 0) && ($comment->comments->count() ?? 0)) {
             $out[1]['comments'] = [
                 0 => 'section',
                 1 => [],
@@ -365,7 +366,7 @@ namespace x\comment {
                     'id' => 'comments:' . $comment->id
                 ]
             ];
-            foreach ($comment->comments($count) as $v) {
+            foreach ($comment->comments->sort($sort) as $v) {
                 $out[1]['comments'][1][$v->path] = \x\comment\y__comment(\array_replace_recursive($lot, [
                     'comment' => $v,
                     'deep' => $deep + 1
@@ -571,7 +572,7 @@ namespace x\comment {
             ]
         ];
         if ($count > 0) {
-            foreach ($page->comments($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
+            foreach ($page->comments->sort($sort)->chunk($chunk ?? $count, ($part ?? (int) \ceil($count / ($chunk ?? $count))) - 1) as $comment) {
                 $out[1][$comment->path] = \x\comment\y__comment(\array_replace_recursive($lot, [
                     'comment' => $comment,
                     'deep' => 0
