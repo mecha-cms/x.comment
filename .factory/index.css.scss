@@ -70,11 +70,6 @@
     gap: 0 1rem;
     justify-content: space-between;
   }
-  &-status {
-    &\:-1 {
-      opacity: 0.5;
-    }
-  }
   &-tasks {
     align-content: center;
     display: flex;
@@ -85,6 +80,9 @@
       content: '#';
     }
   }
+  &[data-status='-1'] {
+    opacity: 0.5;
+  }
   .comments,
   + .comment {
     margin-top: 1.5rem;
@@ -93,7 +91,7 @@
     + .comment-footer {
       display: none;
     }
-    .js\:cancel {
+    [data-task='cancel'] {
       display: inline-block;
     }
   }
@@ -189,7 +187,7 @@
       }
     }
   }
-  .js\:cancel {
+  [data-task='cancel'] {
     display: none;
   }
 }

@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@taufik-nurrohman/document": "*",
-    "@taufik-nurrohman/event": "*"
+    "@taufik-nurrohman/document": "^1.5.3",
+    "@taufik-nurrohman/event": "^1.0.1"
   },
   "devDependencies": {
-    "@taufik-nurrohman/factory": "*"
+    "@taufik-nurrohman/factory": "^2.3.1"
   },
   "private": true,
   "scripts": {

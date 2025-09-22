@@ -1,18 +1,13 @@
 import {
     D,
-    W,
-    getAttribute,
+    getDatum,
     getElement,
-    getElements,
     getFormElement,
     getParent,
-    letAttribute,
     letClass,
-    setAttribute,
     setChildLast,
     setClass,
-    setPrev,
-    theLocation
+    setPrev
 } from '@taufik-nurrohman/document';
 
 import {
@@ -20,46 +15,82 @@ import {
     onEvent
 } from '@taufik-nurrohman/event';
 
-const form = getFormElement('comment');
-
-if (form) {
-    let footer = getParent(form),
-        comments = getParent(footer),
-        q = theLocation.search,
-        content = form['comment[content]'],
-        parent = form['comment[parent]'],
-        placeholder = getAttribute(content, 'placeholder'),
-        test = /(?:\?|&(?:amp;)?)parent(?:=([1-9]\d{3,}-(?:0\d|1[0-2])-(?:0\d|[1-2]\d|3[0-1])(?:-(?:[0-1]\d|2[0-4])(?:-(?:[0-5]\d|60)){2}))?|&)/g;
-    q = !q || !q.match(test);
-    function onEventCancel(a) {
-        onEvent('click', a, function (e) {
-            setChildLast(footer, form);
-            setAttribute(form, 'action', getAttribute(form, 'action').replace(test, ""));
-            letClass(form, 'is:reply');
-            setAttribute(content, 'placeholder', placeholder);
-            content.focus();
-            parent && (letAttribute(parent, 'value'));
-            offEventDefault(e);
-        })
-    }
-    function onEventReply(a) {
-        onEvent('click', a, function (e) {
-            // `a < li < ul.comment-tasks < footer.comment-footer`
-            let s = getParent(getParent(getParent(this))),
-                a = getAttribute(form, 'action'),
-                i = test.exec(this.href);
-            i = i ? i[1] : "";
-            setPrev(s, form);
-            a = a.replace(test, "");
-            a += (a.indexOf('?') > -1 ? '&' : '?') + 'parent=' + i;
-            setAttribute(content, 'placeholder', this.title);
-            setAttribute(form, 'action', a);
-            setClass(form, 'is:reply');
-            content.focus();
-            parent && (parent.value = i);
-            offEventDefault(e);
-        });
-    }
-    q && getElements('.js\\:cancel', comments).forEach(onEventCancel);
-    q && getElements('.js\\:reply', comments).forEach(onEventReply);
+function getParentValueFrom(href) {
+    return u(href).searchParams.get('parent');
 }
+
+function letParentValueFrom(href) {
+    href = u(href);
+    href.searchParams.delete('parent');
+    return href + "";
+}
+
+function onClickCancel(e) {
+    let form = getFormElement('comment');
+    if (!form) {
+        return; // Skip if comment form does not exist!
+    }
+    let $ = getParent(e.target, '[data-task=cancel]'),
+        comments = $ && getParent($, '.comments[data-status]'),
+        commentsFooter = getElement('.comments-footer', comments),
+        formContent = form['comment[content]'],
+        formParent = form['comment[parent]'];
+    if (!$ || !comments.contains($)) {
+        return; // Skip if cancel button does not exist or does exist but outside the root comment(s)’ container!
+    }
+    // Append comment form to the root comment(s)’ footer or to the root comment(s)’ container!
+    setChildLast(commentsFooter || comments, letClass(form, 'in-reply'));
+    form.action = letParentValueFrom(form.action);
+    if (formContent) {
+        formContent.focus();
+        formContent.placeholder = getDatum(formContent, 'hint') || "";
+    }
+    if (formParent) {
+        formParent.value = "";
+    }
+    offEventDefault(e);
+}
+
+function onClickReply(e) {
+    let form = getFormElement('comment');
+    if (!form) {
+        return; // Skip if comment form does not exist!
+    }
+    let $ = getParent(e.target, '[data-task=reply]'),
+        comment = $ && getParent($, '.comment'),
+        commentFooter = getElement('.comment-footer', comment),
+        formContent = form['comment[content]'],
+        formParent = form['comment[parent]'], v;
+    if (!$ || !comment.contains($)) {
+        return; // Skip if reply button does not exist or does exist but outside the comment’s container!
+    }
+    // Insert comment form before the comment’s footer …
+    if (commentFooter) {
+        setPrev(commentFooter, setClass(form, 'in-reply'));
+    // … or append it to the comment’s container!
+    } else {
+        setChildLast(comment, setClass(form, 'in-reply'));
+    }
+    form.action = setParentValueTo(form.action, v = getParentValueFrom($.href));
+    if (formContent) {
+        formContent.focus();
+        formContent.placeholder = $.title;
+    }
+    if (formParent) {
+        formParent.value = v;
+    }
+    offEventDefault(e);
+}
+
+function setParentValueTo(href, v) {
+    href = u(href);
+    href.searchParams.set('parent', v);
+    return href + "";
+}
+
+function u(href) {
+    return new URL(href);
+}
+
+onEvent('click', D, onClickCancel, true);
+onEvent('click', D, onClickReply, true);

@@ -22,9 +22,7 @@ namespace {
             // Calculate last page offset
             $max = (int) \ceil($count / ($chunk ?? $count));
             // Show last page by default if page offset is not available in URL
-            if (false !== \strpos($path, '/' . $route . '/') && \preg_match('/\/' . \x($route) . '\/([1-9]\d*)$/', $path, $m)) {
-                $part = (int) $m[1];
-            } else {
+            if (false !== \strpos($path, '/' . $route . '/') && ($part = \x\page\part($path))) {} else {
                 $part = $max;
             }
             // Comment form is disabled and there are no comment(s)
@@ -115,7 +113,7 @@ namespace x\comment {
         $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
         \State::set([
             'can' => ['comment' => 1 === $open],
-            'has' => ['comments' => !!$page->comments->count()]
+            'has' => ['comments' => $page->comments->count() > 0]
         ]);
         return $content;
     }
@@ -296,20 +294,20 @@ namespace x\comment {
         $route = \trim($state->x->comment->route ?? 'comment', '/');
         // `/comment/article/lorem-ipsum`
         if (0 === \strpos($path, $route . '/')) {
-            if (\preg_match('/^' . \x($route) . '(\/.*)$/', $path, $m)) {
-                return \Hook::fire('route.comment', [$content, $m[1], $query, $hash]);
+            if (\strlen($path) > \strlen($route)) {
+                return \Hook::fire('route.comment', [$content, \substr($path, \strlen($route)), $query, $hash]);
             }
             return $content;
         }
         // `/article/lorem-ipsum/comment/1`
         if (false !== \strpos($path . '/', '/' . $route . '/')) {
-            if (\preg_match('/^(.*?)\/' . \x($route) . '(?:\/[1-9]\d*)$/', $path, $m)) {
-                // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
-                // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
-                // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
-                // going to page `123` which is not what we meant. The comment pagination offset will be taken care of
-                // else-where using the current route value which now contains `/comment/123`.
-                [$any, $path] = $m;
+            // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
+            // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
+            // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
+            // going to page `123` which is not what we meant. The comment pagination offset will be taken care of
+            // else-where using the current route value which now contains `/comment/123`.
+            if ($part = \x\page\part($path)) {
+                $path = \substr($path, 0, -\strlen('/' . $route . '/' . $part));
                 $folder = \LOT . \D . 'page' . \D . \strtr($path, ['/' => \D]);
                 $file = \exist([
                     $folder . '.archive',
@@ -347,7 +345,8 @@ namespace x\comment {
                 'comments' => null
             ],
             2 => [
-                'class' => 'comment comment-status:' . $comment->status,
+                'class' => 'comment',
+                'data-status' => $comment->status,
                 'id' => 'comment:' . $comment->id
             ],
             // These key(s) will be ignored by `HTML` class but can be used by other hook(s) as a reference.
@@ -356,7 +355,7 @@ namespace x\comment {
             'self' => $comment->name,
             'status' => $comment->status
         ];
-        if ($deep < ($c['page']['deep'] ?? 0) && ($comment->comments->count() ?? 0)) {
+        if ($deep < ($c['page']['deep'] ?? 0) && $comment->children && $comment->children->count()) {
             $out[1]['comments'] = [
                 0 => 'section',
                 1 => [],
@@ -366,7 +365,7 @@ namespace x\comment {
                     'id' => 'comments:' . $comment->id
                 ]
             ];
-            foreach ($comment->comments->sort($sort) as $v) {
+            foreach ($comment->children->sort($sort) as $v) {
                 $out[1]['comments'][1][$v->path] = \x\comment\y__comment(\array_replace_recursive($lot, [
                     'comment' => $v,
                     'deep' => $deep + 1
@@ -520,7 +519,7 @@ namespace x\comment {
                         0 => 'a',
                         1 => \i('Reply'),
                         2 => [
-                            'class' => 'js:reply',
+                            'data-task' => 'reply',
                             'href' => \To::query(\array_replace($_GET, [
                                 'parent' => $id
                             ])) . '#comment',
@@ -543,7 +542,8 @@ namespace x\comment {
                 'footer' => \x\comment\y__comments_footer($lot) ?: null
             ],
             2 => [
-                'class' => 'comments status:' . $k,
+                'class' => 'comments',
+                'data-status' => $k,
                 'id' => 'comments'
             ]
         ], $lot], $page);
@@ -904,11 +904,12 @@ namespace x\comment {
                                     0 => 'textarea',
                                     1 => "",
                                     2 => [
+                                        'data-hint' => $hint = \i('Message goes here...'),
                                         'id' => $id,
                                         'maxlength' => $guard->max->content ?? null,
                                         'minlength' => $guard->min->content ?? null,
                                         'name' => 'comment[content]',
-                                        'placeholder' => $parent ? \To::text(\i('Reply to %s', (string) $parent->author)) : \i('Message goes here...'),
+                                        'placeholder' => $parent ? \To::text(\i('Reply to %s', (string) $parent->author)) : $hint,
                                         'required' => true
                                     ]
                                 ]
@@ -943,7 +944,7 @@ namespace x\comment {
                                     0 => 'a',
                                     1 => \i('Cancel'),
                                     2 => [
-                                        'class' => 'js:cancel',
+                                        'data-task' => 'cancel',
                                         'href' => \To::query(\array_replace($_GET, [
                                             'parent' => null
                                         ])) . '#comment',
@@ -982,7 +983,7 @@ namespace x\comment {
                 ]) . \To::query($_GET, [
                     'parent' => null
                 ]),
-                'class' => 'form-comment' . ($parent ? ' is:reply' : ""),
+                'class' => 'form-comment' . ($parent ? ' in-reply' : ""),
                 'id' => 'comment',
                 'method' => 'post',
                 'name' => 'comment'

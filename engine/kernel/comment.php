@@ -6,8 +6,7 @@ class Comment extends Page {
         if (!$this->_exist()) {
             return null;
         }
-        $path = $this['page'] ?? null;
-        if (!is_string($path) || !is_file($path)) {
+        if (!is_string($path = $this->offsetGet('page')) || !is_file($path)) {
             $folder = strtr(dirname($this->path), [LOT . D . 'comment' . D => LOT . D . 'page' . D]);
             if (!$path = exist([
                 $folder . '.archive',
@@ -23,8 +22,7 @@ class Comment extends Page {
         if (!$this->_exist()) {
             return null;
         }
-        $path = $this['parent'] ?? null;
-        if (!is_string($path) || !is_file($path)) {
+        if (!is_string($path = $this->offsetGet('parent')) || !is_file($path)) {
             if (!is_file($path = dirname($this->path) . D . $path . '.page')) {
                 return null;
             }
@@ -39,16 +37,22 @@ class Comment extends Page {
         return parent::URL(...$lot);
     }
 
-    public function comments() {
-        if ($path = $this->path) {
-            $comments = Comments::from(dirname($path), 'page')->is(function ($v) use ($path) {
-                return ($parent = $v->parent()) && $path === $parent->path;
-            });
-            $comments->title = i(0 === ($count = $comments->count) ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);
-            return $comments;
+    public function children($x = 'page', $deep = 0) {
+        if (!$this->_exist()) {
+            return null;
         }
-        $comments = new Comments;
-        $comments->title = i('0 Replies');
+        if ($v = $this->offsetGet('children')) {
+            if (is_array($v) || (is_string($v) && is_dir($v))) {
+                $comments = Comments::from($v, $x, $deep);
+                $comments->title = i(0 === ($count = $comments->count) ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);
+                return $comments;
+            }
+            return null;
+        }
+        $comments = Comments::from(dirname($path = $this->path), $x, $deep)->is(function ($v) use ($path) {
+            return ($parent = $v->parent()) && $path === $parent->path;
+        });
+        $comments->title = i(0 === ($count = $comments->count) ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);
         return $comments;
     }
 

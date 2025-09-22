@@ -12,6 +12,6 @@ Page::_('comments', function () {
     }
     $comments = new Comments;
     $comments->status = (int) ($this->state['x']['comment'] ?? 1);
-    $comments->title = i('0 Replies');
+    $comments->title = i('0 Comments');
     return $comments;
 });

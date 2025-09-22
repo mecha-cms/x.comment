@@ -69,9 +69,6 @@
   gap: 0 1rem;
   justify-content: space-between;
 }
-.comment-status\:-1 {
-  opacity: 0.5;
-}
 .comment-tasks {
   align-content: center;
   display: flex;
@@ -80,6 +77,9 @@
 .comment-url::before {
   content: "#";
 }
+.comment[data-status="-1"] {
+  opacity: 0.5;
+}
 .comment .comments,
 .comment + .comment {
   margin-top: 1.5rem;
@@ -87,7 +87,7 @@
 .comment .form-comment + .comment-footer {
   display: none;
 }
-.comment .form-comment .js\:cancel {
+.comment .form-comment [data-task=cancel] {
   display: inline-block;
 }
 
@@ -143,12 +143,12 @@
   flex-wrap: wrap;
   gap: 0.5em;
 }
+.form-comment > p > label:not([for]) {
+  visibility: hidden;
+}
 .form-comment > p > label {
   max-width: 5rem;
   text-align: right;
-}
-.form-comment > p > label:not([for]) {
-  visibility: hidden;
 }
 .form-comment > p > label + br {
   display: none;
@@ -184,7 +184,7 @@
   display: block;
   margin-top: 0.5rem;
 }
-.form-comment .js\:cancel {
+.form-comment [data-task=cancel] {
   display: none;
 }
 
