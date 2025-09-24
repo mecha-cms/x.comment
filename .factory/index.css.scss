@@ -93,7 +93,7 @@
     + .comment-footer {
       display: none;
     }
-    [data-task='cancel'] {
+    [href$='#comment']:not([href*='&parent='], [href*='?parent=']) {
       display: inline-block;
     }
   }
@@ -189,7 +189,7 @@
       }
     }
   }
-  [data-task='cancel'] {
+  [href$='#comment']:not([href*='&parent='], [href*='?parent=']) {
     display: none;
   }
 }

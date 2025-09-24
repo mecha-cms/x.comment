@@ -89,7 +89,7 @@
 .comment .form-comment + .comment-footer {
   display: none;
 }
-.comment .form-comment [data-task=cancel] {
+.comment .form-comment [href$="#comment"]:not([href*="&parent="], [href*="?parent="]) {
   display: inline-block;
 }
 
@@ -186,7 +186,7 @@
   display: block;
   margin-top: 0.5rem;
 }
-.form-comment [data-task=cancel] {
+.form-comment [href$="#comment"]:not([href*="&parent="], [href*="?parent="]) {
   display: none;
 }
 
