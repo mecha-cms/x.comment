@@ -39,7 +39,7 @@ namespace {
                     // Make sure parent comment exists
                     if (!\is_file($path = \strtr(\dirname($page->path), [\LOT . \D . 'page' . \D => \LOT . \D . 'comment' . \D]) . \D . $page->name . \D . $parent . '.page')) {
                         \class_exists("\\Alert") && \Alert::error('Parent comment does not exist.');
-                        \kick($page->url);
+                        \kick($page->route);
                     }
                     $parent = new \Comment($path);
                 }
@@ -138,7 +138,7 @@ namespace x\comment {
             (array) \a($state->x->page->page ?? []),
             (array) \a($state->x->comment->page ?? [])
         );
-        $data = \array_replace_recursive($data_default, (array) ($_POST['comment'] ?? []));
+        $data = \array_replace_recursive($data_default, (array) ($_POST ?? []));
         if (empty($data['token']) || !\check($data['token'], 'comment')) {
             $can_alert && \Alert::error('Invalid token.');
             \kick('/' . $path . $query . '#comment');
@@ -237,10 +237,10 @@ namespace x\comment {
             ++$error;
         }
         if ($error > 0) {
-            $_SESSION['form']['comment'] = $data;
+            $_SESSION['form'] = $data;
         // Store comment to file
         } else {
-            unset($_SESSION['form']['comment']);
+            unset($_SESSION['form']);
             $folder = \LOT . \D . 'comment' . \D . $path;
             if (!\is_dir($folder)) {
                 \mkdir($folder, 0775, true);
@@ -519,7 +519,6 @@ namespace x\comment {
                         0 => 'a',
                         1 => \i('Reply'),
                         2 => [
-                            'data-task' => 'reply',
                             'href' => \To::query(\array_replace($_GET, [
                                 'parent' => $id
                             ])) . '#comment',
@@ -743,7 +742,7 @@ namespace x\comment {
                     }
                     return $out;
                 })($part, $count, $chunk, 2, static function ($i) use ($c, $max, $page) {
-                    return $page->url . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . \To::query(\array_replace($_GET, [
+                    return $page->route . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . \To::query(\array_replace($_GET, [
                         'parent' => null
                     ])) . '#comments';
                 }, 'First', 'Previous', 'Next', 'Last'),
@@ -806,7 +805,7 @@ namespace x\comment {
                                         'id' => $id,
                                         'maxlength' => $guard->max->author ?? null,
                                         'minlength' => $guard->min->author ?? null,
-                                        'name' => 'comment[author]',
+                                        'name' => 'author',
                                         'placeholder' => \i('Anonymous'),
                                         'required' => true,
                                         'type' => 'text'
@@ -840,7 +839,7 @@ namespace x\comment {
                                         'id' => $id,
                                         'maxlength' => $guard->max->email ?? null,
                                         'minlength' => $guard->min->email ?? null,
-                                        'name' => 'comment[email]',
+                                        'name' => 'email',
                                         'placeholder' => \S . \i('hello') . \S . '@' . \S . $host . \S,
                                         'required' => true,
                                         'type' => 'email'
@@ -874,7 +873,7 @@ namespace x\comment {
                                         'id' => $id,
                                         'maxlength' => $guard->max->link ?? null,
                                         'minlength' => $guard->min->link ?? null,
-                                        'name' => 'comment[link]',
+                                        'name' => 'link',
                                         'placeholder' => \S . $protocol . \S . $host . \S,
                                         'type' => 'url'
                                     ]
@@ -904,12 +903,11 @@ namespace x\comment {
                                     0 => 'textarea',
                                     1 => "",
                                     2 => [
-                                        'data-hint' => $hint = \i('Message goes here...'),
                                         'id' => $id,
                                         'maxlength' => $guard->max->content ?? null,
                                         'minlength' => $guard->min->content ?? null,
-                                        'name' => 'comment[content]',
-                                        'placeholder' => $parent ? \To::text(\i('Reply to %s', (string) $parent->author)) : $hint,
+                                        'name' => 'content',
+                                        'placeholder' => $parent ? \To::text(\i('Reply to %s', (string) $parent->author)) : \i('Message goes here...'),
                                         'required' => true
                                     ]
                                 ]
@@ -944,10 +942,7 @@ namespace x\comment {
                                     0 => 'a',
                                     1 => \i('Cancel'),
                                     2 => [
-                                        'data-task' => 'cancel',
-                                        'href' => \To::query(\array_replace($_GET, [
-                                            'parent' => null
-                                        ])) . '#comment',
+                                        'href' => $page->route . '#comment',
                                         'role' => 'button'
                                     ]
                                 ] : null
@@ -962,7 +957,7 @@ namespace x\comment {
                     0 => 'input',
                     1 => false,
                     2 => [
-                        'name' => 'comment[parent]',
+                        'name' => 'parent',
                         'type' => 'hidden',
                         'value' => $parent ? $parent->name : null
                     ]
@@ -971,16 +966,14 @@ namespace x\comment {
                     0 => 'input',
                     1 => false,
                     2 => [
-                        'name' => 'comment[token]',
+                        'name' => 'token',
                         'type' => 'hidden',
                         'value' => \token('comment')
                     ]
                 ]
             ],
             2 => [
-                'action' => \strtr($page->url, [
-                    '://' . $host . '/' => '://' . $host . '/' . \trim($state->x->comment->route ?? 'comment', '/') . '/'
-                ]) . \To::query($_GET, [
+                'action' => '/' . \trim($state->x->comment->route ?? 'comment', '/') . $page->route . \To::query($_GET, [
                     'parent' => null
                 ]),
                 'class' => 'form-comment' . ($parent ? ' in-reply' : ""),

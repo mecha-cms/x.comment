@@ -49,6 +49,7 @@
   margin-top: 0.5rem;
 }
 .comment-header + .comment-body + .comment-footer + .comments,
+.comment-header + .comment-body + .form-comment,
 .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
   margin-left: 1.5rem;
 }
@@ -60,6 +61,7 @@
 .comment-figure + .comment-header + .comment-body,
 .comment-figure + .comment-header + .comment-body + .comment-footer,
 .comment-figure + .comment-header + .comment-body + .comment-footer + .comments,
+.comment-figure + .comment-header + .comment-body + .form-comment,
 .comment-figure + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
   margin-left: 6.5rem;
 }

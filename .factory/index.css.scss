@@ -49,6 +49,7 @@
   }
   &-header {
     + .comment-body + .comment-footer + .comments,
+    + .comment-body + .form-comment,
     + .comment-body + .form-comment + .comment-footer + .comments {
       margin-left: 1.5rem; // Default comment indent without avatar-related extension
     }
@@ -60,6 +61,7 @@
     + .comment-header + .comment-body,
     + .comment-header + .comment-body + .comment-footer,
     + .comment-header + .comment-body + .comment-footer + .comments,
+    + .comment-header + .comment-body + .form-comment,
     + .comment-header + .comment-body + .form-comment + .comment-footer + .comments {
       margin-left: 6.5rem; // Default comment indent with avatar-related extension
     }
