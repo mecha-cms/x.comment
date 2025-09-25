@@ -162,7 +162,7 @@ namespace x\comment {
             }
         }
         // Replace new line with `<br>` and `<p>` tag(s)
-        return '<p>' . \strtr($r, [
+        return '<p>' . \strtr(\trim($r), [
             "\n\n" => '</p><p>',
             "\n" => '<br>'
         ]) . '</p>';
