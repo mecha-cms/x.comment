@@ -119,6 +119,56 @@ namespace x\comment {
     }
     // Set the comment state as quickly as possible, but as close as possible to the response body
     \Hook::set('content', __NAMESPACE__ . "\\content", -1);
+    function f__comment__author($author) {
+        if (0 === \strpos($author .= "", '@')) {
+            return '@' . \To::kebab($author);
+        }
+        return \To::text($author);
+    }
+    function f__comment__content($content, $data) {
+        // Temporarily disable PHP expression written in the comment body. Why? I don’t know!
+        $content = \strtr($content .= "", [
+            '<?php' => '&lt;?php',
+            '<?=' => '&lt;?=',
+            '?>' => '?&gt;'
+        ]);
+        $r = "";
+        foreach (\apart($content, ['script', 'style', 'textarea']) as $v) {
+            if (-1 === $v[1]) {
+                $r .= $v[0];
+                continue;
+            }
+            if (0 === $v[1]) {
+                $r .= $v[0];
+                continue;
+            }
+            if (1 === $v[1] || 2 === $v[1]) {
+                // Replace potential XSS via HTML attribute(s) into `data-*` attribute(s)
+                $v[0] = \preg_replace('/(\s)on(\w+)=([\'"]?)/', '$1data-on$2=$3', $v[0]);
+                // Replace `javascript:*` value with `javascript:;`
+                $v[0] = \preg_replace([
+                    '/="javascript:[^"]+"/',
+                    '/=\'javascript:[^\']+\'/',
+                    '/=javascript:[^\s\/>]+/'
+                ], '="javascript:;"', $v[0]);
+            }
+            if (false !== \strpos(',a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var,', ',' . ($n = \trim(\strtok(\substr($v[0], 1), " \n\r\t>"), '/')) . ',')) {
+                // Temporarily disallow image(s) in comment to prevent XSS
+                if ('img' === $n) {
+                    $r .= \htmlspecialchars($v[0]);
+                    continue;
+                }
+                $r .= $v[0];
+            }
+        }
+        // Replace new line with `<br>` and `<p>` tag(s)
+        return '<p>' . \strtr($r, [
+            "\n\n" => '</p><p>',
+            "\n" => '<br>'
+        ]) . '</p>';
+    }
+    \Hook::set('f.comment.author', __NAMESPACE__ . "\\f__comment__author", 10);
+    \Hook::set('f.comment.content', __NAMESPACE__ . "\\f__comment__content", 10);
     function route__comment($content, $path, $query) {
         \extract(\lot(), \EXTR_SKIP);
         $can_alert = \class_exists("\\Alert");
@@ -169,54 +219,13 @@ namespace x\comment {
         }
         // Sanitize comment author
         if (0 === $error && isset($data['author'])) {
-            if (0 === \strpos((string) $data['author'], '@')) {
-                $data['author'] = '@' . \To::kebab($data['author']);
-            } else {
-                $data['author'] = \To::text($data['author']);
-            }
+            $data['author'] = \Hook::fire('f.comment.author', [$data['author'], $data]);
         }
         // Sanitize comment content
         if (0 === $error && isset($data['content'])) {
-            // Temporarily disable PHP expression written in the comment body. Why? I don’t know!
-            $data['content'] = \strtr($data['content'], [
-                '<?php' => '&lt;?php',
-                '<?=' => '&lt;?=',
-                '?>' => '?&gt;'
-            ]);
-            // Temporarily disable the `[[e]]` block(s) written in the comment body
-            if (isset($state->x->block) && false !== \strpos($data['content'], '[[/e]]')) {
-                $data['content'] = \preg_replace_callback('/\[\[e\]\]([\s\S]*?)\[\[\/e\]\]/', static function ($m) {
-                    return '<pre><code>' . \htmlspecialchars($m[1]) . '</code></pre>';
-                }, $data['content']);
-            }
             // Implement default XSS filter to the comment with type of `HTML` or `text/html`
             if (!isset($data['type']) || 'HTML' === $data['type'] || 'text/html' === $data['type']) {
-                $tags = 'a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var';
-                $data['content'] = \strip_tags($data['content'], \explode(',', $tags));
-                // Replace potential XSS via HTML attribute(s) into a `data-*` attribute(s)
-                $data['content'] = \preg_replace_callback('/<(' . \strtr($tags, ',', '|') . ')(\s(?:"[^"]*"|\'[^\']*\'|[^>])*)?>/', static function ($m) {
-                    if ('img' === $m[1]) {
-                        // Temporarily disallow image(s) in comment to prevent XSS
-                        return '&lt;' . $m[1] . $m[2] . '&gt;';
-                    }
-                    if (!empty($m[2])) {
-                        // Replace `onerror` with `data-onerror`
-                        $m[2] = \preg_replace('/(\s)on(\w+)=([\'"]?)/', '$1data-on$2=$3', $m[2]);
-                        // Replace `javascript:*` value with `javascript:;`
-                        $m[2] = \preg_replace([
-                            '/="javascript:[^"]+"/',
-                            '/=\'javascript:[^\']+\'/',
-                            '/=javascript:[^\s\/>]+/'
-                        ], '="javascript:;"', $m[2]);
-                        return '<' . $m[1] . $m[2] . '>';
-                    }
-                    return '<' . $m[1] . '>';
-                }, $data['content']);
-                // Replace new line with `<br>` and `<p>` tag(s)
-                $data['content'] = '<p>' . \strtr($data['content'], [
-                    "\n\n" => '</p><p>',
-                    "\n" => '<br>'
-                ]) . '</p>';
+                $data['content'] = \Hook::fire('f.comment.content', [$data['content'], $data]);
             }
         }
         if (0 === $error && !$active) {
