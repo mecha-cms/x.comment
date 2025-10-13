@@ -130,6 +130,7 @@
 
 .form-comment {
   clear: both;
+  margin-bottom: 2rem;
   margin-top: 2rem;
 }
 .form-comment > p:not([role=alert]):not([role=status]) {

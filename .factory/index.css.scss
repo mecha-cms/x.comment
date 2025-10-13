@@ -138,7 +138,10 @@
 
 .form-comment {
   clear: both;
-  margin-top: 2rem;
+  margin: {
+    bottom: 2rem;
+    top: 2rem;
+  }
   > p {
     &:not([role='alert']):not([role='status']) {
       display: flex;
