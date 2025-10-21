@@ -785,7 +785,7 @@ namespace x\comment {
         \extract($lot, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
         $host = $_SERVER['HTTP_HOST'];
-        $protocol = 'http' . (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || 443 === ((int) $_SERVER['SERVER_PORT']) ? 's' : "") . '://';
+        $scheme = 'http' . (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || 443 === ((int) $_SERVER['SERVER_PORT']) ? 's' : "") . '://';
         return \Hook::fire('y.form.comment', [[
             0 => 'form',
             1 => [
@@ -883,7 +883,7 @@ namespace x\comment {
                                         'maxlength' => $guard->max->link ?? null,
                                         'minlength' => $guard->min->link ?? null,
                                         'name' => 'link',
-                                        'placeholder' => \S . $protocol . \S . $host . \S,
+                                        'placeholder' => \S . $scheme . \S . $host . \S,
                                         'type' => 'url'
                                     ]
                                 ]
