@@ -113,7 +113,7 @@ namespace x\comment {
         $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
         \State::set([
             'can' => ['comment' => 1 === $open],
-            'has' => ['comments' => $page->comments->count() > 0]
+            'has' => ['comments' => $page->comments && $page->comments->count() > 0]
         ]);
         return $content;
     }
