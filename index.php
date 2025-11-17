@@ -211,11 +211,10 @@ namespace x\comment {
                     }
                 }
                 // Replace new line with `<br>` and `<p>` tag(s)
-                return '<p>' . \strtr(\trim($r), [
+                $data['content'] = '<p>' . \strtr(\trim($r), [
                     "\n\n" => '</p><p>',
                     "\n" => '<br>'
                 ]) . '</p>';
-                $data['content'] = $r;
             }
         }
         if (0 === $error && !$active) {
