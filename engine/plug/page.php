@@ -3,7 +3,7 @@
 Page::_('comments', function () {
     if ($path = $this->path) {
         $folder = strtr(dirname($path), [LOT . D . 'page' . D => LOT . D . 'comment' . D]) . D . pathinfo($path, PATHINFO_FILENAME);
-        $comments = Comments::from($folder, 'page')->not(function ($v) {
+        $comments = Comments::from($folder, x\page\x())->not(function ($v) {
             return $v->parent();
         });
         $comments->status = (int) ($this->state['x']['comment'] ?? 1);

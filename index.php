@@ -12,16 +12,18 @@ namespace {
             \extract(\lot($lot), \EXTR_SKIP);
             $any = \P . \uniqid() . \P; // Dummy value
             $c = \State::get('x.comment', true);
-            $chunk = $c['page']['chunk'] ?? null;
+            $chunk = $c['lot']['chunk'] ?? null;
             $count = $page->comments->count();
-            $parent = $_GET['parent'] ?? null;
-            $path = \trim($url->path ?? "", '/');
+            if (!\is_string($parent = $_GET['parent'] ?? 0)) {
+                $parent = 0;
+            }
+            $path = \trim($link->path ?? "", '/');
             $route = \trim($c['route'] ?? 'comment', '/');
-            $sort = \array_replace([1, 'path'], (array) ($c['page']['sort'] ?? []));
+            $sort = \array_replace([1, 'path'], (array) ($c['lot']['sort'] ?? []));
             $status = $page->state['x']['comment'] ?? $c['status'] ?? $lot[0] ?? $any;
             // Calculate last page offset
             $max = (int) \ceil($count / ($chunk ?? $count));
-            // Show last page by default if page offset is not available in URL
+            // Show last page by default if page offset is not available in link
             if (false !== \strpos($path, '/' . $route . '/') && ($part = \x\page\part($path))) {} else {
                 $part = $max;
             }
@@ -31,13 +33,14 @@ namespace {
             }
             if (
                 // Make sure current page is active
-                'page' === $page->x &&
+                0 !== \strpos($page->_name, '#') &&
                 // Make sure comment feature is active
                 ($any === $status || (false !== $status && 0 !== $status))
             ) {
                 if ($parent) {
                     // Make sure parent comment exists
-                    if (!\is_file($path = \strtr(\dirname($page->path), [\LOT . \D . 'page' . \D => \LOT . \D . 'comment' . \D]) . \D . $page->name . \D . $parent . '.page')) {
+                    $folder = \strtr(\dirname($page->path), [\LOT . \D . 'page' . \D => \LOT . \D . 'comment' . \D]);
+                    if (!$path = \exist($folder . \D . $page->name . \D . $parent . '.{' . \x\page\x() . '}', 1)) {
                         \class_exists("\\Alert") && \Alert::error('Parent comment does not exist.');
                         \kick($page->route);
                     }
@@ -76,28 +79,29 @@ namespace x\comment {
                 return $email;
             }
             $user = $this['author'];
-            if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
-                if (\is_file($user = \LOT . \D . 'user' . \D . \substr($user, 1) . '.page')) {
+            if (\is_string($user ?? 0) && '@' === ($user[0] ?? 0)) {
+                if ($user = \exist(\LOT . D . 'user' . \D . \substr($user, 1) . '.{' . \x\page\x() . '}', 1)) {
                     return (new \User($user))->email ?? $email;
                 }
             }
             return $email;
         }
-        function comment__link($link) {
-            if ($link || 1 !== $this['status']) {
-                return $link;
+        function comment__links($links) {
+            if (!empty($links[0]) || 1 !== $this['status']) {
+                return $links;
             }
             $user = $this['author'];
-            if ($user && \is_string($user) && 0 === \strpos($user, '@')) {
-                if (\is_file($user = \LOT . \D . 'user' . \D . \substr($user, 1) . '.page')) {
+            if (\is_string($user ?? 0) && '@' === ($user[0] ?? 0)) {
+                if ($user = \exist(\LOT . D . 'user' . \D . \substr($user, 1) . '.{' . \x\page\x() . '}', 1)) {
                     $user = new \User($user);
-                    return $user->link ?? $user->url ?? $link;
+                    $user_links = \array_unique(\array_filter(\array_merge((array) ($user->links ?? []), [$user->link], $links ?? [])));
+                    return $user_links ? $user_links : null;
                 }
             }
-            return $link;
+            return $links;
         }
         \Hook::set('comment.email', __NAMESPACE__ . "\\comment__email", 0);
-        \Hook::set('comment.link', __NAMESPACE__ . "\\comment__link", 0);
+        \Hook::set('comment.links', __NAMESPACE__ . "\\comment__links", 0);
     }
     function content($content) {
         if (!\class_exists("\\Asset")) {
@@ -110,7 +114,7 @@ namespace x\comment {
         $z = \defined("\\TEST") && \TEST ? '.' : '.min.';
         \Asset::set(__DIR__ . \D . 'index' . $z . 'css', 10);
         \Asset::set(__DIR__ . \D . 'index' . $z . 'js', 10);
-        $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->page->x->state->comment ?? 1);
+        $open = (int) ($page->state['x']['comment'] ?? $state->x->comment->lot->x->state->comment ?? 1);
         \State::set([
             'can' => ['comment' => 1 === $open],
             'has' => ['comments' => $page->comments && $page->comments->count() > 0]
@@ -122,49 +126,45 @@ namespace x\comment {
     function route__comment($content, $path, $query) {
         \extract(\lot(), \EXTR_SKIP);
         $active = isset($state->x->user, $user) && $user->exist;
-        $can_alert = \class_exists("\\Alert");
         $guard = $state->x->comment->guard ?? [];
-        $path = \trim($path ?? "", '/');
-        if ('GET' === $_SERVER['REQUEST_METHOD']) {
-            $can_alert && \Alert::error('Method not allowed.');
+        $path = \rawurldecode(\trim($path ?? "", '/'));
+        $with_alert = \class_exists("\\Alert");
+        if ('POST' !== $_SERVER['REQUEST_METHOD']) {
+            $with_alert && \Alert::error('Method not allowed.');
             \kick('/' . $path . $query . '#comment');
         }
-        if (!\is_file(\LOT . \D . 'page' . \D . $path . '.page')) {
-            $can_alert && \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
+        if (!\exist(\LOT . \D . 'page' . \D . $path . '.{' . \x\page\x() . '}', 1)) {
+            $with_alert && \Alert::error('You cannot write a comment here. This is usually due to the page data that is dynamically generated.');
             \kick('/' . $path . $query . '#comment');
         }
         $error = 0;
         $data_default = \array_replace_recursive(
-            (array) \a($state->x->page->page ?? []),
-            (array) \a($state->x->comment->page ?? [])
+            (array) \a($state->x->page->lot ?? []),
+            (array) \a($state->x->comment->lot ?? [])
         );
         $data = \array_replace_recursive($data_default, (array) ($_POST ?? []));
         if (empty($data['token']) || !\check($data['token'], 'comment')) {
-            $can_alert && \Alert::error('Invalid token.');
+            $with_alert && \Alert::error('Invalid token.');
             \kick('/' . $path . $query . '#comment');
         }
         $data['status'] = $active ? 1 : 2; // Status data is hard-coded for security
-        foreach (['author', 'email', 'link', 'content'] as $key) {
+        foreach (['author', 'email', 'content'] as $key) {
             if (!\array_key_exists($key, $data)) {
                 continue;
             }
             $title = \ucfirst($key);
             // Check for empty field(s)
             if (\Is::void($data[$key])) {
-                if ('link' !== $key) { // `link` field is optional
-                    $can_alert && \Alert::error('Please fill out the %s field.', [$title]);
-                    ++$error;
-                }
+                $with_alert && \Alert::error('Please fill out the %s field.', [$title]);
+                ++$error;
             }
             // Check for field(s) value length
             if (isset($guard->max->{$key}) && \gt($data[$key], $guard->max->{$key})) {
-                $can_alert && \Alert::error('%s too long.', [$title]);
+                $with_alert && \Alert::error('%s too long.', [$title]);
                 ++$error;
             } else if (isset($guard->min->{$key}) && \lt($data[$key], $guard->min->{$key})) {
-                if ('link' !== $key) { // `link` field is optional
-                    $can_alert && \Alert::error('%s too short.', [$title]);
-                    ++$error;
-                }
+                $with_alert && \Alert::error('%s too short.', [$title]);
+                ++$error;
             }
         }
         // Sanitize comment author
@@ -201,7 +201,7 @@ namespace x\comment {
                             '/=javascript:[^\s\/>]+/'
                         ], '="javascript:;"', $v[0]);
                     }
-                    if (false !== \strpos(',a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var,', ',' . ($n = \trim(\strtok(\substr($v[0], 1), " \n\r\t>"), '/')) . ',')) {
+                    if (false !== \strpos(',a,abbr,b,br,cite,code,del,dfn,em,i,img,ins,kbd,mark,q,span,strong,sub,sup,time,u,var,', ',' . ($n = \trim(\substr($v[0], 1, \strcspn($v[0], " \n\r\t>", 1)), '/')) . ',')) {
                         // Temporarily disallow image(s) in comment to prevent XSS
                         if ('img' === $n) {
                             $r .= \htmlspecialchars($v[0]);
@@ -220,18 +220,18 @@ namespace x\comment {
         if (0 === $error && !$active) {
             // Check for email format
             if (!empty($data['email']) && !\Is::email($data['email'])) {
-                $can_alert && \Alert::error('Invalid %s format.', 'Email');
+                $with_alert && \Alert::error('Invalid %s format.', 'Email');
                 ++$error;
             }
             // Check for link format
-            if (!empty($data['link']) && !\Is::URL($data['link'])) {
-                $can_alert && \Alert::error('Invalid %s format.', 'Link');
+            if (!empty($data['links'][0]) && !\Is::link($data['links'][0])) {
+                $with_alert && \Alert::error('Invalid %s format.', 'Link');
                 ++$error;
             }
         }
         // Check for duplicate comment
         if (isset($_SESSION['comment']['content']) && $data['content'] === $_SESSION['comment']['content']) {
-            $can_alert && \Alert::error('You have sent that comment already.');
+            $with_alert && \Alert::error('You have sent that comment already.');
             ++$error;
         }
         if ($error > 0) {
@@ -243,14 +243,14 @@ namespace x\comment {
             if (!\is_dir($folder)) {
                 \mkdir($folder, 0775, true);
             }
-            $folder .= \D . \date('Y-m-d-H-i-s', $t = \time());
-            $file = $folder . '.' . ($x = $state->x->comment->page->x ?? 'page');
+            $folder .= \D . (($defer = !empty($guard->defer)) ? '~' : "") . \date('Y-m-d-H-i-s', $t = \time());
+            $file = $folder . '.' . ($x = $state->x->comment->lot->x ?? 'txt');
             $values = [
                 'author' => null,
                 'email' => null,
-                'link' => null,
                 'status' => null,
                 'type' => null,
+                'links' => null,
                 'content' => ""
             ];
             foreach ($data as $k => $v) {
@@ -265,23 +265,28 @@ namespace x\comment {
                 }
             }
             $values = \drop($values);
-            \file_put_contents($file, \To::page($values));
+            if (\function_exists($task = "\\x\\page\\to\\x\\" . $x)) {
+                $content = \call_user_func($task, $values);
+            } else {
+                $content = \To::page($values);
+            }
+            \file_put_contents($file, $content ?? "");
             \chmod($file, 0600);
             if (isset($data['parent']) && !\Is::void($data['parent'])) {
                 if (!\is_dir($folder)) {
                     \mkdir($folder, 0775, true);
                 }
-                \file_put_contents($parent = $folder . \D . 'parent.data', (new \Time($data['parent']))->name);
+                \file_put_contents($parent = $folder . \D . '+' . \D . 'parent.txt', (new \Time($data['parent']))->name);
                 \chmod($parent, 0600);
             }
-            $can_alert && \Alert::success('Comment created.');
-            if ('draft' === $x) {
-                $can_alert && \Alert::info('Your comment will be visible once approved by the author.');
+            $with_alert && \Alert::success('Comment created.');
+            if ($defer) {
+                $with_alert && \Alert::info('Your comment will be visible once approved by the author.');
             }
             $_SESSION['comment'] = $values;
             \Hook::fire('on.comment.set', [$file]);
-            if ('draft' !== $x) {
-                \kick('/' . $path . $url->query(['parent' => null]) . '#comment:' . \sprintf('%u', $t));
+            if (!$defer) {
+                \kick('/' . $path . $link->query(['parent' => null]) . '#comment:' . (new \Comment($file))->id);
             }
         }
         \kick('/' . $path . $query . '#comment');
@@ -291,7 +296,7 @@ namespace x\comment {
         $path = \trim($path ?? $state->route ?? 'index', '/');
         $route = \trim($state->x->comment->route ?? 'comment', '/');
         // `/comment/article/lorem-ipsum`
-        if (0 === \strpos($path, $route . '/')) {
+        if (0 === \strpos($path = \rawurldecode($path), $route . '/')) {
             if (\strlen($path) > \strlen($route)) {
                 return \Hook::fire('route.comment', [$content, \substr($path, \strlen($route)), $query, $hash]);
             }
@@ -306,18 +311,10 @@ namespace x\comment {
             // else-where using the current route value which now contains `/comment/123`.
             if ($part = \x\page\part($path)) {
                 $path = \substr($path, 0, -\strlen('/' . $route . '/' . $part));
-                $folder = \LOT . \D . 'page' . \D . \strtr($path, ['/' => \D]);
-                $file = \exist([
-                    $folder . '.archive',
-                    $folder . '.page'
-                ], 1);
+                $file = \exist(\LOT . \D . 'page' . \D . $path . '.{' . \x\page\x() . '}', 1);
                 \State::set([
                     'is' => [
                         'error' => $file ? false : 404,
-                        'page' => !!$file,
-                        'pages' => false
-                    ],
-                    'has' => [
                         'page' => !!$file,
                         'pages' => false
                     ]
@@ -347,13 +344,13 @@ namespace x\comment {
                 'data-status' => $comment->status,
                 'id' => 'comment:' . $comment->id
             ],
-            // These key(s) will be ignored by `HTML` class but can be used by other hook(s) as a reference.
+            // These key(s) will be ignored by `HTML` class but can be used by other hook(s) as a reference
             'level' => $deep + 1,
             'parent' => $parent ? $parent->name : null,
             'self' => $comment->name,
             'status' => $comment->status
         ];
-        if ($deep < ($c['page']['deep'] ?? 0) && $comment->children && $comment->children->count()) {
+        if ($deep < ($c['lot']['deep'] ?? 0) && $comment->children && $comment->children->count()) {
             $out[1]['comments'] = [
                 0 => 'section',
                 1 => [],
@@ -378,13 +375,13 @@ namespace x\comment {
             0 => 'h4',
             1 => [
                 'link' => [
-                    0 => ($link = $comment->link) ? 'a' : 'span',
+                    0 => ($links = $comment->links) ? 'a' : 'span',
                     1 => (string) $comment->author,
                     2 => [
                         'class' => 'comment-link',
-                        'href' => $link,
-                        'rel' => $link ? 'nofollow' : null,
-                        'target' => $link ? '_blank' : null
+                        'href' => $links ? \reset($links) : null,
+                        'rel' => $links ? 'nofollow' : null,
+                        'target' => $links ? '_blank' : null
                     ]
                 ]
             ],
@@ -482,11 +479,11 @@ namespace x\comment {
                     ]
                 ],
                 'space' => '&#x20;',
-                'url' => [
+                'link' => [
                     0 => 'a',
                     1 => "",
                     2 => [
-                        'class' => 'comment-url',
+                        'class' => 'comment-link',
                         'href' => '#comment:' . $comment->id,
                         'rel' => 'nofollow'
                     ]
@@ -508,7 +505,7 @@ namespace x\comment {
                 'class' => 'comment-tasks'
             ]
         ];
-        if ($deep < ($state->x->comment->page->deep ?? 0) && (1 === $status || true === $status)) {
+        if ($deep < ($state->x->comment->lot->deep ?? 0) && (1 === $status || true === $status)) {
             $id = $comment->name;
             $out[1]['reply'] = [
                 0 => 'li',
@@ -869,9 +866,9 @@ namespace x\comment {
                                     1 => false,
                                     2 => [
                                         'id' => $id,
-                                        'maxlength' => $guard->max->link ?? null,
-                                        'minlength' => $guard->min->link ?? null,
-                                        'name' => 'link',
+                                        'maxlength' => $guard->max->links[0] ?? null,
+                                        'minlength' => $guard->min->links[0] ?? null,
+                                        'name' => 'links[0]',
                                         'placeholder' => \S . $scheme . \S . $host . \S,
                                         'type' => 'url'
                                     ]
@@ -936,7 +933,7 @@ namespace x\comment {
                                         'value' => 1
                                     ]
                                 ],
-                                'cancel' => isset($c['page']['deep']) && $c['page']['deep'] > 0 ? [
+                                'cancel' => isset($c['lot']['deep']) && $c['lot']['deep'] > 0 ? [
                                     0 => 'a',
                                     1 => \i('Cancel'),
                                     2 => [
