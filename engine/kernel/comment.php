@@ -6,7 +6,7 @@ class Comment extends Page {
         if (!$this->_exist()) {
             return null;
         }
-        if (!is_string($path = $this->offsetGet('page')) || !is_file($path)) {
+        if (!is_string($path = $this->offsetGet(__FUNCTION__)) || !is_file($path)) {
             $folder = strtr(dirname($this->path), [LOT . D . 'comment' . D => LOT . D . 'page' . D]);
             if (!$path = exist($folder . '.{' . x\page\x() . '}', 1)) {
                 return null;
@@ -19,7 +19,7 @@ class Comment extends Page {
         if (!$this->_exist()) {
             return null;
         }
-        if (!is_string($path = $this->offsetGet('parent')) || !is_file($path)) {
+        if (!is_string($path = $this->offsetGet(__FUNCTION__)) || !is_file($path)) {
             if (!$path = exist(dirname($this->path) . D . $path . '.{' . x\page\x() . '}', 1)) {
                 return null;
             }
@@ -32,7 +32,7 @@ class Comment extends Page {
             return null;
         }
         $x ??= x\page\x();
-        if ($v = $this->offsetGet('children')) {
+        if ($v = $this->offsetGet(__FUNCTION__)) {
             if (is_array($v) || (is_string($v) && is_dir($v))) {
                 $comments = Comments::from($v, $x, $deep);
                 $comments->title = i(0 === ($count = $comments->count) ? '0 Replies' : (1 === $count ? '1 Reply' : '%d Replies'), [$count]);

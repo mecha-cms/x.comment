@@ -268,7 +268,7 @@ namespace x\comment {
             if (\function_exists($task = "\\x\\page\\to\\x\\" . $x)) {
                 $content = \call_user_func($task, $values);
             } else {
-                $content = \To::page($values);
+                $content = \To::page($values, 2);
             }
             \file_put_contents($file, $content ?? "");
             \chmod($file, 0600);
@@ -771,7 +771,8 @@ namespace x\comment {
         \extract($lot, \EXTR_SKIP);
         $guard = (object) ($state->x->comment->guard ?? []);
         $host = $_SERVER['HTTP_HOST'];
-        $scheme = 'http' . (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || 443 === ((int) $_SERVER['SERVER_PORT']) ? 's' : "") . '://';
+        $s = !empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || 443 === ((int) $_SERVER['SERVER_PORT']) ? 's' : "";
+        $scheme = 'http' . $s . '://';
         return \Hook::fire('y.form.comment', [[
             0 => 'form',
             1 => [
