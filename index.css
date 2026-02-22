@@ -32,6 +32,11 @@
   content: "";
   display: table;
 }
+.comment:target {
+  background: rgba(255, 255, 0, 0.125);
+  box-shadow: 0 0 0 0.5em rgba(255, 255, 0, 0.125);
+  scroll-margin-top: 0.5em;
+}
 .comment-author,
 .comment-meta {
   font: inherit;
