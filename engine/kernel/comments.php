@@ -3,7 +3,13 @@
 class Comments extends Pages {
 
     public function page(...$lot) {
-        return Comment::from(...$lot);
+        if (($v = reset($lot)) && $v instanceof Comment) {
+            return $v;
+        }
+        if (is_array($v) && isset($v["\0"])) {
+            return $v["\0"];
+        }
+        return new Comment(...$lot);
     }
 
     public static function from(...$lot) {

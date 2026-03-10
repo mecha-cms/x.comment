@@ -31,6 +31,11 @@
     content: "";
     display: table;
   }
+  &:target {
+    background: rgb(255 255 0 / 0.125);
+    box-shadow: 0 0 0 0.5em rgb(255 255 0 / 0.125);
+    scroll-margin-top: 0.5em;
+  }
   &-author,
   &-meta {
     font: inherit;
@@ -47,13 +52,6 @@
   &-footer {
     margin-top: 0.5rem;
   }
-  &-header {
-    + .comment-body + .comment-footer + .comments,
-    + .comment-body + .form-comment,
-    + .comment-body + .form-comment + .comment-footer + .comments {
-      margin-left: 1.5rem; // Default comment indent without avatar-related extension
-    }
-  }
   &-figure {
     float: left;
     width: 5rem;
@@ -67,20 +65,29 @@
     }
   }
   &-header {
+    + .comment-body + .comment-footer + .comments,
+    + .comment-body + .form-comment,
+    + .comment-body + .form-comment + .comment-footer + .comments {
+      margin-left: 1.5rem; // Default comment indent without avatar-related extension
+    }
+  }
+  &-header {
     display: flex;
     flex-wrap: wrap;
     gap: 0 1rem;
     justify-content: space-between;
   }
+  &-meta {
+    .comment-link {
+      &::before {
+        content: '#';
+      }
+    }
+  }
   &-tasks {
     align-content: center;
     display: flex;
     gap: 0 1rem;
-  }
-  &-url {
-    &::before {
-      content: '#';
-    }
   }
   &[data-status='-1'] {
     opacity: 0.5;

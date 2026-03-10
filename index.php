@@ -506,7 +506,6 @@ namespace x\comment {
             ]
         ];
         if ($deep < ($state->x->comment->lot->deep ?? 0) && (1 === $status || true === $status)) {
-            $id = $comment->name;
             $out[1]['reply'] = [
                 0 => 'li',
                 1 => [
@@ -514,9 +513,9 @@ namespace x\comment {
                         0 => 'a',
                         1 => \i('Reply'),
                         2 => [
-                            'href' => \To::query(\array_replace($_GET, [
-                                'parent' => $id
-                            ])) . '#comment',
+                            'href' => \long(\To::query(\array_replace($_GET, [
+                                'parent' => $comment->name
+                            ])) . '#comment'),
                             'rel' => 'nofollow',
                             'title' => \To::text(\i('Reply to %s', (string) $comment->author))
                         ]
@@ -938,7 +937,7 @@ namespace x\comment {
                                     0 => 'a',
                                     1 => \i('Cancel'),
                                     2 => [
-                                        'href' => $page->route . '#comment',
+                                        'href' => $page->link . '#comment',
                                         'role' => 'button'
                                     ]
                                 ] : null
@@ -969,9 +968,9 @@ namespace x\comment {
                 ]
             ],
             2 => [
-                'action' => '/' . \trim($state->x->comment->route ?? 'comment', '/') . $page->route . \To::query($_GET, [
+                'action' => \long('/' . \trim($state->x->comment->route ?? 'comment', '/') . $page->route . \To::query($_GET, [
                     'parent' => null
-                ]),
+                ])),
                 'class' => 'form-comment' . ($parent ? ' in-reply' : ""),
                 'id' => 'comment',
                 'method' => 'post',
