@@ -49,7 +49,9 @@ class Comment extends Page {
 
     public function link(...$lot) {
         if ($page = $this->page()) {
-            return $page->link . '#comment:' . $this->id;
+            $link = $page->link;
+            $link->hash = 'comment:' . $this->id;
+            return $link;
         }
         return parent::link(...$lot);
     }
