@@ -3,14 +3,11 @@
 class Comments extends Pages {
 
     public function page(...$lot) {
-        if (($v = $lot[0] ?? 0) instanceof Comment) {
-            return $v;
+        static $c = [];
+        if (isset($c[$id = json_encode($lot)])) {
+            return $c[$id];
         }
-        if (is_array($v)) {
-            unset($v[P]);
-            $lot[0] = $v;
-        }
-        return new Comment(...$lot);
+        return ($c[$id] = new Comment(...$lot));
     }
 
     public static function from(...$lot) {
