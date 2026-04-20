@@ -33,7 +33,7 @@ namespace {
             }
             if (
                 // Make sure current page is active
-                0 !== \strpos($page->_name, '#') &&
+                0 !== \strpos($page->file->name ?? "", '#') &&
                 // Make sure comment feature is active
                 ($any === $status || (false !== $status && 0 !== $status))
             ) {

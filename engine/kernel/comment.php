@@ -3,7 +3,7 @@
 class Comment extends Page {
 
     public function page(array $lot = []) {
-        if (!$this->_exist()) {
+        if (!$this->file->exist()) {
             return null;
         }
         if (!is_string($path = $this->offsetGet(__FUNCTION__)) || !is_file($path)) {
@@ -16,7 +16,7 @@ class Comment extends Page {
     }
 
     public function parent(array $lot = []) {
-        if (!$this->_exist()) {
+        if (!$this->file->exist()) {
             return null;
         }
         if (!is_string($path = $this->offsetGet(__FUNCTION__)) || !is_file($path)) {
@@ -28,7 +28,7 @@ class Comment extends Page {
     }
 
     public function children($x = null, $deep = 0) {
-        if (!$this->_exist()) {
+        if (!$this->file->exist()) {
             return null;
         }
         $x ??= x\page\x();
