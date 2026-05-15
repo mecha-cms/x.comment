@@ -18,13 +18,13 @@ namespace {
                 $parent = 0;
             }
             $path = \trim($link->path ?? "", '/');
-            $route = \trim($c['route'] ?? 'comment', '/');
             $sort = \array_replace([1, 'path'], (array) ($c['lot']['sort'] ?? []));
             $status = $page->state['x']['comment'] ?? $c['status'] ?? $lot[0] ?? $any;
+            $sub = \trim($c['sub'] ?? 'comment', '/');
             // Calculate last page offset
             $max = (int) \ceil($count / ($chunk ?? $count));
             // Show last page by default if page offset is not available in link
-            if (false !== \strpos($path, '/' . $route . '/') && ($part = \x\page\part($path))) {} else {
+            if (false !== \strpos($path, '/' . $sub . '/') && ($part = \x\page\part($path))) {} else {
                 $part = $max;
             }
             // Comment form is disabled and there are no comment(s)
@@ -293,24 +293,24 @@ namespace x\comment {
     }
     function route__page($content, $path, $query, $hash) {
         \extract(\lot(), \EXTR_SKIP);
-        $path = \trim($path ?? $state->route ?? 'index', '/');
-        $route = \trim($state->x->comment->route ?? 'comment', '/');
+        $path = \trim($path ?? $state->home ?? 'index', '/');
+        $sub = \trim($state->x->comment->sub ?? 'comment', '/');
         // `/comment/article/lorem-ipsum`
-        if (0 === \strpos($path = \rawurldecode($path), $route . '/')) {
-            if (\strlen($path) > \strlen($route)) {
-                return \Hook::fire('route.comment', [$content, \substr($path, \strlen($route)), $query, $hash]);
+        if (0 === \strpos($path = \rawurldecode($path), $sub . '/')) {
+            if (\strlen($path) > \strlen($sub)) {
+                return \Hook::fire('route.comment', [$content, \substr($path, \strlen($sub)), $query, $hash]);
             }
             return $content;
         }
         // `/article/lorem-ipsum/comment/1`
-        if (false !== \strpos($path . '/', '/' . $route . '/')) {
+        if (false !== \strpos($path . '/', '/' . $sub . '/')) {
             // Map route `/article/lorem-ipsum/comment/1` to route `/article/lorem-ipsum`. Pagination offset and comment
             // route will be ignored in this case because route `/article/lorem-ipsum/comment/123` is now an alias for
             // route `/article/lorem-ipsum/123`. Maintaining the pagination offset will give the impression that we are
             // going to page `123` which is not what we meant. The comment pagination offset will be taken care of
             // else-where using the current route value which now contains `/comment/123`.
             if ($part = \x\page\part($path)) {
-                $path = \substr($path, 0, -\strlen('/' . $route . '/' . $part));
+                $path = \substr($path, 0, -\strlen('/' . $sub . '/' . $part));
                 $file = \exist(\LOT . \D . 'page' . \D . $path . '.{' . \x\page\x() . '}', 1);
                 \State::set([
                     'is' => [
@@ -736,7 +736,7 @@ namespace x\comment {
                     }
                     return $out;
                 })($part, $count, $chunk, 2, static function ($i) use ($c, $max, $page) {
-                    return $page->route . ($max === $i ? "" : '/' . \trim($c['route'] ?? 'comment', '/') . '/' . $i) . \To::query(\array_replace($_GET, [
+                    return $page->route . ($max === $i ? "" : '/' . \trim($c['sub'] ?? 'comment', '/') . '/' . $i) . \To::query(\array_replace($_GET, [
                         'parent' => null
                     ])) . '#comments';
                 }, 'First', 'Previous', 'Next', 'Last'),
@@ -968,7 +968,7 @@ namespace x\comment {
                 ]
             ],
             2 => [
-                'action' => \long('/' . \trim($state->x->comment->route ?? 'comment', '/') . $page->route . \To::query($_GET, [
+                'action' => \long('/' . \trim($state->x->comment->sub ?? 'comment', '/') . $page->route . \To::query($_GET, [
                     'parent' => null
                 ])),
                 'class' => 'form-comment' . ($parent ? ' in-reply' : ""),

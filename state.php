@@ -25,11 +25,11 @@ return [
         // Sort comment(s) by the `time` data in ascending order
         'sort' => [1, 'time'],
         // Default comment(s)’ type
-        'type' => 'HTML',
+        // 'type' => 'HTML',
         // Default comment(s)’ file extension
-        'x' => 'txt'
+        // 'x' => 'txt'
     ],
-    'route' => '/comment',
     // The comment(s)’ visibility (`0` or `false` means “disable comment(s)”, `1` or `true` means “enable comment(s)”, `2` means “close comment(s)”)
-    'status' => 1
+    'status' => 1,
+    'sub' => '/comment'
 ];
